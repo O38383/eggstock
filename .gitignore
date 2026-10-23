@@ -1,0 +1,29 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.DS_Store
+Thumbs.db
+
+# Heavy promo and build directories
+promo/
+promo_build/
+promo_new_build/
+website/promo/
+
+# Heavy media assets
+*.mp4
+*.wav
+*.mp3
+preview_*.png
+verify_*.png
+
+# Offline dev/test scripts
+test_*.py
+generate_*.py
+render_*.py
+mix_*.py
+preview_*.py
+export_*.py
+_temp_*.js

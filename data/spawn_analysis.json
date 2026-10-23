@@ -1,0 +1,405 @@
+{
+  "total_drops": 588,
+  "total_waves": 439,
+  "rarity_distribution": {
+    "Eternal": 103,
+    "Secret": 480,
+    "Divine": 5
+  },
+  "egg_distribution": {
+    "Pegasus": 12,
+    "Oni Tiger": 11,
+    "Gargoyle": 88,
+    "Mosasaurus": 16,
+    "Mutant Shark": 32,
+    "Tralaledon": 34,
+    "Pure Jellyfish": 94,
+    "T-Rex": 31,
+    "Stag": 29,
+    "Cosmic Skeleton Boss": 26,
+    "NightFlame": 2,
+    "Cosmic Dragon": 31,
+    "Cerberus": 34,
+    "TRex": 4,
+    "Ice Dragon": 5,
+    "Kraken": 34,
+    "RazorFang": 14,
+    "Phoenix": 16,
+    "Lava Dragon": 13,
+    "Kitsune": 1,
+    "Yeti": 10,
+    "Unicorn": 1,
+    "Centaur": 14,
+    "Skeleton Horse": 7,
+    "Eternal Lunar Dragon": 9,
+    "King Snake": 5,
+    "Gorilla King": 14,
+    "ArchAngel": 1
+  },
+  "biome_distribution": {
+    "Angels": 121,
+    "Cherry Blossom": 41,
+    "Demons": 109,
+    "Prehistoric": 85,
+    "Titan Temple": 48,
+    "Cosmic": 67,
+    "Volcano": 63,
+    "Snow": 15,
+    "Abyss Ocean": 34,
+    "Jungle": 5
+  },
+  "median_wave_interval_sec": 456,
+  "mean_wave_interval_sec": 637,
+  "recent_samples": [
+    {
+      "egg": "Pure Jellyfish",
+      "rarity": "Secret",
+      "location": "Angels",
+      "timestamp": 1790634616.435,
+      "iso": "2026-09-28T22:30:16.435000+00:00"
+    },
+    {
+      "egg": "Gargoyle",
+      "rarity": "Secret",
+      "location": "Demons",
+      "timestamp": 1790635207.069,
+      "iso": "2026-09-28T22:40:07.069000+00:00"
+    },
+    {
+      "egg": "T-Rex",
+      "rarity": "Secret",
+      "location": "Prehistoric",
+      "timestamp": 1790635512.086,
+      "iso": "2026-09-28T22:45:12.086000+00:00"
+    },
+    {
+      "egg": "Cosmic Skeleton Boss",
+      "rarity": "Secret",
+      "location": "Cosmic",
+      "timestamp": 1790635515.707,
+      "iso": "2026-09-28T22:45:15.707000+00:00"
+    },
+    {
+      "egg": "Cerberus",
+      "rarity": "Secret",
+      "location": "Volcano",
+      "timestamp": 1790635808.681,
+      "iso": "2026-09-28T22:50:08.681000+00:00"
+    },
+    {
+      "egg": "Mutant Shark",
+      "rarity": "Secret",
+      "location": "Titan Temple",
+      "timestamp": 1790636107.781,
+      "iso": "2026-09-28T22:55:07.781000+00:00"
+    },
+    {
+      "egg": "Mutant Shark",
+      "rarity": "Secret",
+      "location": "Titan Temple",
+      "timestamp": 1790636717.504,
+      "iso": "2026-09-28T23:05:17.504000+00:00"
+    },
+    {
+      "egg": "Cosmic Dragon",
+      "rarity": "Secret",
+      "location": "Cosmic",
+      "timestamp": 1790636719.274,
+      "iso": "2026-09-28T23:05:19.274000+00:00"
+    },
+    {
+      "egg": "Centaur",
+      "rarity": "Secret",
+      "location": "Angels",
+      "timestamp": 1790637607.797,
+      "iso": "2026-09-28T23:20:07.797000+00:00"
+    },
+    {
+      "egg": "Pure Jellyfish",
+      "rarity": "Secret",
+      "location": "Angels",
+      "timestamp": 1790637908.828,
+      "iso": "2026-09-28T23:25:08.828000+00:00"
+    },
+    {
+      "egg": "RazorFang",
+      "rarity": "Secret",
+      "location": "Demons",
+      "timestamp": 1790638813.097,
+      "iso": "2026-09-28T23:40:13.097000+00:00"
+    },
+    {
+      "egg": "Gargoyle",
+      "rarity": "Secret",
+      "location": "Demons",
+      "timestamp": 1790638814.855,
+      "iso": "2026-09-28T23:40:14.855000+00:00"
+    },
+    {
+      "egg": "T-Rex",
+      "rarity": "Secret",
+      "location": "Prehistoric",
+      "timestamp": 1790640309.998,
+      "iso": "2026-09-29T00:05:09.998000+00:00"
+    },
+    {
+      "egg": "Kraken",
+      "rarity": "Secret",
+      "location": "Abyss Ocean",
+      "timestamp": 1790640608.653,
+      "iso": "2026-09-29T00:10:08.653000+00:00"
+    },
+    {
+      "egg": "Stag",
+      "rarity": "Secret",
+      "location": "Cherry Blossom",
+      "timestamp": 1790641218.383,
+      "iso": "2026-09-29T00:20:18.383000+00:00"
+    },
+    {
+      "egg": "Tralaledon",
+      "rarity": "Secret",
+      "location": "Prehistoric",
+      "timestamp": 1790641226.755,
+      "iso": "2026-09-29T00:20:26.755000+00:00"
+    },
+    {
+      "egg": "Gargoyle",
+      "rarity": "Secret",
+      "location": "Demons",
+      "timestamp": 1790642112.026,
+      "iso": "2026-09-29T00:35:12.026000+00:00"
+    },
+    {
+      "egg": "Cosmic Dragon",
+      "rarity": "Secret",
+      "location": "Cosmic",
+      "timestamp": 1790642117.081,
+      "iso": "2026-09-29T00:35:17.081000+00:00"
+    },
+    {
+      "egg": "Mosasaurus",
+      "rarity": "Eternal",
+      "location": "Prehistoric",
+      "timestamp": 1790642712.582,
+      "iso": "2026-09-29T00:45:12.582000+00:00"
+    },
+    {
+      "egg": "Cerberus",
+      "rarity": "Secret",
+      "location": "Volcano",
+      "timestamp": 1790643011.981,
+      "iso": "2026-09-29T00:50:11.981000+00:00"
+    },
+    {
+      "egg": "Stag",
+      "rarity": "Secret",
+      "location": "Cherry Blossom",
+      "timestamp": 1790643308.808,
+      "iso": "2026-09-29T00:55:08.808000+00:00"
+    },
+    {
+      "egg": "Kraken",
+      "rarity": "Secret",
+      "location": "Abyss Ocean",
+      "timestamp": 1790643611.257,
+      "iso": "2026-09-29T01:00:11.257000+00:00"
+    },
+    {
+      "egg": "Kraken",
+      "rarity": "Secret",
+      "location": "Abyss Ocean",
+      "timestamp": 1790643910.188,
+      "iso": "2026-09-29T01:05:10.188000+00:00"
+    },
+    {
+      "egg": "Pure Jellyfish",
+      "rarity": "Secret",
+      "location": "Angels",
+      "timestamp": 1790644209.299,
+      "iso": "2026-09-29T01:10:09.299000+00:00"
+    },
+    {
+      "egg": "Gorilla King",
+      "rarity": "Eternal",
+      "location": "Titan Temple",
+      "timestamp": 1790645108.385,
+      "iso": "2026-09-29T01:25:08.385000+00:00"
+    },
+    {
+      "egg": "Tralaledon",
+      "rarity": "Secret",
+      "location": "Prehistoric",
+      "timestamp": 1790645417.186,
+      "iso": "2026-09-29T01:30:17.186000+00:00"
+    },
+    {
+      "egg": "Mutant Shark",
+      "rarity": "Secret",
+      "location": "Titan Temple",
+      "timestamp": 1790645420.107,
+      "iso": "2026-09-29T01:30:20.107000+00:00"
+    },
+    {
+      "egg": "Gargoyle",
+      "rarity": "Secret",
+      "location": "Demons",
+      "timestamp": 1790646013.648,
+      "iso": "2026-09-29T01:40:13.648000+00:00"
+    },
+    {
+      "egg": "Cerberus",
+      "rarity": "Secret",
+      "location": "Volcano",
+      "timestamp": 1790646310.827,
+      "iso": "2026-09-29T01:45:10.827000+00:00"
+    },
+    {
+      "egg": "Cosmic Dragon",
+      "rarity": "Secret",
+      "location": "Cosmic",
+      "timestamp": 1790646912.066,
+      "iso": "2026-09-29T01:55:12.066000+00:00"
+    },
+    {
+      "egg": "Pure Jellyfish",
+      "rarity": "Secret",
+      "location": "Angels",
+      "timestamp": 1790647213.615,
+      "iso": "2026-09-29T02:00:13.615000+00:00"
+    },
+    {
+      "egg": "Yeti",
+      "rarity": "Secret",
+      "location": "Snow",
+      "timestamp": 1790647512.601,
+      "iso": "2026-09-29T02:05:12.601000+00:00"
+    },
+    {
+      "egg": "Pure Jellyfish",
+      "rarity": "Secret",
+      "location": "Angels",
+      "timestamp": 1790648107.672,
+      "iso": "2026-09-29T02:15:07.672000+00:00"
+    },
+    {
+      "egg": "Gorilla King",
+      "rarity": "Eternal",
+      "location": "Titan Temple",
+      "timestamp": 1790648419.711,
+      "iso": "2026-09-29T02:20:19.711000+00:00"
+    },
+    {
+      "egg": "Gargoyle",
+      "rarity": "Secret",
+      "location": "Demons",
+      "timestamp": 1790648424.332,
+      "iso": "2026-09-29T02:20:24.332000+00:00"
+    },
+    {
+      "egg": "Gargoyle",
+      "rarity": "Secret",
+      "location": "Demons",
+      "timestamp": 1790648709.823,
+      "iso": "2026-09-29T02:25:09.823000+00:00"
+    },
+    {
+      "egg": "Gargoyle",
+      "rarity": "Secret",
+      "location": "Demons",
+      "timestamp": 1790649035.899,
+      "iso": "2026-09-29T02:30:35.899000+00:00"
+    },
+    {
+      "egg": "Tralaledon",
+      "rarity": "Secret",
+      "location": "Prehistoric",
+      "timestamp": 1790649040.663,
+      "iso": "2026-09-29T02:30:40.663000+00:00"
+    },
+    {
+      "egg": "Pure Jellyfish",
+      "rarity": "Secret",
+      "location": "Angels",
+      "timestamp": 1790649310.266,
+      "iso": "2026-09-29T02:35:10.266000+00:00"
+    },
+    {
+      "egg": "Mutant Shark",
+      "rarity": "Secret",
+      "location": "Titan Temple",
+      "timestamp": 1790649609.695,
+      "iso": "2026-09-29T02:40:09.695000+00:00"
+    },
+    {
+      "egg": "Lava Dragon",
+      "rarity": "Eternal",
+      "location": "Volcano",
+      "timestamp": 1790649910.233,
+      "iso": "2026-09-29T02:45:10.233000+00:00"
+    },
+    {
+      "egg": "Cerberus",
+      "rarity": "Secret",
+      "location": "Volcano",
+      "timestamp": 1790650214.871,
+      "iso": "2026-09-29T02:50:14.871000+00:00"
+    },
+    {
+      "egg": "Mutant Shark",
+      "rarity": "Secret",
+      "location": "Titan Temple",
+      "timestamp": 1790650508.935,
+      "iso": "2026-09-29T02:55:08.935000+00:00"
+    },
+    {
+      "egg": "Cosmic Skeleton Boss",
+      "rarity": "Secret",
+      "location": "Cosmic",
+      "timestamp": 1790650807.936,
+      "iso": "2026-09-29T03:00:07.936000+00:00"
+    },
+    {
+      "egg": "Pure Jellyfish",
+      "rarity": "Secret",
+      "location": "Angels",
+      "timestamp": 1790651110.158,
+      "iso": "2026-09-29T03:05:10.158000+00:00"
+    },
+    {
+      "egg": "Pure Jellyfish",
+      "rarity": "Secret",
+      "location": "Angels",
+      "timestamp": 1790651415.846,
+      "iso": "2026-09-29T03:10:15.846000+00:00"
+    },
+    {
+      "egg": "Oni Tiger",
+      "rarity": "Eternal",
+      "location": "Cherry Blossom",
+      "timestamp": 1790651710.384,
+      "iso": "2026-09-29T03:15:10.384000+00:00"
+    },
+    {
+      "egg": "Gargoyle",
+      "rarity": "Secret",
+      "location": "Demons",
+      "timestamp": 1790652033.4,
+      "iso": "2026-09-29T03:20:33.400000+00:00"
+    },
+    {
+      "egg": "Stag",
+      "rarity": "Secret",
+      "location": "Cherry Blossom",
+      "timestamp": 1790652046.654,
+      "iso": "2026-09-29T03:20:46.654000+00:00"
+    },
+    {
+      "egg": "T-Rex",
+      "rarity": "Secret",
+      "location": "Prehistoric",
+      "timestamp": 1790652057.064,
+      "iso": "2026-09-29T03:20:57.064000+00:00"
+    }
+  ]
+}

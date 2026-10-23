@@ -1,0 +1,19 @@
+# Ignore heavy promo assets and media from Railway deployment
+promo/
+promo_build/
+promo_new_build/
+*.mp4
+*.wav
+*.mp3
+preview_*.png
+verify_*.png
+test_*.py
+generate_*.py
+render_*.py
+mix_*.py
+preview_*.py
+export_*.py
+_temp_*.js
+__pycache__/
+*.pyc
+.env

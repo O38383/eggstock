@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Steal An Egg - Stock Radar Overlay</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700;800;900&family=Lilita+One&family=Titan+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/overlay/assets/overlay.css" onerror="this.onerror=null;this.href='overlay.css';">
+  </head>
+  <body>
+    <div class="stream-container" id="stream-container" aria-live="polite">
+
+      <!-- LEFT COLUMN: ANGELS & DEMONS (TOP) + DIVINE EGGS (BOTTOM) + RIFT BOSS -->
+      <aside class="stream-left-col">
+        <!-- ANGELS & DEMONS RADAR HUD -->
+        <div class="angels-demons-hud">
+          <div class="ad-header">
+            <div class="ad-header-banner">
+              <span class="ad-side-art ad-art-angel" aria-hidden="true">
+                <svg viewBox="0 0 40 40" width="34" height="34">
+                  <defs>
+                    <linearGradient id="angGold" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stop-color="#fff" />
+                      <stop offset="50%" stop-color="#fef08a" />
+                      <stop offset="100%" stop-color="#eab308" />
+                    </linearGradient>
+                  </defs>
+                  <!-- Halo -->
+                  <ellipse cx="20" cy="8" rx="9" ry="3" fill="none" stroke="#fef08a" stroke-width="2.5" />
+                  <!-- Angel Wings -->
+                  <path d="M12 16 C6 10, 0 14, 2 24 C4 30, 10 32, 16 26 Z" fill="url(#angGold)" opacity="0.95" />
+                  <path d="M28 16 C34 10, 40 14, 38 24 C36 30, 30 32, 24 26 Z" fill="url(#angGold)" opacity="0.95" />
+                  <!-- Angel Head/Body -->
+                  <circle cx="20" cy="18" r="6" fill="#ffffff" />
+                  <path d="M14 26 C14 22, 26 22, 26 26 L24 38 L16 38 Z" fill="#ffffff" opacity="0.9" />
+                </svg>
+              </span>
+              <div class="ad-title-block">
+                <div class="ad-title">ANGELS &amp; DEMONS</div>
+                <div class="ad-subtitle">RADAR BY GFLOW</div>
+              </div>
+              <span class="ad-side-art ad-art-demon" aria-hidden="true">
+                <svg viewBox="0 0 40 40" width="34" height="34">
+                  <defs>
+                    <linearGradient id="demRed" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stop-color="#ff7b7b" />
+                      <stop offset="50%" stop-color="#ef4444" />
+                      <stop offset="100%" stop-color="#7f1d1d" />
+                    </linearGradient>
+                  </defs>
+                  <!-- Horns -->
+                  <path d="M15 15 C13 8, 8 8, 10 16 Z" fill="#f87171" />
+                  <path d="M25 15 C27 8, 32 8, 30 16 Z" fill="#f87171" />
+                  <!-- Demon Wings -->
+                  <path d="M12 18 C4 12, -2 20, 2 28 C6 34, 12 32, 15 26 Z" fill="url(#demRed)" opacity="0.95" />
+                  <path d="M28 18 C36 12, 42 20, 38 28 C34 34, 28 32, 25 26 Z" fill="url(#demRed)" opacity="0.95" />
+                  <!-- Demon Head/Body -->
+                  <circle cx="20" cy="19" r="6.5" fill="#b91c1c" />
+                  <ellipse cx="18" cy="18" rx="1.2" ry="1.8" fill="#facc15" />
+                  <ellipse cx="22" cy="18" rx="1.2" ry="1.8" fill="#facc15" />
+                  <path d="M14 27 C14 23, 26 23, 26 27 L25 38 L15 38 Z" fill="#7f1d1d" />
+                </svg>
+              </span>
+            </div>
+          </div>
+          <div class="ad-stats-row">
+            <div class="ad-stat-box ad-angels">
+              <span class="ad-label">ANGELS</span>
+              <strong class="ad-count" id="ad-angels-count">0</strong>
+            </div>
+            <div class="ad-stat-box ad-merged">
+              <span class="ad-label">A &amp; D</span>
+              <strong class="ad-count" id="ad-merged-count">0</strong>
+            </div>
+            <div class="ad-stat-box ad-demons">
+              <span class="ad-label">DEMONS</span>
+              <strong class="ad-count" id="ad-demons-count">0</strong>
+            </div>
+          </div>
+          <div class="ad-feed-header">
+            <span>LATEST 6 DROPS</span>
+            <span class="ad-tz">NY TIME</span>
+          </div>
+          <div class="ad-feed-list" id="ad-drop-feed">
+            <div class="ad-empty">LISTENING FOR A&amp;D DROPS...</div>
+          </div>
+        </div>
+
+        <!-- DIVINE EGGS RADAR HUD -->
+        <div class="divine-hud">
+          <div class="divine-header">
+            <div class="divine-header-left">
+              <span class="divine-egg-icon">✨</span>
+              <div class="divine-header-text">
+                <span class="divine-title">DIVINE EGGS</span>
+                <span class="divine-tz">NEW YORK TIME</span>
+              </div>
+            </div>
+            <div class="divine-found-badge">
+              <span id="divine-found-count">0</span> FOUND
+            </div>
+          </div>
+          <div class="divine-feed-list" id="divine-drop-feed">
+            <div class="divine-empty">NO DIVINE DROPS RECORDED YET</div>
+          </div>
+        </div>
+
+        <!-- RIFT BOSS HUD (Hidden by default to match stream reference, toggle via ?rift=true) -->
+        <div class="wave-hud rift-hud" id="rift-hud" style="display: none;">
+          <div class="wave-header rift-header">
+            <span>⚡ NEXT RIFT BOSS</span>
+          </div>
+          <div class="wave-screen rift-screen" id="rift-screen">
+            <div class="wave-digits rift-digits" id="rift-time">--:--</div>
+          </div>
+          <div class="wave-hud-footer rift-footer">
+            <div class="wave-detail" id="rift-detail">EVERY 30 MIN · SERVER-WIDE</div>
+            <div class="wave-meta">
+              <span id="rift-at">OPENS AT --:--</span>
+              <span id="rift-label">ABYSSAL OVERLORD</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- CENTER TOP: NEXT EGG WAVE + ALARM ON BOX -->
+      <div class="stream-center-top">
+        <div class="wave-hud-wrap">
+          <div class="wave-hud">
+            <div class="wave-header">
+              <span>NEXT EGG WAVE</span>
+            </div>
+            <div class="wave-screen" id="wave-screen">
+              <div class="wave-digits" id="wave-time">--:--</div>
+            </div>
+            <div class="wave-hud-footer">
+              <div class="wave-detail" id="wave-detail">MEDIAN GAP · --:--</div>
+              <div class="confidence-bar"><span id="confidence-fill"></span></div>
+              <div class="wave-meta">
+                <span id="wave-basis">ESTIMATE: OBSERVED</span>
+                <span id="wave-samples">0 SAMPLES</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- DEDICATED ALARM BOX (HANGING DIRECTLY UNDERNEATH) -->
+          <div class="wave-alarm-box" id="alarm-box" title="Click to test or toggle 30s + 10s Voice Alerts">
+            <div class="alarm-box-content">
+              <span class="alarm-led-dot" id="alarm-led"></span>
+              <div class="alarm-text-group">
+                <span class="alarm-title-text" id="alarm-status-text">ALARM ON</span>
+                <span class="alarm-sub-text">BY GFLOW · VOICE ALERTS</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: MAIN RADAR BOARD -->
+      <main class="stream-right-col">
+        <div class="radar-board">
+
+          <!-- HEADER / MASTHEAD -->
+          <header class="board-header">
+            <div class="header-egg-wrap" aria-hidden="true">
+              <svg class="egg-svg" viewBox="0 0 100 125" width="46" height="58">
+                <defs>
+                  <radialGradient id="eggGrad" cx="35%" cy="30%" r="70%">
+                    <stop offset="0%" stop-color="#ffe770"/>
+                    <stop offset="35%" stop-color="#f59e0b"/>
+                    <stop offset="85%" stop-color="#b45309"/>
+                    <stop offset="100%" stop-color="#78350f"/>
+                  </radialGradient>
+                  <clipPath id="eggClip">
+                    <path d="M50 4 C24 4, 6 36, 6 78 C6 104, 26 122, 50 122 C74 122, 94 104, 94 78 C94 36, 76 4, 50 4 Z"/>
+                  </clipPath>
+                </defs>
+                <!-- Base Egg Shape -->
+                <path d="M50 4 C24 4, 6 36, 6 78 C6 104, 26 122, 50 122 C74 122, 94 104, 94 78 C94 36, 76 4, 50 4 Z" fill="url(#eggGrad)" stroke="#3e1a00" stroke-width="4"/>
+                <!-- Diagonal Stripes -->
+                <g clip-path="url(#eggClip)" stroke="#682a00" stroke-width="8" opacity="0.85">
+                  <line x1="-20" y1="20" x2="120" y2="80" />
+                  <line x1="-20" y1="50" x2="120" y2="110" />
+                  <line x1="-20" y1="80" x2="120" y2="140" />
+                </g>
+                <!-- Specular Highlight -->
+                <ellipse cx="32" cy="36" rx="14" ry="24" fill="#ffffff" opacity="0.45" transform="rotate(-20 32 36)"/>
+              </svg>
+            </div>
+
+            <div class="header-center">
+              <h1 class="game-title">STEAL <span>AN</span> EGG</h1>
+              <div class="header-pill pill--live">
+                <span class="live-dot"></span>
+                <span>LIVE ONLINE RADAR</span>
+              </div>
+              <div class="header-pill pill--credit">
+                <span>RADAR BY GFLOW</span>
+              </div>
+            </div>
+
+            <div class="roblox-badge">
+              <div class="roblox-badge-top">
+                <span class="roblox-box-icon"></span>
+                <span class="roblox-text">ROBLOX</span>
+              </div>
+              <div class="roblox-badge-date" id="roblox-date">NY · SEP 05</div>
+              <div class="roblox-badge-time" id="roblox-time">10:40 PM</div>
+            </div>
+          </header>
+
+          <!-- ROW 1: 3 PASTEL STATS CARDS -->
+          <section class="stats-row-pastel">
+            <div class="pastel-box box--session">
+              <span class="box-label">SESSION DROPS</span>
+              <strong class="box-val" id="session-drops">0</strong>
+            </div>
+            <div class="pastel-box box--last-time">
+              <span class="box-label">LAST EGG TIME</span>
+              <strong class="box-val" id="last-egg-time">--:--</strong>
+            </div>
+            <div class="pastel-box box--since-last">
+              <span class="box-label">SINCE LAST DROP</span>
+              <strong class="box-val" id="since-last-drop">00:00:00</strong>
+            </div>
+          </section>
+
+          <!-- ROW 2: 4 RARITY & PLAYERS CARDS -->
+          <section class="stats-row-rarity">
+            <div class="rarity-box rarity--secret">
+              <span class="r-label">SECRET</span>
+              <strong class="r-val" id="secret-count">0</strong>
+            </div>
+            <div class="rarity-box rarity--eternal">
+              <span class="r-label">ETERNAL</span>
+              <strong class="r-val" id="eternal-count">0</strong>
+            </div>
+            <div class="rarity-box rarity--divine">
+              <span class="r-label">DIVINE</span>
+              <strong class="r-val" id="divine-count">0</strong>
+            </div>
+            <div class="rarity-box rarity--players">
+              <div class="players-header">
+                <span class="players-icon">👤</span>
+                <span class="r-label">PLAYING NOW</span>
+              </div>
+              <strong class="r-val" id="player-count">—</strong>
+            </div>
+          </section>
+
+          <!-- ROW 3: 3 SECONDARY TIMERS -->
+          <section class="stats-row-timers">
+            <div class="timer-box timer--eternal">
+              <span class="t-label">SINCE ETERNAL</span>
+              <strong class="t-val" id="since-eternal">--:--:--</strong>
+            </div>
+            <div class="timer-box timer--admin">
+              <span class="t-label">NEXT ADMIN ABUSE</span>
+              <strong class="t-val" id="admin-countdown">--:--:--</strong>
+              <span class="t-sub" id="admin-subtext">SATURDAY 11 AM ET</span>
+            </div>
+            <div class="timer-box timer--divine">
+              <span class="t-label">SINCE DIVINE</span>
+              <strong class="t-val" id="since-divine">--:--:--</strong>
+            </div>
+          </section>
+
+          <!-- LIVE DROP FEED TABLE -->
+          <section class="drop-feed-section">
+            <div class="feed-list" id="drop-feed">
+              <div class="empty-feed">
+                <span>LISTENING FOR LIVE DROPS...</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- FOOTER STATUS -->
+          <footer class="board-footer">
+            <div class="footer-left">
+              <span class="status-indicator" id="status-indicator"></span>
+              <span id="connection-status">LIVE DATA · AUTO-REFRESH 2S</span>
+            </div>
+            <div class="footer-right" id="clock">UTC --:--:--</div>
+          </footer>
+
+        </div>
+      </main>
+    </div>
+
+    <script src="/overlay/assets/overlay.js" onerror="this.onerror=null;this.src='overlay.js';"></script>
+  </body>
+</html>

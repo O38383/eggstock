@@ -1,0 +1,826 @@
+:root {
+  --bg-dark: #0d0714;
+  --bg-card: #170e28;
+  --bg-card-alt: #201338;
+  --border-card: #311c52;
+  --text-main: #f8fafc;
+  --text-sub: #94a3b8;
+  --lime-glow: #7be81a;
+  --purple-glow: #a855f7;
+  --gold-glow: #fbbf24;
+  --cyan-glow: #38bdf8;
+  --rose-glow: #f43f5e;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  font-family: "Fredoka", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ================================================================
+   TOP NAVIGATION
+   ================================================================ */
+.navbar {
+  background: rgba(19, 11, 35, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 2px solid var(--border-card);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-egg-svg {
+  width: 38px;
+  height: 48px;
+  filter: drop-shadow(0 2px 8px rgba(245, 158, 11, 0.5));
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-title {
+  font-family: "Lilita One", sans-serif;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: 0.03em;
+  background: linear-gradient(180deg, #ffffff 30%, #fef08a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brand-title em {
+  font-style: italic;
+  font-size: 19px;
+}
+
+.brand-sub {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #a78bfa;
+}
+
+.live-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(34, 197, 94, 0.15);
+  border: 1.5px solid #22c55e;
+  color: #4ade80;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+}
+
+.live-pill .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+  animation: pulseDot 1.2s infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.roblox-players-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(59, 130, 246, 0.12);
+  border: 1.5px solid #3b82f6;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #bfdbfe;
+}
+
+.players-label {
+  font-size: 9px;
+  color: #60a5fa;
+  font-weight: 900;
+}
+
+.btn-sound {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #23163e;
+  border: 1.5px solid #4c2d82;
+  color: #cbd5e1;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-family: "Fredoka", sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-sound:hover {
+  background: #311c57;
+  border-color: #7c3aed;
+  color: #ffffff;
+}
+
+.btn-sound.sound-active {
+  background: rgba(34, 197, 94, 0.2);
+  border-color: #22c55e;
+  color: #86efac;
+  box-shadow: 0 0 14px rgba(34, 197, 94, 0.35);
+}
+
+.btn-play {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(180deg, #e11d48 0%, #be123c 100%);
+  border: 1.5px solid #fb7185;
+  color: #ffffff;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-family: "Lilita One", sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  box-shadow: 0 3px 10px rgba(225, 29, 72, 0.4);
+  transition: transform 0.15s ease;
+}
+
+.btn-play:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.1);
+}
+
+.external-icon {
+  width: 14px;
+  height: 14px;
+}
+
+/* ================================================================
+   MAIN CONTENT CONTAINER
+   ================================================================ */
+.main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 18px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  flex: 1;
+}
+
+/* ================================================================
+   HERO TIMERS GRID
+   ================================================================ */
+.timers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.timer-card {
+  background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-card-alt) 100%);
+  border: 2px solid var(--border-card);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.timer-card:hover {
+  border-color: #5b339d;
+  transform: translateY(-2px);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.card-tag {
+  background: #251842;
+  border: 1px solid #4a2d80;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #c4b5fd;
+}
+
+.tag--purple {
+  background: #3b0764;
+  border-color: #7c3aed;
+  color: #f5d0fe;
+}
+
+.tag--gold {
+  background: #451a03;
+  border-color: #b45309;
+  color: #fde047;
+}
+
+.card-title {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-sub);
+  letter-spacing: 0.05em;
+}
+
+.timer-display {
+  text-align: center;
+  padding: 10px 0;
+}
+
+.timer-digits {
+  font-family: "Lilita One", sans-serif;
+  font-size: 54px;
+  line-height: 1;
+  color: #ffffff;
+  letter-spacing: 0.03em;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.card--wave .timer-digits {
+  color: #a3e635;
+  text-shadow: 0 0 20px rgba(163, 230, 53, 0.4);
+}
+
+.card--rift .timer-digits {
+  color: #c084fc;
+  text-shadow: 0 0 22px rgba(192, 132, 252, 0.45);
+}
+
+.timer-sub {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-sub);
+  margin-top: 6px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.confidence-wrap {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.confidence-bar {
+  height: 6px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.confidence-bar span {
+  display: block;
+  height: 100%;
+  width: 8%;
+  background: #7be81a;
+  border-radius: 4px;
+  transition: width 0.4s ease, background 0.4s ease;
+}
+
+.confidence-meta, .card-footer-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  font-weight: 800;
+  color: #94a3b8;
+}
+
+.boss-name {
+  color: #c084fc;
+}
+
+/* Rarity mini timers list */
+.rarity-timers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.mini-timer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.divine-mini { border-left: 4px solid #facc15; }
+.eternal-mini { border-left: 4px solid #c084fc; }
+.last-drop-mini { border-left: 4px solid #38bdf8; }
+
+.m-label {
+  font-size: 11px;
+  font-weight: 800;
+  color: #cbd5e1;
+}
+
+.m-val {
+  font-family: "Lilita One", sans-serif;
+  font-size: 16px;
+  letter-spacing: 0.03em;
+  color: #ffffff;
+}
+
+.divine-mini .m-val { color: #fde047; }
+.eternal-mini .m-val { color: #e879f9; }
+
+.roblox-ny-clock {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 800;
+  color: #64748b;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 8px;
+}
+
+.roblox-ny-clock strong {
+  color: #facc15;
+}
+
+/* Counters Row */
+.counts-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.count-pill {
+  padding: 8px;
+  border-radius: 8px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.divine-pill {
+  background: rgba(234, 179, 8, 0.15);
+  border: 1px solid #ca8a04;
+  color: #fef08a;
+}
+
+.eternal-pill {
+  background: rgba(168, 85, 247, 0.15);
+  border: 1px solid #9333ea;
+  color: #f5d0fe;
+}
+
+.secret-pill {
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid #2563eb;
+  color: #bfdbfe;
+}
+
+.total-pill {
+  background: rgba(148, 163, 184, 0.12);
+  border: 1px solid #475569;
+  color: #ffffff;
+}
+
+.p-title {
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+}
+
+.count-pill strong {
+  font-family: "Lilita One", sans-serif;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.admin-event-sub {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 800;
+  color: #94a3b8;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 8px;
+}
+
+.admin-event-sub strong {
+  color: #facc15;
+}
+
+/* ================================================================
+   FEED SECTION & FILTERS
+   ================================================================ */
+.feed-section {
+  background: var(--bg-card);
+  border: 2px solid var(--border-card);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+.feed-header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--border-card);
+  padding-bottom: 16px;
+}
+
+.feed-title-wrap h2 {
+  font-family: "Lilita One", sans-serif;
+  font-size: 22px;
+  letter-spacing: 0.03em;
+  color: #ffffff;
+}
+
+.feed-subtitle {
+  font-size: 12px;
+  color: var(--text-sub);
+}
+
+.feed-filter-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.search-wrap input {
+  background: #0f0a1d;
+  border: 1.5px solid #37215e;
+  color: #ffffff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-family: "Fredoka", sans-serif;
+  font-size: 13px;
+  outline: none;
+  min-width: 200px;
+  transition: border-color 0.2s ease;
+}
+
+.search-wrap input:focus {
+  border-color: #8b5cf6;
+}
+
+.filter-pills {
+  display: flex;
+  gap: 6px;
+}
+
+.filter-btn {
+  background: #201338;
+  border: 1px solid #4c2d82;
+  color: #94a3b8;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-family: "Fredoka", sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.filter-btn:hover {
+  background: #2f1c52;
+  color: #ffffff;
+}
+
+.filter-btn.active {
+  background: #7c3aed;
+  border-color: #a78bfa;
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.4);
+}
+
+.filter-btn.btn--divine.active {
+  background: #eab308;
+  border-color: #fde047;
+  color: #422006;
+  box-shadow: 0 0 10px rgba(234, 179, 8, 0.4);
+}
+
+.filter-btn.btn--eternal.active {
+  background: #c084fc;
+  border-color: #f5d0fe;
+  color: #3b0764;
+  box-shadow: 0 0 10px rgba(192, 132, 252, 0.4);
+}
+
+/* Feed Table */
+.feed-container {
+  border: 1.5px solid var(--border-card);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #0d0717;
+}
+
+.feed-table-header {
+  display: grid;
+  grid-template-columns: 80px 110px 100px 1fr 140px;
+  padding: 10px 14px;
+  background: #180e2b;
+  border-bottom: 1.5px solid var(--border-card);
+  font-size: 10px;
+  font-weight: 900;
+  color: #94a3b8;
+  letter-spacing: 0.06em;
+}
+
+.feed-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.web-drop-row {
+  display: grid;
+  grid-template-columns: 80px 110px 100px 1fr 140px;
+  padding: 12px 14px;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 13px;
+  font-weight: 700;
+  transition: background 0.15s ease;
+}
+
+.web-drop-row:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.web-drop-row.row--newest {
+  background: rgba(244, 63, 94, 0.1);
+  border-left: 4px solid #f43f5e;
+}
+
+.badge-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 900;
+  text-align: center;
+  letter-spacing: 0.04em;
+  width: fit-content;
+}
+
+.badge-tag.tag-newest {
+  background: #22c55e;
+  color: #052e16;
+}
+
+.badge-tag.tag-past {
+  background: #1e293b;
+  color: #94a3b8;
+}
+
+.badge-rarity {
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  width: fit-content;
+}
+
+.badge-rarity.rarity--divine {
+  background: linear-gradient(135deg, #fde047, #ca8a04);
+  color: #422006;
+}
+
+.badge-rarity.rarity--eternal {
+  background: linear-gradient(135deg, #ff7eb3, #bf55ec, #48cae4);
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.badge-rarity.rarity--secret {
+  background: #3b0764;
+  border: 1px solid #a855f7;
+  color: #f5d0fe;
+}
+
+.egg-col {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #ffffff;
+  font-weight: 800;
+}
+
+.time-col {
+  font-family: "Lilita One", sans-serif;
+  color: #cbd5e1;
+}
+
+.biome-col {
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.feed-loading {
+  padding: 32px;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+/* ================================================================
+   COMMUNITY BANNER
+   ================================================================ */
+.community-banner {
+  background: linear-gradient(135deg, #1e1035 0%, #31134a 100%);
+  border: 2px solid #581c87;
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+.banner-badge {
+  display: inline-block;
+  background: #e11d48;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 900;
+  padding: 2px 10px;
+  border-radius: 20px;
+  margin-bottom: 8px;
+  letter-spacing: 0.05em;
+}
+
+.community-banner h3 {
+  font-family: "Lilita One", sans-serif;
+  font-size: 26px;
+  margin-bottom: 6px;
+  color: #ffffff;
+}
+
+.community-banner p {
+  color: #cbd5e1;
+  font-size: 13px;
+  max-width: 600px;
+  margin: 0 auto 16px;
+}
+
+.btn-yt {
+  display: inline-flex;
+  align-items: center;
+  background: #ff0000;
+  color: #ffffff;
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-family: "Lilita One", sans-serif;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
+  transition: transform 0.15s ease;
+}
+
+.btn-yt:hover {
+  transform: scale(1.03);
+}
+
+/* ================================================================
+   FOOTER
+   ================================================================ */
+.app-footer {
+  background: #09040d;
+  border-top: 1px solid var(--border-card);
+  padding: 16px 18px;
+  font-size: 11px;
+  color: #64748b;
+  margin-top: auto;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.footer-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 800;
+  color: #94a3b8;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 6px #22c55e;
+}
+
+.footer-copy strong {
+  color: #a78bfa;
+}
+
+/* ================================================================
+   RESPONSIVE ADJUSTMENTS (MOBILE PHONES)
+   ================================================================ */
+@media (max-width: 768px) {
+  .feed-table-header {
+    display: none;
+  }
+
+  .web-drop-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 12px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.02);
+    margin-bottom: 6px;
+  }
+
+  .nav-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nav-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .brand-title {
+    font-size: 20px;
+  }
+
+  .timer-digits {
+    font-size: 44px;
+  }
+}
