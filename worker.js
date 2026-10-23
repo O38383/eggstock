@@ -76,6 +76,18 @@ button { background: #00f0ff; color: #000; border: none; padding: 10px 20px; fon
       }
     }
 
+    // Handle Monetag push service worker
+    if (url.pathname === "/sw.js") {
+      const swResponse = await env.ASSETS.fetch(request);
+      const headers = new Headers(swResponse.headers);
+      headers.set("Content-Type", "application/javascript");
+      headers.set("Service-Worker-Allowed", "/");
+      return new Response(swResponse.body, {
+        status: swResponse.status,
+        headers: headers
+      });
+    }
+
     // Proxy API calls directly to Railway live bot backend
     if (url.pathname.startsWith("/api/")) {
       const backendUrl = "https://eggstock-web-production.up.railway.app" + url.pathname + url.search;
