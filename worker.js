@@ -2,6 +2,80 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
+    // Handle OAuth callback from Monetag
+    if (url.pathname === "/oauth/callback") {
+      const code = url.searchParams.get("code");
+      const error = url.searchParams.get("error");
+      if (error) {
+        return new Response(`<h1>OAuth Error: ${error}</h1>`, {
+          status: 400,
+          headers: { "Content-Type": "text/html" }
+        });
+      }
+      if (!code) {
+        return new Response(`<h1>Missing authorization code</h1>`, {
+          status: 400,
+          headers: { "Content-Type": "text/html" }
+        });
+      }
+
+      // Automatically exchange authorization code for access token via PKCE
+      const tokenUrl = "https://publishers.monetag.com/api/oauth2/token";
+      const verifier = "EggStockMonetagMcpVerifierSecureKey20261023SafeRandomStr999";
+      const clientId = "mcp_dyn_2fe369d9bc20f449bd5ec09ae1bba14b";
+      const redirectUri = "https://eggstock.xyz/oauth/callback";
+
+      const tokenParams = new URLSearchParams();
+      tokenParams.set("grant_type", "authorization_code");
+      tokenParams.set("client_id", clientId);
+      tokenParams.set("code", code);
+      tokenParams.set("redirect_uri", redirectUri);
+      tokenParams.set("code_verifier", verifier);
+
+      try {
+        const tokenRes = await fetch(tokenUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: tokenParams.toString()
+        });
+        const tokenData = await tokenRes.json();
+        const tokenVal = tokenData.access_token || JSON.stringify(tokenData);
+
+        const html = `<!DOCTYPE html>
+<html>
+<head><title>Monetag MCP Authorized</title>
+<style>
+body { background: #0b0f19; color: #fff; font-family: monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+.card { background: #161f30; padding: 2rem; border-radius: 12px; border: 1px solid #00f0ff; max-width: 600px; width: 90%; }
+h1 { color: #00f0ff; margin-top: 0; }
+textarea { width: 100%; height: 90px; background: #090d16; color: #00ff66; border: 1px solid #334155; padding: 10px; font-family: monospace; border-radius: 6px; box-sizing: border-box; }
+button { background: #00f0ff; color: #000; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 10px; }
+</style>
+</head>
+<body>
+<div class="card">
+<h1>🎉 Monetag Connected!</h1>
+<p>Here is your Monetag MCP Access Token:</p>
+<textarea id="tok" readonly>${tokenVal}</textarea>
+<br>
+<button onclick="navigator.clipboard.writeText(document.getElementById('tok').value); this.innerText='COPIED!';">📋 Copy Token</button>
+<p style="color: #94a3b8; font-size: 0.85rem; margin-top: 1rem;">Paste this token back into chat to finish setup!</p>
+</div>
+</body>
+</html>`;
+
+        return new Response(html, {
+          status: 200,
+          headers: { "Content-Type": "text/html" }
+        });
+      } catch (e) {
+        return new Response(`<h1>Exchange Error: ${e.message}</h1><p>Code: ${code}</p>`, {
+          status: 500,
+          headers: { "Content-Type": "text/html" }
+        });
+      }
+    }
+
     // Proxy API calls directly to Railway live bot backend
     if (url.pathname.startsWith("/api/")) {
       const backendUrl = "https://eggstock-web-production.up.railway.app" + url.pathname + url.search;
