@@ -2852,12 +2852,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ── 11. Polling & Data Engine ──
+    const STATUS_API_DIRECT = "https://eggstock-web-production.up.railway.app/api/status";
+
     async function poll() {
         try {
-            const res = await fetch("/api/status", {
-                headers: window.__ES_TOKEN ? { "X-EggStock-Token": window.__ES_TOKEN } : {}
-            });
-            if (!res.ok) return;
+            let res;
+            try {
+                res = await fetch(STATUS_API_DIRECT);
+                if (!res.ok) throw new Error("Direct status failed, trying proxy");
+            } catch (e) {
+                res = await fetch("/api/status");
+            }
+            if (!res || !res.ok) return;
             const data = await res.json();
             lastData = data;
 
