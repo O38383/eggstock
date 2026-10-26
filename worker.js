@@ -124,7 +124,31 @@ button { background: #00f0ff; color: #000; border: none; padding: 10px 20px; fon
       return env.ASSETS.fetch(new Request(new URL("/index.html", request.url), request));
     }
 
-    // Serve all static assets from ./website
-    return env.ASSETS.fetch(request);
+    // Clean URL mappings for canonical pages & sitemap entries
+    const cleanPath = url.pathname.replace(/\/$/, "");
+    if (cleanPath === "/tier-list" || cleanPath === "/tierlist" || cleanPath === "/tier_list") {
+      return env.ASSETS.fetch(new Request(new URL("/tier_list.html", request.url), request));
+    }
+
+    // Sitemap landing sections -> index.html
+    const indexSections = ["/stock", "/predictions", "/notifier", "/values", "/trading"];
+    if (indexSections.includes(cleanPath)) {
+      return env.ASSETS.fetch(new Request(new URL("/index.html", request.url), request));
+    }
+
+    // Serve static assets from ./website with automatic .html and SPA 404 fallback (prevents origin 429s)
+    let assetResponse = await env.ASSETS.fetch(request);
+    if (assetResponse.status === 404 && !url.pathname.includes(".")) {
+      // Try resolving with .html appended
+      const htmlUrl = new URL(url.pathname + ".html", request.url);
+      const htmlResponse = await env.ASSETS.fetch(new Request(htmlUrl, request));
+      if (htmlResponse.status === 200) {
+        return htmlResponse;
+      }
+      // Clean SPA fallback to index.html instead of hitting rate-limited origin
+      return env.ASSETS.fetch(new Request(new URL("/index.html", request.url), request));
+    }
+
+    return assetResponse;
   }
 };
