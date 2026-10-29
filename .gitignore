@@ -27,3 +27,9 @@ mix_*.py
 preview_*.py
 export_*.py
 _temp_*.js
+
+# Secret credentials
+*credentials*.json
+*.key
+check_cf_*.py
+
