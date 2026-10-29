@@ -12,9 +12,9 @@
 
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
-<title>Steal An Egg Notifier & Audio Sniper Alerts (October 29, 2026) | EggStock</title>
-<meta name="description" content="Free Roblox Steal An Egg egg notifier and Audio Sniper. Get instant sound alerts and Discord pings the second a Secret or Divine egg drops."/>
-<meta name="keywords" content="steal an egg stock, steal an egg live stock, steal an egg radar, steal an egg prediction, steal an egg notifier, roblox steal an egg, kitsune egg stock, nightflame egg spawn, steal an egg admin abuse, steal an egg codes, steal an egg tier list, steal an egg october 2026, eggstock"/>
+<title>Steal An Egg Notifier | Instant Egg Spawn Alerts & Sound Radar (2026) — EggStock</title>
+<meta name="description" content="Official #1 Roblox Steal An Egg egg notifier and live spawn alert radar. Get instant audio sirens, browser push notifications, and 24/7 Discord webhook pings the second Secret or Divine eggs drop in-game!"/>
+<meta name="keywords" content="egg notifier steal an egg, steal an egg egg notifier, steal an egg notifier, steal an egg sound alert, steal an egg live stock, steal an egg discord alerts, kitsune egg alert, nightflame spawn alert, steal an egg radar, eggstock"/>
 <meta name="author" content="EggStock"/>
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"/>
 <link rel="canonical" href="https://eggstock.xyz/notifier"/>
@@ -567,19 +567,47 @@
         <div class="lg:col-span-7 flex flex-col space-y-4 sm:space-y-5">
             <!-- Pill Status Badge -->
             <div class="inline-flex items-center gap-2 bg-[#131722] px-3 py-1 w-max border border-black shadow-[2px_2px_0px_#000]">
-                <span class="w-2 h-2 rounded-full bg-[#00f0ff] animate-ping"></span>
-                <span class="text-[11px] font-mono font-bold uppercase text-[#00f0ff]">● 24/7 Live Steal An Egg Stock Radar</span>
+                <span class="w-2 h-2 rounded-full bg-[#00ff66] animate-ping"></span>
+                <span class="text-[11px] font-mono font-bold uppercase text-[#00ff66]">● 24/7 Live Egg Notifier Active</span>
             </div>
 
-            <!-- Big Confident Headline -->
+            <!-- Big Confident Headline targeting #1 search ranking -->
             <h1 class="font-display font-black text-3xl sm:text-5xl lg:text-6xl uppercase text-white leading-[1.05] tracking-tight">
-                STEAL AN EGG STOCK<br/>
-                <span class="text-[#00f0ff]">LIVE 24/7 SPAWN TRACKER</span>
+                STEAL AN EGG NOTIFIER<br/>
+                <span class="text-[#00f0ff]">LIVE EGG SPAWN &amp; SOUND ALERTS</span>
             </h1>
 
             <p class="text-xs sm:text-sm text-slate-300 max-w-lg leading-relaxed">
-                The #1 real-time Steal An Egg stock tracker. Monitor Secret, Eternal, and Divine egg drops across active Roblox servers with sub-second wave countdowns, all 12 in-game biomes (Forest to Angels &amp; Demons), and verified hatch odds.
+                The official #1 Roblox Steal An Egg egg notifier. Arm instant audio sirens, browser push notifications, and Discord webhook pings the second Secret, Eternal, or Divine eggs drop across all 12 biomes.
             </p>
+
+            <!-- NOTIFIER COMMAND CENTER: PUSH, SOUND & DISCORD -->
+            <div class="bg-[#101522] border-2 border-[#00f0ff] p-4 sm:p-5 shadow-[4px_4px_0px_#000] space-y-3 neo-card">
+                <div class="flex items-center justify-between border-b border-black/40 pb-2">
+                    <span class="font-display font-black text-xs sm:text-sm uppercase text-[#00f0ff] flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-[#00ff66] animate-pulse"></span>
+                        Egg Notifier Alert Controls
+                    </span>
+                    <span class="text-[10px] font-mono text-slate-400">Sub-second Live Telemetry</span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                    <button id="btn-browser-push" class="bg-[#00f0ff] hover:bg-[#7df4ff] text-black font-display font-black text-xs uppercase p-3 neo-btn flex items-center justify-center gap-1.5 transition-all cursor-pointer">
+                        <span class="material-symbols-outlined text-[18px]">notifications_active</span>
+                        <span id="push-btn-txt">🔔 Arm Push Alerts</span>
+                    </button>
+                    <button id="btn-sound-siren" class="bg-[#181d2c] hover:bg-[#23293d] text-[#fbff00] border border-black font-display font-black text-xs uppercase p-3 neo-btn flex items-center justify-center gap-1.5 cursor-pointer">
+                        <span class="material-symbols-outlined text-[18px]">volume_up</span>
+                        <span id="siren-btn-txt">🔊 Siren Sound: ON</span>
+                    </button>
+                    <a href="https://discord.gg/Jmvam6Ktgm" target="_blank" rel="noopener noreferrer" class="bg-[#5865F2] hover:bg-[#4752C4] text-white font-display font-black text-xs uppercase p-3 neo-btn flex items-center justify-center gap-1.5 no-underline">
+                        <span class="material-symbols-outlined text-[18px]">chat</span>
+                        <span>Discord Pings ↗</span>
+                    </a>
+                </div>
+                <p class="text-[11px] font-mono text-slate-400 flex items-center gap-1 pt-1">
+                    <span>⚡ Alerts trigger instantly on Kitsune, Nightflame, Pure Jellyfish, Gorilla King, and all Secret eggs.</span>
+                </p>
+            </div>
 
             <!-- Primary CTAs -->
             <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
@@ -3218,9 +3246,11 @@ document.addEventListener("DOMContentLoaded", () => {
                             showToast(`🎯 TARGET DETECTED: ${latest.egg} spawned in ${latest.location || 'World'}!`);
                         } else if (r === "divine") {
                             playChime(true);
+                            fireEggNotification(latest);
                             showToast(`👑 DIVINE SPAWN: ${latest.egg} in ${latest.location || 'World'}!`);
                         } else if (r === "eternal" || r === "secret") {
                             playChime(false);
+                            fireEggNotification(latest);
                         }
                     }
                     lastNotifiedTime = latest.time;
@@ -3481,6 +3511,89 @@ window.finishGateway = function() {
         window.location.href = "/";
     }
 };
+
+    // ── Browser Push Notification Engine ──
+    let pushEnabled = localStorage.getItem("egg_push_enabled") === "true";
+    const pushBtn = document.getElementById("btn-browser-push");
+    const pushTxt = document.getElementById("push-btn-txt");
+    const sirenBtn = document.getElementById("btn-sound-siren");
+    const sirenTxt = document.getElementById("siren-btn-txt");
+
+    function updatePushBtnUI() {
+        if (!pushBtn || !pushTxt) return;
+        if (!("Notification" in window)) {
+            pushTxt.textContent = "🔔 Push Not Supported";
+            pushBtn.disabled = true;
+            return;
+        }
+        if (Notification.permission === "granted" && pushEnabled) {
+            pushTxt.textContent = "✅ Push Alerts Armed";
+            pushBtn.classList.replace("bg-[#00f0ff]", "bg-[#00ff66]");
+        } else {
+            pushTxt.textContent = "🔔 Arm Push Alerts";
+            pushBtn.classList.replace("bg-[#00ff66]", "bg-[#00f0ff]");
+        }
+    }
+
+    if (pushBtn) {
+        updatePushBtnUI();
+        pushBtn.addEventListener("click", async () => {
+            if (!("Notification" in window)) {
+                showToast("⚠️ Browser does not support push notifications");
+                return;
+            }
+            try {
+                const perm = await Notification.requestPermission();
+                if (perm === "granted") {
+                    pushEnabled = true;
+                    localStorage.setItem("egg_push_enabled", "true");
+                    updatePushBtnUI();
+                    showToast("🔔 Steal An Egg Notifier Armed! You will receive live alerts.");
+                    new Notification("🚨 Steal An Egg Notifier Armed!", {
+                        body: "Live alerts are active! You will be notified the instant Secret & Divine eggs spawn.",
+                        icon: "/favicon-192x192.png",
+                        tag: "eggstock-welcome"
+                    });
+                } else {
+                    showToast("⚠️ Push permission was not granted");
+                }
+            } catch (e) {
+                console.warn("Notification error:", e);
+            }
+        });
+    }
+
+    if (sirenBtn && sirenTxt) {
+        sirenBtn.addEventListener("click", () => {
+            toggleSound();
+            sirenTxt.textContent = soundEnabled ? "🔊 Siren Sound: ON" : "🔇 Siren Sound: OFF";
+            sirenBtn.classList.toggle("text-[#fbff00]", soundEnabled);
+            sirenBtn.classList.toggle("text-slate-400", !soundEnabled);
+        });
+    }
+
+    function fireEggNotification(drop) {
+        if (!drop || !drop.egg || !pushEnabled || !("Notification" in window) || Notification.permission !== "granted") return;
+        try {
+            const r = (drop.rarity || "").toUpperCase();
+            const title = `🚨 ${r} EGG SPAWNED: ${drop.egg}!`;
+            const body = `📍 Spawned in ${drop.location || 'Unknown World'}! Click to open live radar.`;
+            const notif = new Notification(title, {
+                body: body,
+                icon: "/favicon-192x192.png",
+                badge: "/favicon-48x48.png",
+                tag: `egg-${drop.egg}`,
+                renotify: true
+            });
+            notif.onclick = function() {
+                window.focus();
+                this.close();
+            };
+        } catch (e) {
+            console.warn("Notification send error:", e);
+        }
+    }
+
 </script>
 
 </body>

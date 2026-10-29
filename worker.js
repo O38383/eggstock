@@ -157,21 +157,35 @@ button { background: #00f0ff; color: #000; border: none; padding: 10px 20px; fon
       }
     }
 
-    // Handle /script and /scripts cleanly
-    if (url.pathname === "/script" || url.pathname === "/scripts" || url.pathname === "/script/" || url.pathname === "/scripts/") {
-      return env.ASSETS.fetch(new Request(new URL("/index.html", request.url), request));
-    }
-
     // Clean URL mappings for canonical pages & sitemap entries
     const cleanPath = url.pathname.replace(/\/$/, "");
+
+    if (cleanPath === "/notifier") {
+      return env.ASSETS.fetch(new Request(new URL("/notifier.html", request.url), request));
+    }
+    if (cleanPath === "/calculator") {
+      return env.ASSETS.fetch(new Request(new URL("/calculator.html", request.url), request));
+    }
+    if (cleanPath === "/stock") {
+      return env.ASSETS.fetch(new Request(new URL("/stock.html", request.url), request));
+    }
+    if (cleanPath === "/predictions") {
+      return env.ASSETS.fetch(new Request(new URL("/predictions.html", request.url), request));
+    }
+    if (cleanPath === "/script" || cleanPath === "/scripts") {
+      return env.ASSETS.fetch(new Request(new URL("/script/index.html", request.url), request));
+    }
     if (cleanPath === "/tier-list" || cleanPath === "/tierlist" || cleanPath === "/tier_list") {
       return env.ASSETS.fetch(new Request(new URL("/tier_list.html", request.url), request));
     }
-
-    // Sitemap landing sections -> index.html
-    const indexSections = ["/stock", "/predictions", "/notifier", "/values", "/trading"];
-    if (indexSections.includes(cleanPath)) {
-      return env.ASSETS.fetch(new Request(new URL("/index.html", request.url), request));
+    if (cleanPath === "/codes") {
+      return env.ASSETS.fetch(new Request(new URL("/codes.html", request.url), request));
+    }
+    if (cleanPath === "/event") {
+      return env.ASSETS.fetch(new Request(new URL("/event.html", request.url), request));
+    }
+    if (cleanPath === "/values" || cleanPath === "/trading") {
+      return env.ASSETS.fetch(new Request(new URL("/tier_list.html", request.url), request));
     }
 
     // Serve static assets from ./website with automatic .html and SPA 404 fallback (prevents origin 429s)

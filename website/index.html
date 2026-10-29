@@ -587,13 +587,13 @@
                     <span class="material-symbols-outlined text-[18px]">bolt</span>
                     <span>Play Steal An Egg ↗</span>
                 </a>
-                <a href="#drops" class="bg-[#fbff00] hover:bg-yellow-300 text-black font-display font-black text-center text-xs uppercase px-5 py-3 neo-btn flex items-center justify-center gap-2 no-underline">
-                    <span class="material-symbols-outlined text-[18px]">radar</span>
-                    <span>Live Drops Feed ↓</span>
-                </a>
-                <a href="#calculator" class="bg-[#181d2c] hover:bg-[#23293d] text-white font-display font-bold text-center text-xs uppercase px-4 py-3 neo-btn flex items-center justify-center gap-2 no-underline">
-                    <span class="material-symbols-outlined text-[18px]">calculate</span>
-                    <span>Hatch Odds Calc</span>
+                <button id="btn-hero-push" class="bg-[#fbff00] hover:bg-yellow-300 text-black font-display font-black text-center text-xs uppercase px-5 py-3 neo-btn flex items-center justify-center gap-2 cursor-pointer shadow-[2px_2px_0px_#000]">
+                    <span class="material-symbols-outlined text-[18px]">notifications_active</span>
+                    <span id="hero-push-txt">🔔 Arm Spawn Alerts</span>
+                </button>
+                <a href="/notifier" class="bg-[#181d2c] hover:bg-[#23293d] text-[#00f0ff] font-display font-bold text-center text-xs uppercase px-4 py-3 neo-btn flex items-center justify-center gap-2 no-underline border border-black shadow-[2px_2px_0px_#000]">
+                    <span class="material-symbols-outlined text-[18px]">notifications</span>
+                    <span>Live Notifier ↗</span>
                 </a>
             </div>
         </div>
@@ -3218,9 +3218,11 @@ document.addEventListener("DOMContentLoaded", () => {
                             showToast(`🎯 TARGET DETECTED: ${latest.egg} spawned in ${latest.location || 'World'}!`);
                         } else if (r === "divine") {
                             playChime(true);
+                            fireEggNotification(latest);
                             showToast(`👑 DIVINE SPAWN: ${latest.egg} in ${latest.location || 'World'}!`);
                         } else if (r === "eternal" || r === "secret") {
                             playChime(false);
+                            fireEggNotification(latest);
                         }
                     }
                     lastNotifiedTime = latest.time;
@@ -3481,6 +3483,78 @@ window.finishGateway = function() {
         window.location.href = "/";
     }
 };
+
+    // ── Browser Push Notification Engine ──
+    let pushEnabled = localStorage.getItem("egg_push_enabled") === "true";
+    const heroPushBtn = document.getElementById("btn-hero-push");
+    const heroPushTxt = document.getElementById("hero-push-txt");
+
+    function updateHeroPushBtnUI() {
+        if (!heroPushBtn || !heroPushTxt) return;
+        if (!("Notification" in window)) {
+            heroPushTxt.textContent = "🔔 Push Not Supported";
+            heroPushBtn.disabled = true;
+            return;
+        }
+        if (Notification.permission === "granted" && pushEnabled) {
+            heroPushTxt.textContent = "✅ Spawn Alerts Armed";
+            heroPushBtn.classList.replace("bg-[#fbff00]", "bg-[#00ff66]");
+        } else {
+            heroPushTxt.textContent = "🔔 Arm Spawn Alerts";
+            heroPushBtn.classList.replace("bg-[#00ff66]", "bg-[#fbff00]");
+        }
+    }
+
+    if (heroPushBtn) {
+        updateHeroPushBtnUI();
+        heroPushBtn.addEventListener("click", async () => {
+            if (!("Notification" in window)) {
+                showToast("⚠️ Browser does not support push notifications");
+                return;
+            }
+            try {
+                const perm = await Notification.requestPermission();
+                if (perm === "granted") {
+                    pushEnabled = true;
+                    localStorage.setItem("egg_push_enabled", "true");
+                    updateHeroPushBtnUI();
+                    showToast("🔔 Steal An Egg Notifier Armed! You will receive live alerts.");
+                    new Notification("🚨 Steal An Egg Notifier Armed!", {
+                        body: "Live alerts are active! You will be notified the instant Secret & Divine eggs spawn.",
+                        icon: "/favicon-192x192.png",
+                        tag: "eggstock-welcome"
+                    });
+                } else {
+                    showToast("⚠️ Push permission was not granted");
+                }
+            } catch (e) {
+                console.warn("Notification error:", e);
+            }
+        });
+    }
+
+    function fireEggNotification(drop) {
+        if (!drop || !drop.egg || !pushEnabled || !("Notification" in window) || Notification.permission !== "granted") return;
+        try {
+            const r = (drop.rarity || "").toUpperCase();
+            const title = `🚨 ${r} EGG SPAWNED: ${drop.egg}!`;
+            const body = `📍 Spawned in ${drop.location || 'Unknown World'}! Click to open live radar.`;
+            const notif = new Notification(title, {
+                body: body,
+                icon: "/favicon-192x192.png",
+                badge: "/favicon-48x48.png",
+                tag: `egg-${drop.egg}`,
+                renotify: true
+            });
+            notif.onclick = function() {
+                window.focus();
+                this.close();
+            };
+        } catch (e) {
+            console.warn("Notification send error:", e);
+        }
+    }
+
 </script>
 
 </body>
