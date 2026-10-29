@@ -968,6 +968,27 @@
                 Join Discord Notifier →
             </a>
         </div>
+            <!-- GUEST / CLAN DISCORD WEBHOOK INTEGRATION BANNER -->
+        <div class="mt-4 p-4 sm:p-5 bg-gradient-to-r from-[#181d2c] via-[#10141f] to-[#181d2c] border-2 border-black neo-card flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3.5">
+                <div class="w-12 h-12 rounded bg-[#5865F2] flex items-center justify-center shrink-0 border-2 border-black shadow-[2px_2px_0px_#000]">
+                    <svg class="w-7 h-7 fill-white" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028z"/></svg>
+                </div>
+                <div>
+                    <div class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-[#5865F2] text-white font-mono font-bold text-[10px] uppercase border border-black shadow-[1px_1px_0px_#000] mb-1">
+                        DISCORD BOT &amp; WEBHOOK INTEGRATION
+                    </div>
+                    <h4 class="font-display font-black text-base sm:text-lg text-white uppercase">Get Live Spawn Radar in Your Discord Server</h4>
+                    <p class="text-xs text-slate-300 font-mono mt-0.5">Stream instant 0s Secret &amp; Divine drop alerts directly to your clan or trading channel.</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 shrink-0 w-full sm:w-auto">
+                <button onclick="openWebhookModal()" class="w-full sm:w-auto bg-[#fbff00] hover:bg-yellow-300 text-black font-display font-black text-xs px-4 py-2.5 uppercase neo-btn flex items-center justify-center gap-1.5 shadow-[2px_2px_0px_#000] cursor-pointer">
+                    <span class="material-symbols-outlined text-[16px]">sensors</span>
+                    <span>Add Webhook ↗</span>
+                </button>
+            </div>
+        </div>
     </section>
 
     <!-- INTERACTIVE WORLDS GUIDE (ALL 10 OFFICIAL BIOMES) -->
@@ -1216,6 +1237,60 @@
     </div>
 </div>
 
+<!-- DISCORD WEBHOOK INTEGRATION MODAL -->
+<div id="webhook-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 modal-backdrop hidden overflow-y-auto">
+    <div class="neo-card bg-[#131722] max-w-lg w-full max-h-[92vh] overflow-y-auto my-auto p-5 sm:p-6 relative border-2 border-black shadow-[6px_6px_0px_#000]">
+        <!-- Close button -->
+        <button onclick="closeWebhookModal()" class="absolute top-4 right-4 bg-[#181d2c] hover:bg-red-500 hover:text-white text-slate-400 w-8 h-8 flex items-center justify-center border border-black font-bold cursor-pointer">
+            ✕
+        </button>
+
+        <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded bg-[#5865F2] flex items-center justify-center border border-black shrink-0">
+                <span class="material-symbols-outlined text-white text-[22px]">sensors</span>
+            </div>
+            <div>
+                <span class="bg-[#5865F2] text-white text-[10px] font-mono font-bold px-2 py-0.5 uppercase border border-black">Discord Webhook Relay</span>
+                <h3 class="font-display font-black text-xl text-white uppercase mt-1">Live Drops For Your Server</h3>
+            </div>
+        </div>
+
+        <p class="text-xs text-slate-300 font-mono leading-relaxed mb-4">
+            Send real-time Secret &amp; Divine egg spawn embeds directly to your Discord clan or trading server. Enter your channel's webhook below:
+        </p>
+
+        <div class="space-y-3 font-mono text-xs">
+            <div>
+                <label class="block text-slate-400 uppercase font-bold mb-1 text-[11px]">Discord Webhook URL:</label>
+                <input type="url" id="webhook-url-input" placeholder="https://discord.com/api/webhooks/..." class="w-full bg-[#0a0d14] text-white p-2.5 border-2 border-black focus:outline-none focus:border-[#00f0ff] text-xs">
+                <span class="text-[10px] text-slate-400 mt-1 block">In Discord: Channel Settings &rarr; Integrations &rarr; Webhooks &rarr; Copy Webhook URL</span>
+            </div>
+
+            <div>
+                <label class="block text-slate-400 uppercase font-bold mb-1 text-[11px]">Minimum Alert Tier:</label>
+                <select id="webhook-min-rarity" class="w-full bg-[#0a0d14] text-white p-2 border-2 border-black text-xs cursor-pointer">
+                    <option value="secret">Secret, Eternal &amp; Divine (All Rare Drops)</option>
+                    <option value="eternal">Eternal &amp; Divine Only</option>
+                    <option value="divine">Divine Only (Ultra Rare Spawns)</option>
+                </select>
+            </div>
+
+            <div class="pt-2 flex flex-col sm:flex-row items-center gap-2">
+                <button onclick="testWebhook()" id="test-webhook-btn" class="w-full sm:flex-1 bg-[#181d2c] hover:bg-[#23293d] text-white font-mono font-bold py-2.5 px-3 border border-black neo-btn flex items-center justify-center gap-1.5 cursor-pointer">
+                    <span class="material-symbols-outlined text-[16px] text-[#00f0ff]">send</span>
+                    <span>Send Test Ping</span>
+                </button>
+                <button onclick="saveWebhook()" id="save-webhook-btn" class="w-full sm:flex-1 bg-[#00ff66] hover:bg-emerald-400 text-black font-display font-black py-2.5 px-3 border border-black neo-btn flex items-center justify-center gap-1.5 uppercase cursor-pointer">
+                    <span class="material-symbols-outlined text-[16px]">check_circle</span>
+                    <span>Activate Relay</span>
+                </button>
+            </div>
+
+            <div id="webhook-feedback" class="hidden p-2 text-center text-xs font-bold rounded border border-black"></div>
+        </div>
+    </div>
+</div>
+
 <!-- EGG INTELLIGENCE DOSSIER MODAL -->
 <div id="egg-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 modal-backdrop hidden overflow-y-auto">
     <div class="neo-card bg-[#131722] max-w-md w-full max-h-[92vh] overflow-y-auto my-auto p-4 sm:p-6 relative">
@@ -1348,6 +1423,134 @@
 
 <!-- COMPLETE CLIENT LOGIC -->
 <script>
+
+    // Webhook modal handlers
+    window.openWebhookModal = function() {
+        const m = document.getElementById('webhook-modal');
+        if (m) {
+            m.classList.remove('hidden');
+            const saved = localStorage.getItem('eggstock_webhook_url');
+            if (saved) {
+                const input = document.getElementById('webhook-url-input');
+                if (input) input.value = saved;
+            }
+        }
+    };
+
+    window.closeWebhookModal = function() {
+        const m = document.getElementById('webhook-modal');
+        if (m) m.classList.add('hidden');
+    };
+
+    window.testWebhook = async function() {
+        const input = document.getElementById('webhook-url-input');
+        const fb = document.getElementById('webhook-feedback');
+        const url = (input ? input.value : "").trim();
+        if (!url || !url.startsWith("https://discord.com/api/webhooks/")) {
+            if (fb) {
+                fb.className = "p-2 text-center text-xs font-bold rounded border border-red-500 bg-red-950 text-red-200 block";
+                fb.textContent = "Please enter a valid Discord Webhook URL!";
+            }
+            return;
+        }
+
+        const payload = {
+            username: "EggStock Live Radar",
+            avatar_url: "https://eggstock.xyz/logo.png",
+            embeds: [{
+                title: "⚡ EggStock Live Telemetry Connected!",
+                description: "Your Discord channel is now connected to the **EggStock 24/7 Steal An Egg Radar**!\n\nYou will receive real-time alerts whenever rare eggs spawn across Roblox servers.\n\n🌐 **Live Wave Predictor & Radar:** [EggStock.xyz](https://eggstock.xyz)\n👑 **Official Discord Community:** [discord.gg/Jmvam6Ktgm](https://discord.gg/Jmvam6Ktgm)",
+                color: 0x00f0ff,
+                footer: { text: "EggStock • Verified Roblox Telemetry", icon_url: "https://eggstock.xyz/logo.png" },
+                timestamp: new Date().toISOString()
+            }]
+        };
+
+        try {
+            const res = await fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+            if (res.ok) {
+                if (fb) {
+                    fb.className = "p-2 text-center text-xs font-bold rounded border border-emerald-500 bg-emerald-950 text-emerald-200 block";
+                    fb.textContent = "✅ Test embed sent! Check your Discord channel!";
+                }
+            } else {
+                throw new Error("Discord returned HTTP " + res.status);
+            }
+        } catch (e) {
+            if (fb) {
+                fb.className = "p-2 text-center text-xs font-bold rounded border border-red-500 bg-red-950 text-red-200 block";
+                fb.textContent = "Error sending test embed: " + e.message;
+            }
+        }
+    };
+
+    window.saveWebhook = function() {
+        const input = document.getElementById('webhook-url-input');
+        const tier = document.getElementById('webhook-min-rarity');
+        const fb = document.getElementById('webhook-feedback');
+        const url = (input ? input.value : "").trim();
+        if (!url || !url.startsWith("https://discord.com/api/webhooks/")) {
+            if (fb) {
+                fb.className = "p-2 text-center text-xs font-bold rounded border border-red-500 bg-red-950 text-red-200 block";
+                fb.textContent = "Please enter a valid Discord Webhook URL!";
+            }
+            return;
+        }
+
+        localStorage.setItem('eggstock_webhook_url', url);
+        localStorage.setItem('eggstock_webhook_tier', tier ? tier.value : 'secret');
+        if (fb) {
+            fb.className = "p-2 text-center text-xs font-bold rounded border border-emerald-500 bg-emerald-950 text-emerald-200 block";
+            fb.textContent = "🎉 Webhook Relay Activated! Drops will stream live to your channel.";
+        }
+        setTimeout(window.closeWebhookModal, 1500);
+    };
+
+    // Relay drop alerts to user's saved webhook if configured
+    let lastRelayedDropTime = 0;
+    function checkWebhookRelay(drops) {
+        const webhookUrl = localStorage.getItem('eggstock_webhook_url');
+        if (!webhookUrl || !drops || drops.length === 0) return;
+        const minTier = localStorage.getItem('eggstock_webhook_tier') || 'secret';
+        
+        for (const d of drops) {
+            const dropTs = d.time ? new Date(d.time).getTime() : 0;
+            if (dropTs <= lastRelayedDropTime) continue;
+            
+            const r = (d.rarity || "").toLowerCase();
+            if (minTier === 'divine' && r !== 'divine') continue;
+            if (minTier === 'eternal' && r !== 'eternal' && r !== 'divine') continue;
+            
+            lastRelayedDropTime = Math.max(lastRelayedDropTime, dropTs);
+            const eggSafe = d.egg || "Secret Egg";
+            const locSafe = d.location || "Active World";
+            const color = r === 'divine' ? 0x00f0ff : (r === 'eternal' ? 0x00ff88 : 0xff00ff);
+            
+            const payload = {
+                username: "EggStock Spawn Alert",
+                avatar_url: "https://eggstock.xyz/logo.png",
+                embeds: [{
+                    title: `🚨 ${r.toUpperCase()} EGG DETECTED! | Steal An Egg`,
+                    description: `🥚 **Egg:** **${eggSafe}**\n📍 **Location:** **${locSafe}**\n✨ **Rarity:** **${r.toUpperCase()}**\n\n⚡ **Live Wave Prediction & Radar:** [EggStock.xyz](https://eggstock.xyz/?target=${encodeURIComponent(eggSafe.toLowerCase())}#drops)\n👑 **Official Discord Community:** [discord.gg/Jmvam6Ktgm](https://discord.gg/Jmvam6Ktgm)`,
+                    color: color,
+                    footer: { text: "EggStock • Verified Roblox Telemetry", icon_url: "https://eggstock.xyz/logo.png" },
+                    timestamp: new Date().toISOString()
+                }]
+            };
+            
+            fetch(webhookUrl, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            }).catch(() => {});
+            break; // One alert per polling cycle
+        }
+    }
+
 document.addEventListener("DOMContentLoaded", () => {
     // ── 1. Toast Notification Helper ──
     const toast = document.getElementById("toast");
