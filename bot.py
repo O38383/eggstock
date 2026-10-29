@@ -1893,35 +1893,23 @@ def compute_prediction_model():
     }
 
 
-# ---------- HTTP API for the overlay ----------
-async def handle_status(request):
-    # --- Token auth: reject scrapers / competitor bots ---
-    # A request is trusted (no token needed) only if it comes from:
-    #   a) A browser with Origin header in our whitelist (our own site's JS polls), OR
-    #   b) A browser with Referer from our own domain / Railway domain (overlay)
-    # Everything else — curl, Python scripts, competitor bots, unknown origins — must
-    # supply the X-EggStock-Token header or ?_t= param with the correct secret.
-    origin = request.headers.get("Origin", "")
-    referer = request.headers.get("Referer", "")
-    token_header = request.headers.get("X-EggStock-Token", "")
-    token_param = request.rel_url.query.get("_t", "")
-
-    is_trusted_origin = (
-        (origin and origin in ALLOWED_ORIGINS) or
-        ("eggstock.xyz" in referer) or
-        ("railway.app" in referer)
+# ---------- HTTP API for the overlay & public live status ----------
+async def handle_cors_preflight(request):
+    """Universal CORS preflight handler for API endpoints."""
+    return web.Response(
+        status=204,
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, HEAD, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type, Accept, Origin, X-Requested-With, X-EggStock-Token",
+            "Access-Control-Max-Age": "86400",
+        }
     )
-    token_ok = _secrets.compare_digest(token_header, API_TOKEN) or \
-               _secrets.compare_digest(token_param, API_TOKEN)
 
-    if not is_trusted_origin and not token_ok:
-        log.warning(f"BLOCKED /api/status from {_get_client_ip(request)} origin='{origin}' referer='{referer}'")
-        return web.Response(
-            status=401,
-            text="Unauthorized\n",
-            content_type="text/plain"
-        )
 
+async def handle_status(request):
+    # Public live drop telemetry and radar status.
+    # Protected against abuse via _ip_guard rate limiting middleware.
     now = datetime.now(timezone.utc)
 
     def seconds_since(iso_ts):
@@ -2054,18 +2042,14 @@ async def handle_status(request):
         "server_time": now.isoformat(),
         "status_heartbeat": "healthy",
     }
-    # CORS & Cache-Control: allow trusted origins and prevent proxy cache deception
-    origin = request.headers.get("Origin", "")
+    # CORS & Cache-Control: allow direct access from frontend without proxy overhead
     cors_headers = {
         "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",
         "Pragma": "no-cache",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, HEAD, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, Origin, X-Requested-With, X-EggStock-Token",
     }
-    if origin in ALLOWED_ORIGINS:
-        cors_headers["Access-Control-Allow-Origin"] = origin
-        cors_headers["Vary"] = "Origin"
-    else:
-        # For same-origin requests (no Origin header), or our own pages, allow it
-        cors_headers["Access-Control-Allow-Origin"] = "https://eggstock.xyz"
     return web.json_response(payload, headers=cors_headers)
 
 
@@ -2532,6 +2516,9 @@ async def start_web_app():
         web.get("/blog/{slug}/", handle_blog_article),
         web.get("/guides/{slug}", handle_blog_article),
         web.get("/guides/{slug}/", handle_blog_article),
+        web.route("OPTIONS", "/api/status", handle_cors_preflight),
+        web.route("OPTIONS", "/api/prediction", handle_cors_preflight),
+        web.route("OPTIONS", "/api/predictions", handle_cors_preflight),
         web.get("/api/status", handle_status),
         web.get("/api/prediction", handle_prediction),
         web.get("/api/predictions", handle_prediction),

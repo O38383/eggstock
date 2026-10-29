@@ -88,8 +88,35 @@ button { background: #00f0ff; color: #000; border: none; padding: 10px 20px; fon
       });
     }
 
-    // Proxy API calls directly to Railway live bot backend
+    // Proxy API calls directly to Railway live bot backend with Edge Caching & CORS
     if (url.pathname.startsWith("/api/")) {
+      if (request.method === "OPTIONS") {
+        return new Response(null, {
+          status: 204,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, HEAD, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type, Accept, Origin, X-Requested-With, X-EggStock-Token",
+            "Access-Control-Max-Age": "86400"
+          }
+        });
+      }
+
+      // Check Cloudflare edge cache for GET requests (prevents worker subrequest exhaustion)
+      const cache = caches.default;
+      const cacheKey = new Request(url.toString(), request);
+
+      if (request.method === "GET") {
+        try {
+          const cached = await cache.match(cacheKey);
+          if (cached) {
+            return cached;
+          }
+        } catch (e) {
+          // ignore cache read failure
+        }
+      }
+
       const backendUrl = "https://eggstock-web-production.up.railway.app" + url.pathname + url.search;
       const headers = new Headers(request.headers);
       headers.set("Referer", "https://eggstock.xyz");
@@ -104,17 +131,28 @@ button { background: #00f0ff; color: #000; border: none; padding: 10px 20px; fon
 
         const newHeaders = new Headers(response.headers);
         newHeaders.set("Access-Control-Allow-Origin", "*");
-        newHeaders.set("Cache-Control", "no-store, no-cache, must-revalidate");
+        // Edge cache for 5s; stale-while-revalidate for 10s
+        newHeaders.set("Cache-Control", "public, max-age=2, s-maxage=5, stale-while-revalidate=10");
 
-        return new Response(response.body, {
+        const proxiedResponse = new Response(response.body, {
           status: response.status,
           statusText: response.statusText,
           headers: newHeaders
         });
+
+        if (request.method === "GET" && response.status === 200) {
+          try {
+            await cache.put(cacheKey, proxiedResponse.clone());
+          } catch (e) {
+            // ignore cache write failure
+          }
+        }
+
+        return proxiedResponse;
       } catch (err) {
         return new Response(JSON.stringify({ error: "Backend proxy error", details: err.message }), {
           status: 502,
-          headers: { "Content-Type": "application/json" }
+          headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
         });
       }
     }

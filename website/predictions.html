@@ -3059,15 +3059,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ── 11. Polling & Data Engine ──
     const STATUS_API_DIRECT = "https://eggstock-web-production.up.railway.app/api/status";
+    let _lastProxyAttempt = 0;
+    let _proxyBackoffSec = 30;
 
     async function poll() {
         try {
             let res;
             try {
-                res = await fetch(STATUS_API_DIRECT);
-                if (!res.ok) throw new Error("Direct status failed, trying proxy");
+                res = await fetch(STATUS_API_DIRECT, {
+                    mode: 'cors',
+                    headers: { 'Accept': 'application/json' }
+                });
+                if (!res.ok) throw new Error("Direct status HTTP " + res.status);
             } catch (e) {
-                res = await fetch("/api/status");
+                // Throttle fallback to Cloudflare proxy (prevents rate-limit quota exhaustion)
+                const now = Date.now();
+                if (now - _lastProxyAttempt > _proxyBackoffSec * 1000) {
+                    _lastProxyAttempt = now;
+                    try {
+                        res = await fetch("/api/status");
+                        if (res.status === 429) {
+                            _proxyBackoffSec = 120; // backed off for 2 mins if Cloudflare rate limited
+                        } else if (res.ok) {
+                            _proxyBackoffSec = 30;
+                        }
+                    } catch (err) {}
+                }
             }
             if (!res || !res.ok) return;
             const data = await res.json();
