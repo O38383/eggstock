@@ -3516,20 +3516,27 @@ window.finishGateway = function() {
 
     function initNotifyPrompt() {
         if (!("Notification" in window)) return;
-        if (Notification.permission === "granted") return;
+        if (Notification.permission === "granted" || Notification.permission === "denied") return;
         
         const dismissUntil = Number(localStorage.getItem("egg_notify_dismissed_until") || 0);
         if (Date.now() < dismissUntil) return;
 
+        // Smart timing:
+        // New users (visit 1): wait 25 seconds to explore radar without irritation
+        // Returning users (visit 2+): wait 5 seconds because they already know the site
+        let visitCount = parseInt(localStorage.getItem("egg_visit_count") || "0", 10) + 1;
+        localStorage.setItem("egg_visit_count", visitCount);
+        const delayMs = visitCount <= 1 ? 25000 : 5000;
+
         setTimeout(() => {
-            if (Notification.permission !== "granted") {
+            if (Notification.permission !== "granted" && Notification.permission !== "denied") {
                 const modal = document.getElementById("notify-prompt-modal");
                 if (modal) {
                     modal.classList.remove("hidden");
                     modal.classList.add("flex");
                 }
             }
-        }, 4500);
+        }, delayMs);
 
         const btn = document.getElementById("btn-modal-enable-notify");
         if (btn) {
