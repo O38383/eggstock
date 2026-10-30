@@ -316,50 +316,20 @@
     return `${d}d ${h}h ${m}m`;
   }
 
-  // ── Audio & Speech Alert Engine (OBS Local & Stream Audio) ──
+  // ── Audio & Speech Alert Engine (Native HTML5 WAV Audio for OBS CEF) ──
   let alarmEnabled = true;
-  let audioContext = null;
   let lastSpokenWaveSecond = null;
 
-  function initAudio() {
-    if (!audioContext) {
-      audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    if (audioContext && audioContext.state === "suspended") {
-      audioContext.resume();
-    }
-  }
-
-  function playTone(freq = 660, duration = 0.2, type = "sine", delay = 0) {
+  function playSoundFile(filename) {
     if (!alarmEnabled) return;
     try {
-      initAudio();
-      if (!audioContext) return;
-      const osc = audioContext.createOscillator();
-      const gain = audioContext.createGain();
-      const startTime = audioContext.currentTime + delay;
-      osc.type = type;
-      osc.frequency.setValueAtTime(freq, startTime);
-      gain.gain.setValueAtTime(0.3, startTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
-      osc.connect(gain);
-      gain.connect(audioContext.destination);
-      osc.start(startTime);
-      osc.stop(startTime + duration);
-    } catch (e) {}
-  }
-
-  function speakAlert(text) {
-    if (!alarmEnabled) return;
-    try {
-      initAudio();
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        const utter = new SpeechSynthesisUtterance(text);
-        utter.rate = 1.15;
-        utter.pitch = 1.05;
-        utter.volume = 0.9;
-        window.speechSynthesis.speak(utter);
+      const isLocal = window.location.protocol === "file:";
+      const basePath = isLocal ? "../website/sounds/" : "/sounds/";
+      const audio = new Audio(basePath + filename);
+      audio.volume = 1.0;
+      const p = audio.play();
+      if (p !== undefined) {
+        p.catch(() => {});
       }
     } catch (e) {}
   }
@@ -371,25 +341,17 @@
     // 30 seconds warning
     if (sec === 30 && lastSpokenWaveSecond !== 30) {
       lastSpokenWaveSecond = 30;
-      playTone(660, 0.18, "sine", 0);
-      playTone(880, 0.25, "sine", 0.18);
-      speakAlert("Warning: 30 seconds until next egg wave!");
+      playSoundFile("warning_30s.wav");
     }
     // 10 seconds urgent warning
     else if (sec === 10 && lastSpokenWaveSecond !== 10) {
       lastSpokenWaveSecond = 10;
-      playTone(880, 0.12, "triangle", 0);
-      playTone(1100, 0.12, "triangle", 0.14);
-      playTone(880, 0.12, "triangle", 0.28);
-      playTone(1100, 0.22, "triangle", 0.42);
-      speakAlert("10 seconds until egg wave! Get ready!");
+      playSoundFile("urgent_10s.wav");
     }
     // 0 seconds - Wave spawned!
     else if (sec === 0 && lastSpokenWaveSecond !== 0) {
       lastSpokenWaveSecond = 0;
-      const freqs = [440, 554.37, 659.25, 880];
-      freqs.forEach((f, i) => playTone(f, 0.2 + i * 0.08, "sine", i * 0.14));
-      speakAlert("Egg wave is here!");
+      playSoundFile("drop_chime.wav");
     }
     else if (sec > 35) {
       if (lastSpokenWaveSecond !== null && lastSpokenWaveSecond <= 10) {
@@ -397,9 +359,6 @@
       }
     }
   }
-
-  // Unlock audio on any click/interaction (essential for OBS browser source)
-  document.addEventListener("click", () => initAudio(), { once: true });
 
   // ── Synchronized In-Game Timers (Aligned with live Roblox server schedule) ──
 
@@ -532,6 +491,11 @@
   }
 
   function playAlertSound(rarity = "secret") {
+    const r = (rarity || "").toLowerCase();
+    if (r === "divine") playSoundFile("divine_chord.wav");
+    else if (r === "eternal") playSoundFile("drop_chime.wav");
+    else playSoundFile("drop_chime.wav");
+    return;
     try {
       const ctx = getAudioContext();
       if (!ctx) return;
