@@ -3,47 +3,54 @@
   const params = new URLSearchParams(window.location.search);
   const showPreview = params.get("preview") === "true";
   const token = params.get("token") || window.__ES_TOKEN || "";
-  const apiUrl = params.get("api") || (window.location.origin.includes("railway") ? "/api/status" : "https://eggstock-web-production.up.railway.app/api/status");
+  
+  // Connect to live production API by default when opened as a local file in OBS
+  const isLocalFile = window.location.protocol === "file:";
+  const defaultApi = isLocalFile ? "https://eggstock.xyz/api/status" : "/api/status";
+  const apiUrl = params.get("api") || defaultApi;
 
-  // Pre-mapped pet images (serves from /images/pets/ everywhere on Railway and Cloudflare)
+  // Base path for pet images: relative for local file in OBS, absolute for web server
+  const imgBase = isLocalFile ? "../website/images/pets/" : "/images/pets/";
+
+  // Pre-mapped pet images
   const PET_IMG_MAP = {
-    "winged lamb": "/images/pets/winged_lamb.png",
-    "toro": "/images/pets/toro.png",
-    "archangel": "/images/pets/archangel.png",
-    "kitsune": "/images/pets/kitsune.png",
-    "nightflame": "/images/pets/nightflame.png",
-    "unicorn": "/images/pets/unicorn.png",
-    "kraken": "/images/pets/kraken.png",
-    "gorilla king": "/images/pets/gorilla_king.png",
-    "mosasaurus": "/images/pets/mosasaurus.png",
-    "ice dragon": "/images/pets/ice_dragon.png",
-    "lava dragon": "/images/pets/lava_dragon.png",
-    "el maja": "/images/pets/el_maja.png",
-    "cerberus": "/images/pets/cerberus.png",
-    "pure jellyfish": "/images/pets/pure_jellyfish.png",
-    "gargoyle": "/images/pets/gargoyle.png",
-    "yeti": "/images/pets/yeti.png",
-    "trex": "/images/pets/trex.png",
-    "tralaledon": "/images/pets/tralaledon.png",
-    "oni tiger": "/images/pets/oni_tiger.png",
-    "phoenix": "/images/pets/phoenix.png",
-    "pegasus": "/images/pets/pegasus.png",
-    "centaur": "/images/pets/centaur.png",
-    "holy peacock": "/images/pets/holy_peacock.png",
-    "light dove": "/images/pets/light_dove.png",
-    "sacred moth": "/images/pets/sacred_moth.png",
-    "demon hound": "/images/pets/demon_hound.png",
-    "imp": "/images/pets/imp.png",
-    "flame sprite": "/images/pets/flame_sprite.png",
-    "razorfang": "/images/pets/razorfang.png",
-    "skeleton horse": "/images/pets/skeleton_horse.png",
-    "world burner": "/images/pets/world_burner.png",
-    "eternal lunar": "/images/pets/eternal_lunar_dragon.png",
-    "cosmic dragon": "/images/pets/cosmic_dragon.png",
-    "cosmic skeleton": "/images/pets/cosmic_skeleton_boss.png",
-    "stag": "/images/pets/stag.png",
-    "mutant shark": "/images/pets/mutant_shark.png",
-    "king snake": "/images/pets/snake_king.png"
+    "winged lamb": imgBase + "winged_lamb.png",
+    "toro": imgBase + "toro.png",
+    "archangel": imgBase + "archangel.png",
+    "kitsune": imgBase + "kitsune.png",
+    "nightflame": imgBase + "nightflame.png",
+    "unicorn": imgBase + "unicorn.png",
+    "kraken": imgBase + "kraken.png",
+    "gorilla king": imgBase + "gorilla_king.png",
+    "mosasaurus": imgBase + "mosasaurus.png",
+    "ice dragon": imgBase + "ice_dragon.png",
+    "lava dragon": imgBase + "lava_dragon.png",
+    "el maja": imgBase + "el_maja.png",
+    "cerberus": imgBase + "cerberus.png",
+    "pure jellyfish": imgBase + "pure_jellyfish.png",
+    "gargoyle": imgBase + "gargoyle.png",
+    "yeti": imgBase + "yeti.png",
+    "trex": imgBase + "trex.png",
+    "tralaledon": imgBase + "tralaledon.png",
+    "oni tiger": imgBase + "oni_tiger.png",
+    "phoenix": imgBase + "phoenix.png",
+    "pegasus": imgBase + "pegasus.png",
+    "centaur": imgBase + "centaur.png",
+    "holy peacock": imgBase + "holy_peacock.png",
+    "light dove": imgBase + "light_dove.png",
+    "sacred moth": imgBase + "sacred_moth.png",
+    "demon hound": imgBase + "demon_hound.png",
+    "imp": imgBase + "imp.png",
+    "flame sprite": imgBase + "flame_sprite.png",
+    "razorfang": imgBase + "razorfang.png",
+    "skeleton horse": imgBase + "skeleton_horse.png",
+    "world burner": imgBase + "world_burner.png",
+    "eternal lunar": imgBase + "eternal_lunar_dragon.png",
+    "cosmic dragon": imgBase + "cosmic_dragon.png",
+    "cosmic skeleton": imgBase + "cosmic_skeleton_boss.png",
+    "stag": imgBase + "stag.png",
+    "mutant shark": imgBase + "mutant_shark.png",
+    "king snake": imgBase + "snake_king.png"
   };
 
   // Default emojis for standard animals without local PNGs
@@ -309,12 +316,98 @@
     return `${d}d ${h}h ${m}m`;
   }
 
+  // ── Audio & Speech Alert Engine (OBS Local & Stream Audio) ──
+  let alarmEnabled = true;
+  let audioContext = null;
+  let lastSpokenWaveSecond = null;
+
+  function initAudio() {
+    if (!audioContext) {
+      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioContext && audioContext.state === "suspended") {
+      audioContext.resume();
+    }
+  }
+
+  function playTone(freq = 660, duration = 0.2, type = "sine", delay = 0) {
+    if (!alarmEnabled) return;
+    try {
+      initAudio();
+      if (!audioContext) return;
+      const osc = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+      const startTime = audioContext.currentTime + delay;
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, startTime);
+      gain.gain.setValueAtTime(0.3, startTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+      osc.connect(gain);
+      gain.connect(audioContext.destination);
+      osc.start(startTime);
+      osc.stop(startTime + duration);
+    } catch (e) {}
+  }
+
+  function speakAlert(text) {
+    if (!alarmEnabled) return;
+    try {
+      initAudio();
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.rate = 1.15;
+        utter.pitch = 1.05;
+        utter.volume = 0.9;
+        window.speechSynthesis.speak(utter);
+      }
+    } catch (e) {}
+  }
+
+  function checkWaveAlarms(s) {
+    if (!alarmEnabled || s === null || s === undefined) return;
+    const sec = Math.round(Number(s));
+
+    // 30 seconds warning
+    if (sec === 30 && lastSpokenWaveSecond !== 30) {
+      lastSpokenWaveSecond = 30;
+      playTone(660, 0.18, "sine", 0);
+      playTone(880, 0.25, "sine", 0.18);
+      speakAlert("Warning: 30 seconds until next egg wave!");
+    }
+    // 10 seconds urgent warning
+    else if (sec === 10 && lastSpokenWaveSecond !== 10) {
+      lastSpokenWaveSecond = 10;
+      playTone(880, 0.12, "triangle", 0);
+      playTone(1100, 0.12, "triangle", 0.14);
+      playTone(880, 0.12, "triangle", 0.28);
+      playTone(1100, 0.22, "triangle", 0.42);
+      speakAlert("10 seconds until egg wave! Get ready!");
+    }
+    // 0 seconds - Wave spawned!
+    else if (sec === 0 && lastSpokenWaveSecond !== 0) {
+      lastSpokenWaveSecond = 0;
+      const freqs = [440, 554.37, 659.25, 880];
+      freqs.forEach((f, i) => playTone(f, 0.2 + i * 0.08, "sine", i * 0.14));
+      speakAlert("Egg wave is here!");
+    }
+    else if (sec > 35) {
+      if (lastSpokenWaveSecond !== null && lastSpokenWaveSecond <= 10) {
+        lastSpokenWaveSecond = null;
+      }
+    }
+  }
+
+  // Unlock audio on any click/interaction (essential for OBS browser source)
+  document.addEventListener("click", () => initAudio(), { once: true });
+
   function tickCountdowns() {
     // 1. New Eggs timer
     if (newEggsSecs > 0) newEggsSecs--;
     else newEggsSecs = 300; // resets every 5 mins
     const elNewEggs = document.getElementById("timer-new-eggs");
     if (elNewEggs) elNewEggs.textContent = formatMmSs(newEggsSecs);
+    checkWaveAlarms(newEggsSecs);
 
     // 2. Event timer & progress bar
     if (eventSecs > 0) eventSecs--;
@@ -369,7 +462,81 @@
     return l.replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
   }
 
+  // =========================================================
+  // Web Audio API Sound Alerts Engine (Synthesized loud gaming pings)
+  // =========================================================
+  let audioCtx = null;
+  function getAudioContext() {
+    if (!audioCtx) {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (AudioContext) audioCtx = new AudioContext();
+    }
+    if (audioCtx && audioCtx.state === "suspended") {
+      audioCtx.resume().catch(() => {});
+    }
+    return audioCtx;
+  }
+
+  function playAlertSound(rarity = "secret") {
+    try {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+
+      const now = ctx.currentTime;
+      const r = (rarity || "").toLowerCase();
+
+      if (r === "divine") {
+        // Triumphant 4-tone ascending fanfare (C5 -> E5 -> G5 -> C6)
+        const notes = [523.25, 659.25, 783.99, 1046.50];
+        notes.forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(freq, now + idx * 0.12);
+          gain.gain.setValueAtTime(0.35, now + idx * 0.12);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.12 + 0.35);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + idx * 0.12);
+          osc.stop(now + idx * 0.12 + 0.35);
+        });
+      } else if (r === "eternal") {
+        // High-pitch 2-tone melodic chime
+        const notes = [659.25, 987.77];
+        notes.forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(freq, now + idx * 0.14);
+          gain.gain.setValueAtTime(0.3, now + idx * 0.14);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.14 + 0.4);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + idx * 0.14);
+          osc.stop(now + idx * 0.14 + 0.4);
+        });
+      } else {
+        // Crisp drop radar ping
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(880, now);
+        osc.frequency.exponentialRampToValueAtTime(1320, now + 0.18);
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.45);
+      }
+    } catch (e) {
+      console.warn("Audio alert failed", e);
+    }
+  }
+
   // Periodic API Sync with bot's /api/status if reachable
+  let lastSeenDropTime = null;
+
   async function syncWithApi() {
     try {
       const reqHeaders = {};
@@ -383,12 +550,21 @@
         newEggsSecs = Math.max(0, Math.floor(data.next_wave_estimate.overall.eta_seconds));
       }
 
-      // Check recent drops to flash updates in corresponding biome
+      // Check recent drops to flash updates and trigger loud sound alerts
       if (Array.isArray(data.recent_drops) && data.recent_drops.length > 0) {
         const lastDrop = data.recent_drops[0];
+        
+        // Detect if this is a newly arrived drop
+        if (lastDrop.time && lastDrop.time !== lastSeenDropTime) {
+          if (lastSeenDropTime !== null) {
+            // Play alert sound for stream!
+            playAlertSound(lastDrop.rarity || "secret");
+          }
+          lastSeenDropTime = lastDrop.time;
+        }
+
         const biomeKey = getRosterBiomeKey(lastDrop.location || "");
         if (ROSTER_DATA[biomeKey]) {
-          // If egg exists in biome, mark as fresh
           const match = ROSTER_DATA[biomeKey].find(p => p.name.toLowerCase().includes((lastDrop.egg || "").toLowerCase()));
           if (match) {
             match.status = "x1";
