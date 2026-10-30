@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>EggStock Sound & Voice Alert Board</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    .glow-btn:hover {
+      box-shadow: 0 0 15px currentColor;
+    }
+    .wave-bar {
+      transition: height 0.05s ease;
+    }
+  </style>
+</head>
+<body class="bg-transparent text-[var(--foreground)] antialiased p-4">
+  <div class="bg-[var(--card)] text-[var(--foreground)] border border-[var(--border)] rounded-2xl p-6 shadow-xl max-w-xl mx-auto backdrop-blur-md">
+    
+    <!-- Header -->
+    <div class="flex items-center justify-between border-b border-[var(--border)] pb-4 mb-5">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-xl font-bold">
+          🔊
+        </div>
+        <div>
+          <h2 class="text-[var(--foreground)] font-bold text-lg leading-tight">EggStock Alert Soundboard</h2>
+          <p class="text-[var(--muted-foreground)] text-xs">Audition live drop chimes, wave alarms, and TTS speech</p>
+        </div>
+      </div>
+      <div id="audio-status" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+        Ready
+      </div>
+    </div>
+
+    <!-- Live Audio Visualizer -->
+    <div class="bg-[var(--background)]/80 rounded-xl p-3 border border-[var(--border)] mb-5 flex items-end justify-center gap-1.5 h-16 overflow-hidden">
+      <div class="wave-bar w-2 bg-cyan-400/80 rounded-t h-2" id="bar-1"></div>
+      <div class="wave-bar w-2 bg-cyan-400/80 rounded-t h-4" id="bar-2"></div>
+      <div class="wave-bar w-2 bg-cyan-400/80 rounded-t h-6" id="bar-3"></div>
+      <div class="wave-bar w-2 bg-cyan-400/80 rounded-t h-10" id="bar-4"></div>
+      <div class="wave-bar w-2 bg-cyan-400/80 rounded-t h-8" id="bar-5"></div>
+      <div class="wave-bar w-2 bg-cyan-400/80 rounded-t h-5" id="bar-6"></div>
+      <div class="wave-bar w-2 bg-cyan-400/80 rounded-t h-3" id="bar-7"></div>
+      <div class="wave-bar w-2 bg-cyan-400/80 rounded-t h-7" id="bar-8"></div>
+      <div class="wave-bar w-2 bg-cyan-400/80 rounded-t h-11" id="bar-9"></div>
+      <div class="wave-bar w-2 bg-cyan-400/80 rounded-t h-4" id="bar-10"></div>
+    </div>
+
+    <!-- Sound Alert Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
+      
+      <!-- 1. 30s Warning -->
+      <button onclick="play30sWarning()" class="glow-btn flex flex-col items-start p-3.5 rounded-xl border border-amber-500/30 bg-amber-500/5 hover:bg-amber-500/15 text-amber-400 transition-all text-left">
+        <div class="flex items-center justify-between w-full mb-1">
+          <span class="font-bold text-sm flex items-center gap-2">🔔 30s Warning</span>
+          <span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono">660-880Hz</span>
+        </div>
+        <span class="text-[var(--muted-foreground)] text-xs">Dual sine chime + voice: "30s until wave"</span>
+      </button>
+
+      <!-- 2. 10s Urgent Alert -->
+      <button onclick="play10sUrgent()" class="glow-btn flex flex-col items-start p-3.5 rounded-xl border border-rose-500/30 bg-rose-500/5 hover:bg-rose-500/15 text-rose-400 transition-all text-left">
+        <div class="flex items-center justify-between w-full mb-1">
+          <span class="font-bold text-sm flex items-center gap-2">🚨 10s Urgent Alarm</span>
+          <span class="text-[10px] px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 font-mono">880-1100Hz</span>
+        </div>
+        <span class="text-[var(--muted-foreground)] text-xs">Fast pulse alarm + voice: "10 seconds!"</span>
+      </button>
+
+      <!-- 3. Secret / Eternal Drop Chime -->
+      <button onclick="playDropChime()" class="glow-btn flex flex-col items-start p-3.5 rounded-xl border border-cyan-500/30 bg-cyan-500/5 hover:bg-cyan-500/15 text-cyan-400 transition-all text-left">
+        <div class="flex items-center justify-between w-full mb-1">
+          <span class="font-bold text-sm flex items-center gap-2">✨ Drop Chime</span>
+          <span class="text-[10px] px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-mono">4-Tone Ascending</span>
+        </div>
+        <span class="text-[var(--muted-foreground)] text-xs">Smooth chime + "Pure Jellyfish in Angels"</span>
+      </button>
+
+      <!-- 4. Divine Drop Epic Chord -->
+      <button onclick="playDivineChord()" class="glow-btn flex flex-col items-start p-3.5 rounded-xl border border-purple-500/30 bg-purple-500/5 hover:bg-purple-500/15 text-purple-400 transition-all text-left">
+        <div class="flex items-center justify-between w-full mb-1">
+          <span class="font-bold text-sm flex items-center gap-2">👑 Divine Drop Chord</span>
+          <span class="text-[10px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 font-mono">C5 Shimmer Chord</span>
+        </div>
+        <span class="text-[var(--muted-foreground)] text-xs">Harmonic chime + "Divine Kitsune in Forest"</span>
+      </button>
+
+      <!-- 5. Phantom Express Train Bell -->
+      <button onclick="playTrainBell()" class="glow-btn flex flex-col items-start p-3.5 rounded-xl border border-orange-500/30 bg-orange-500/5 hover:bg-orange-500/15 text-orange-400 transition-all text-left">
+        <div class="flex items-center justify-between w-full mb-1">
+          <span class="font-bold text-sm flex items-center gap-2">🚆 Phantom Train Bell</span>
+          <span class="text-[10px] px-1.5 py-0.5 rounded bg-orange-500/20 text-orange-300 font-mono">Metallic Bell</span>
+        </div>
+        <span class="text-[var(--muted-foreground)] text-xs">Triple bell toll for Halloween train spawn</span>
+      </button>
+
+      <!-- 6. Voice Utterance Only -->
+      <button onclick="speakCustom()" class="glow-btn flex flex-col items-start p-3.5 rounded-xl border border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/15 text-emerald-400 transition-all text-left">
+        <div class="flex items-center justify-between w-full mb-1">
+          <span class="font-bold text-sm flex items-center gap-2">🗣️ Spoken Voice Test</span>
+          <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono">Web Speech TTS</span>
+        </div>
+        <span class="text-[var(--muted-foreground)] text-xs">Test browser TTS voice synthesizer</span>
+      </button>
+
+    </div>
+
+    <!-- Custom Spoken Text Box -->
+    <div class="bg-[var(--background)]/60 rounded-xl p-3 border border-[var(--border)] mb-4">
+      <label class="block text-xs font-semibold text-[var(--muted-foreground)] mb-1.5">Custom Speech Announcement:</label>
+      <div class="flex gap-2">
+        <input id="custom-text" type="text" value="Egg wave is here! Pure Jellyfish in Angels!" class="flex-1 bg-[var(--card)] border border-[var(--border)] rounded-lg px-3 py-1.5 text-xs text-[var(--foreground)] focus:outline-none focus:border-cyan-400">
+        <button onclick="speakCustom()" class="px-4 py-1.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-black font-bold text-xs">Speak</button>
+      </div>
+    </div>
+
+    <!-- Master Controls -->
+    <div class="flex items-center justify-between pt-2 border-t border-[var(--border)]">
+      <div class="flex items-center gap-2">
+        <span class="text-xs text-[var(--muted-foreground)]">Volume:</span>
+        <input id="volume-slider" type="range" min="0" max="1" step="0.05" value="0.7" class="w-24 accent-cyan-400">
+      </div>
+      <button onclick="stopAllAudio()" class="px-3 py-1 rounded-lg bg-[var(--background)] border border-[var(--border)] hover:border-red-500/50 text-red-400 text-xs font-semibold">
+        ⏹️ Silence All
+      </button>
+    </div>
+
+  </div>
+
+  <script>
+    let audioCtx = null;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function getVolume() {
+      const slider = document.getElementById("volume-slider");
+      return slider ? parseFloat(slider.value) : 0.7;
+    }
+
+    function animateVisualizer(duration = 1000) {
+      const bars = [1,2,3,4,5,6,7,8,9,10].map(i => document.getElementById(`bar-${i}`));
+      const interval = setInterval(() => {
+        bars.forEach(b => {
+          if (b) {
+            const h = Math.floor(Math.random() * 48) + 6;
+            b.style.height = `${h}px`;
+          }
+        });
+      }, 50);
+      setTimeout(() => {
+        clearInterval(interval);
+        bars.forEach((b, i) => {
+          if (b) b.style.height = `${(i % 4 + 1) * 6}px`;
+        });
+      }, duration);
+    }
+
+    function speakText(text) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.rate = 1.15;
+      utter.pitch = 1.05;
+      utter.volume = getVolume();
+      window.speechSynthesis.speak(utter);
+    }
+
+    function playTone(freq, dur, type = "sine", delay = 0) {
+      const ctx = getAudioContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      const vol = getVolume() * 0.35;
+      const startTime = ctx.currentTime + delay;
+
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, startTime);
+      gain.gain.setValueAtTime(vol, startTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, startTime + dur);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(startTime);
+      osc.stop(startTime + dur);
+    }
+
+    function play30sWarning() {
+      animateVisualizer(1200);
+      playTone(660, 0.18, "sine", 0);
+      playTone(880, 0.25, "sine", 0.18);
+      setTimeout(() => {
+        speakText("Warning: 30 seconds until next egg wave!");
+      }, 400);
+    }
+
+    function play10sUrgent() {
+      animateVisualizer(1000);
+      playTone(880, 0.12, "triangle", 0);
+      playTone(1100, 0.12, "triangle", 0.14);
+      playTone(880, 0.12, "triangle", 0.28);
+      playTone(1100, 0.22, "triangle", 0.42);
+      setTimeout(() => {
+        speakText("10 seconds until egg wave! Get ready!");
+      }, 550);
+    }
+
+    function playDropChime() {
+      animateVisualizer(1500);
+      const freqs = [440, 554.37, 659.25, 880];
+      freqs.forEach((f, i) => {
+        playTone(f, 0.2 + i * 0.08, "sine", i * 0.14);
+      });
+      setTimeout(() => {
+        speakText("Egg wave is here! Pure Jellyfish in Angels!");
+      }, 650);
+    }
+
+    function playDivineChord() {
+      animateVisualizer(2200);
+      const freqs = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+      freqs.forEach(f => {
+        playTone(f, 1.8, "triangle", 0);
+      });
+      setTimeout(() => {
+        speakText("Divine drop alert! Kitsune spawned in Forest!");
+      }, 700);
+    }
+
+    function playTrainBell() {
+      animateVisualizer(1400);
+      [0, 0.45, 0.9].forEach(delay => {
+        playTone(784, 0.35, "sine", delay);
+        playTone(1646.4, 0.25, "triangle", delay);
+      });
+      setTimeout(() => {
+        speakText("Phantom Express train has arrived at the station!");
+      }, 1000);
+    }
+
+    function speakCustom() {
+      const input = document.getElementById("custom-text");
+      const text = input ? input.value : "Egg wave incoming!";
+      animateVisualizer(1500);
+      speakText(text);
+    }
+
+    function stopAllAudio() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      if (audioCtx && audioCtx.state !== 'closed') {
+        audioCtx.suspend();
+      }
+    }
+  </script>
+</body>
+</html>
