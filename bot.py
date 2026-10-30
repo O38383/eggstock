@@ -2644,7 +2644,6 @@ async def start_web_app():
         web.get("/calculator", handle_calculator),
         web.get("/soundboard", handle_soundboard),
         web.get("/soundboard/", handle_soundboard),
-        web.static("/sounds", WEBSITE_DIR / "sounds"),
         web.get("/calculator/", handle_calculator),
         web.get("/calc", handle_calculator),
         web.get("/calc/", handle_calculator),
@@ -2686,6 +2685,10 @@ async def start_web_app():
         web.static("/website/assets", WEBSITE_DIR),
         web.static("/images", WEBSITE_DIR / "images"),
     ]
+    sounds_dir = WEBSITE_DIR / "sounds"
+    sounds_dir.mkdir(parents=True, exist_ok=True)
+    routes.append(web.static("/sounds", sounds_dir))
+
     promo_dir = WEBSITE_DIR / "promo"
     if promo_dir.exists():
         routes.append(web.static("/promo", promo_dir))
