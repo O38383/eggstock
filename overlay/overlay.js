@@ -415,8 +415,7 @@
     }
     const targetMin = m < 15 ? 15 : (m < 45 ? 45 : 75);
     const rem = (targetMin - m) * 60 - s;
-    const pm = Math.floor(rem / 60);
-    return { active: false, text: `${pm}m`, remainingSec: rem };
+    return { active: false, text: formatMmSs(rem), remainingSec: rem };
   }
 
   // 2. Train / Phantom Express: Arrives at :00 and :30
@@ -603,6 +602,47 @@
       // If next wave estimate exists, sync the new eggs timer
       if (data.next_wave_estimate && data.next_wave_estimate.overall && data.next_wave_estimate.overall.eta_seconds) {
         newEggsSecs = Math.max(0, Math.floor(data.next_wave_estimate.overall.eta_seconds));
+      }
+
+      // ── Live Pet Timestamps Sync from SenZ V2 ──
+      if (data.last_seen_snapshot && data.last_seen_snapshot.sections) {
+        const nowUnix = Math.floor(Date.now() / 1000);
+        const allItems = [];
+        for (const [rarity, list] of Object.entries(data.last_seen_snapshot.sections)) {
+          if (Array.isArray(list)) {
+            list.forEach(item => allItems.push(item));
+          }
+        }
+
+        allItems.forEach(livePet => {
+          const petName = (livePet.name || "").toLowerCase().trim();
+          const elapsedSec = Math.max(0, nowUnix - (livePet.ts || nowUnix));
+
+          for (const [biomeKey, cardList] of Object.entries(ROSTER_DATA)) {
+            const match = cardList.find(p => {
+              const n = p.name.toLowerCase().trim();
+              return n === petName || n.includes(petName) || petName.includes(n) || (n.includes("patapim") && petName.includes("patapim"));
+            });
+
+            if (match) {
+              if (elapsedSec < 240) {
+                // Dropped within last 4 minutes -> IN STOCK!
+                match.status = "x1";
+                match.inStock = true;
+              } else {
+                match.inStock = false;
+                if (elapsedSec < 3600) {
+                  match.status = Math.floor(elapsedSec / 60) + "m ago";
+                } else if (elapsedSec < 86400) {
+                  match.status = Math.floor(elapsedSec / 3600) + "h ago";
+                } else {
+                  match.status = Math.floor(elapsedSec / 86400) + "d ago";
+                }
+              }
+            }
+          }
+        });
+        renderAllCards();
       }
 
       // Check recent drops to flash updates and trigger loud sound alerts
