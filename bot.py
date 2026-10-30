@@ -2088,19 +2088,129 @@ async def handle_prediction(request):
     return web.json_response(model_data, headers=cors_headers)
 
 
-async def handle_root(request):
-    """Serve index.html with the API token injected at runtime (never stored on disk)."""
-    html = (WEBSITE_DIR / "index.html").read_text(encoding="utf-8")
-    # Inject the token as a JS variable right after <head> so the polling
-    # code can read window.__ES_TOKEN and send it as X-EggStock-Token header.
+def _render_page_with_token(filepath: Path) -> web.Response:
+    """Serve an HTML file with API token injected for client-side API requests."""
+    if not filepath.exists():
+        filepath = WEBSITE_DIR / "index.html"
+    html = filepath.read_text(encoding="utf-8")
     token_script = f'<script>window.__ES_TOKEN="{API_TOKEN}";</script>'
-    html = html.replace("<head>", f"<head>\n{token_script}", 1)
+    if "<head>" in html:
+        html = html.replace("<head>", f"<head>\n{token_script}", 1)
     return web.Response(
         text=html,
         content_type="text/html",
         charset="utf-8",
         headers={"Cache-Control": "no-cache, no-store, must-revalidate", "Pragma": "no-cache"}
     )
+
+
+async def handle_root(request):
+    return _render_page_with_token(WEBSITE_DIR / "index.html")
+
+
+async def handle_stock(request):
+    return _render_page_with_token(WEBSITE_DIR / "stock.html")
+
+
+async def handle_notifier(request):
+    return _render_page_with_token(WEBSITE_DIR / "notifier.html")
+
+
+async def handle_predictions(request):
+    return _render_page_with_token(WEBSITE_DIR / "predictions.html")
+
+
+async def handle_calculator(request):
+    return _render_page_with_token(WEBSITE_DIR / "calculator.html")
+
+
+async def handle_sw(request):
+    sw_file = WEBSITE_DIR / "sw.js"
+    if sw_file.exists():
+        return web.FileResponse(
+            sw_file,
+            headers={
+                "Content-Type": "application/javascript; charset=utf-8",
+                "Service-Worker-Allowed": "/",
+                "Cache-Control": "public, max-age=3600"
+            }
+        )
+    return web.Response(status=404, text="Service worker not found\n", content_type="text/plain")
+
+
+async def handle_style_css(request):
+    css_file = WEBSITE_DIR / "style.css"
+    if css_file.exists():
+        return web.FileResponse(
+            css_file,
+            headers={"Content-Type": "text/css; charset=utf-8", "Cache-Control": "public, max-age=86400"}
+        )
+    return web.Response(status=404, text="CSS not found\n", content_type="text/plain")
+
+
+async def handle_app_js(request):
+    js_file = WEBSITE_DIR / "app.js"
+    if js_file.exists():
+        return web.FileResponse(
+            js_file,
+            headers={"Content-Type": "application/javascript; charset=utf-8", "Cache-Control": "public, max-age=86400"}
+        )
+    return web.Response(status=404, text="JS not found\n", content_type="text/plain")
+
+
+async def handle_monetag_oauth(request):
+    code = request.query.get("code")
+    error = request.query.get("error")
+    if error:
+        return web.Response(status=400, text=f"<h1>OAuth Error: {error}</h1>", content_type="text/html")
+    if not code:
+        return web.Response(status=400, text="<h1>Missing authorization code</h1>", content_type="text/html")
+
+    token_url = "https://publishers.monetag.com/api/oauth2/token"
+    verifier = "EggStockMonetagMcpVerifierSecureKey20261023SafeRandomStr999"
+    client_id = "mcp_dyn_2fe369d9bc20f449bd5ec09ae1bba14b"
+    redirect_uri = "https://eggstock.xyz/oauth/callback"
+
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                token_url,
+                data={
+                    "grant_type": "authorization_code",
+                    "client_id": client_id,
+                    "code": code,
+                    "redirect_uri": redirect_uri,
+                    "code_verifier": verifier
+                }
+            ) as resp:
+                token_data = await resp.json()
+                token_val = token_data.get("access_token") or json.dumps(token_data)
+
+                html = f"""<!DOCTYPE html>
+<html>
+<head><title>Monetag MCP Authorized</title>
+<style>
+body {{ background: #0b0f19; color: #fff; font-family: monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }}
+.card {{ background: #161f30; padding: 2rem; border-radius: 12px; border: 1px solid #00f0ff; max-width: 600px; width: 90%; }}
+h1 {{ color: #00f0ff; margin-top: 0; }}
+textarea {{ width: 100%; height: 90px; background: #090d16; color: #00ff66; border: 1px solid #334155; padding: 10px; font-family: monospace; border-radius: 6px; box-sizing: border-box; }}
+button {{ background: #00f0ff; color: #000; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 10px; }}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>🎉 Monetag Connected!</h1>
+<p>Here is your Monetag MCP Access Token:</p>
+<textarea id="tok" readonly>{token_val}</textarea>
+<br>
+<button onclick="navigator.clipboard.writeText(document.getElementById('tok').value); this.innerText='COPIED!';">📋 Copy Token</button>
+<p style="color: #94a3b8; font-size: 0.85rem; margin-top: 1rem;">Paste this token back into chat to finish setup!</p>
+</div>
+</body>
+</html>"""
+                return web.Response(text=html, content_type="text/html")
+    except Exception as e:
+        return web.Response(status=500, text=f"<h1>Exchange Error: {e}</h1>", content_type="text/html")
 
 
 async def handle_ads_txt(request):
@@ -2163,24 +2273,18 @@ async def handle_codes(request):
 
 
 async def handle_tier_list(request):
-    tier_file = WEBSITE_DIR / "tier_list.html"
-    if tier_file.exists():
-        return web.FileResponse(tier_file)
-    return web.Response(status=404, text="Tier list page not found\n", content_type="text/plain")
+    tier_file = WEBSITE_DIR / "tier-list.html"
+    if not tier_file.exists():
+        tier_file = WEBSITE_DIR / "tier_list.html"
+    return _render_page_with_token(tier_file)
 
 
 async def handle_event(request):
-    event_file = WEBSITE_DIR / "event.html"
-    if event_file.exists():
-        return web.FileResponse(event_file)
-    return web.Response(status=404, text="Event page not found\n", content_type="text/plain")
+    return _render_page_with_token(WEBSITE_DIR / "event.html")
 
 
 async def handle_script_gateway(request):
-    index_file = WEBSITE_DIR / "index.html"
-    if index_file.exists():
-        return web.FileResponse(index_file)
-    return web.Response(status=404, text="Gateway page not found\n", content_type="text/plain")
+    return _render_page_with_token(WEBSITE_DIR / "script" / "index.html")
 
 
 async def handle_blog_index(request):
@@ -2514,15 +2618,31 @@ async def start_web_app():
         web.get("/codes/", handle_codes),
         web.get("/tier-list", handle_tier_list),
         web.get("/tier-list/", handle_tier_list),
+        # Asset & Service Worker Routes
+        web.get("/sw.js", handle_sw),
+        web.get("/style.css", handle_style_css),
+        web.get("/app.js", handle_app_js),
+        web.get("/oauth/callback", handle_monetag_oauth),
+
         # High-Intent SEO Landing Routes (Google Search optimization)
-        web.get("/stock", handle_root),
-        web.get("/stock/", handle_root),
-        web.get("/prediction", handle_root),
-        web.get("/prediction/", handle_root),
-        web.get("/predictions", handle_root),
-        web.get("/predictions/", handle_root),
-        web.get("/notifier", handle_root),
-        web.get("/notifier/", handle_root),
+        web.get("/stock", handle_stock),
+        web.get("/stock/", handle_stock),
+        web.get("/stocks", handle_stock),
+        web.get("/stocks/", handle_stock),
+        web.get("/prediction", handle_predictions),
+        web.get("/prediction/", handle_predictions),
+        web.get("/predictions", handle_predictions),
+        web.get("/predictions/", handle_predictions),
+        web.get("/notifier", handle_notifier),
+        web.get("/notifier/", handle_notifier),
+        web.get("/calculator", handle_calculator),
+        web.get("/calculator/", handle_calculator),
+        web.get("/calc", handle_calculator),
+        web.get("/calc/", handle_calculator),
+        web.get("/tierlist", handle_tier_list),
+        web.get("/tierlist/", handle_tier_list),
+        web.get("/tier_list", handle_tier_list),
+        web.get("/tier_list/", handle_tier_list),
         web.get("/values", handle_tier_list),
         web.get("/values/", handle_tier_list),
         web.get("/trading", handle_tier_list),
