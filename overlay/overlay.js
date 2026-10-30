@@ -401,50 +401,105 @@
   // Unlock audio on any click/interaction (essential for OBS browser source)
   document.addEventListener("click", () => initAudio(), { once: true });
 
+  // ── Synchronized In-Game Timers (Aligned with live Roblox server schedule) ──
+
+  // 1. Pumpkin King: Spawns twice an hour at exactly :15 and :45
+  function getPumpkinKingData() {
+    const now = new Date();
+    const m = now.getMinutes();
+    const s = now.getSeconds();
+    // Portal open window: 5 minutes (:15-:20 and :45-:50)
+    if ((m >= 15 && m < 20) || (m >= 45 && m < 50)) {
+      const rem = (m < 20 ? 20 - m : 50 - m) * 60 - s;
+      return { active: true, text: "OPEN NOW", remainingSec: rem };
+    }
+    const targetMin = m < 15 ? 15 : (m < 45 ? 45 : 75);
+    const rem = (targetMin - m) * 60 - s;
+    const pm = Math.floor(rem / 60);
+    return { active: false, text: `${pm}m`, remainingSec: rem };
+  }
+
+  // 2. Train / Phantom Express: Arrives at :00 and :30
+  function getTrainData() {
+    const now = new Date();
+    const m = now.getMinutes();
+    const s = now.getSeconds();
+    // In station / boarding: 5 minutes (:00-:05 and :30-:35)
+    if ((m >= 0 && m < 5) || (m >= 30 && m < 35)) {
+      const rem = (m < 5 ? 5 - m : 35 - m) * 60 - s;
+      return { inStation: true, text: "NOW", remainingSec: rem };
+    }
+    const targetMin = m < 30 ? 30 : 60;
+    const rem = (targetMin - m) * 60 - s;
+    return { inStation: false, text: formatMmSs(rem), remainingSec: rem };
+  }
+
+  // 3. New Eggs / Night Cycle (5-minute rotation: 4m 50s day, 10s night refresh)
+  function getNewEggsRemaining() {
+    const now = new Date();
+    const secInCycle = (now.getMinutes() * 60 + now.getSeconds()) % 300;
+    let rem = 300 - secInCycle + 6;
+    if (rem > 300) rem -= 300;
+    if (rem <= 0) rem = 300;
+    return rem;
+  }
+
+  // 4. Weekly Update Countdown (Saturdays at 14:00 UTC)
+  function getWeeklyUpdateRemaining() {
+    const now = new Date();
+    const target = new Date(now);
+    target.setUTCHours(14, 0, 0, 0);
+    const day = now.getUTCDay();
+    let diffDays = (6 - day + 7) % 7;
+    if (diffDays === 0 && now.getUTCHours() >= 14) {
+      diffDays = 7;
+    }
+    target.setUTCDate(now.getUTCDate() + diffDays);
+    return Math.max(0, Math.floor((target - now) / 1000));
+  }
+
   function tickCountdowns() {
-    // 1. New Eggs timer
-    if (newEggsSecs > 0) newEggsSecs--;
-    else newEggsSecs = 300; // resets every 5 mins
+    // 1. New Eggs timer (Synchronized 5-min cycle)
+    const eggsRem = getNewEggsRemaining();
     const elNewEggs = document.getElementById("timer-new-eggs");
-    if (elNewEggs) elNewEggs.textContent = formatMmSs(newEggsSecs);
-    checkWaveAlarms(newEggsSecs);
+    if (elNewEggs) elNewEggs.textContent = formatMmSs(eggsRem);
+    checkWaveAlarms(eggsRem);
 
-    // 2. Event timer & progress bar
-    if (eventSecs > 0) eventSecs--;
-    else eventSecs = 600;
-    const elEventTime = document.getElementById("event-timer-val");
-    if (elEventTime) elEventTime.textContent = formatMmSs(eventSecs);
-    const elProgressBar = document.getElementById("event-progress-bar");
-    if (elProgressBar) {
-      const pct = Math.max(0, Math.min(100, (eventSecs / 600) * 100));
-      elProgressBar.style.width = `${pct}%`;
-    }
-
-    // 3. Pumpkin King timer
-    if (pumpkinKingSecs > 0) pumpkinKingSecs--;
-    else pumpkinKingSecs = 1800;
-    const elPumpkin = document.getElementById("timer-pumpkin-king");
-    if (elPumpkin) {
-      const pm = Math.floor(pumpkinKingSecs / 60);
-      elPumpkin.textContent = `${pm}m`;
-    }
-
-    // 4. Train timer (dynamic: pulses "NOW" while Phantom Express is in station, otherwise counts down)
+    // 2. Train & Event Pill (Synchronized 30-min schedule: :00 and :30)
+    const train = getTrainData();
     const elTrain = document.getElementById("timer-train");
     if (elTrain) {
-      if (eventSecs > 0) {
-        elTrain.textContent = "NOW";
+      elTrain.textContent = train.text;
+      if (train.inStation) {
         elTrain.classList.add("pulse-now");
       } else {
         elTrain.classList.remove("pulse-now");
-        elTrain.textContent = formatMmSs(newEggsSecs);
       }
     }
 
-    // 5. Update timer
-    if (updateSecs > 0) updateSecs--;
+    const elEventTime = document.getElementById("event-timer-val");
+    if (elEventTime) {
+      elEventTime.textContent = train.inStation ? "BOARDING" : formatMmSs(train.remainingSec);
+    }
+    const elProgressBar = document.getElementById("event-progress-bar");
+    if (elProgressBar) {
+      const pct = Math.max(5, Math.min(100, ((1800 - train.remainingSec) / 1800) * 100));
+      elProgressBar.style.width = `${pct}%`;
+    }
+
+    // 3. Pumpkin King timer (Synchronized twice per hour: :15 and :45)
+    const pk = getPumpkinKingData();
+    const elPumpkin = document.getElementById("timer-pumpkin-king");
+    if (elPumpkin) {
+      elPumpkin.textContent = pk.text;
+      if (pk.active) elPumpkin.classList.add("pulse-now");
+      else elPumpkin.classList.remove("pulse-now");
+    }
+
+    // 4. Update timer (Weekly Saturday update)
+    const updSec = getWeeklyUpdateRemaining();
     const elUpdate = document.getElementById("timer-update");
-    if (elUpdate) elUpdate.textContent = formatDhm(updateSecs);
+    if (elUpdate) elUpdate.textContent = formatDhm(updSec);
   }
 
   function getRosterBiomeKey(loc) {
