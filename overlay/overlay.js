@@ -318,6 +318,31 @@
 
   // ── Audio & Speech Alert Engine (Native HTML5 WAV Audio for OBS CEF) ──
   let alarmEnabled = true;
+
+  // Continuous Inaudible Audio Carrier (Keeps OBS CEF Audio Stream Alive at 160 kbps 24/7)
+  // Guarantees YouTube Studio never flags "Audio bit rate (0)" during quiet periods
+  function initAudioCarrier() {
+    try {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (AudioContext) {
+        const carrierCtx = new AudioContext();
+        const osc = carrierCtx.createOscillator();
+        const gain = carrierCtx.createGain();
+        gain.gain.value = 0.00001; // inaudible carrier
+        osc.frequency.value = 440;
+        osc.connect(gain);
+        gain.connect(carrierCtx.destination);
+        osc.start();
+
+        setInterval(() => {
+          if (carrierCtx.state === 'suspended') {
+            carrierCtx.resume().catch(() => {});
+          }
+        }, 3000);
+      }
+    } catch (e) {}
+  }
+  initAudioCarrier();
   let lastSpokenWaveSecond = null;
 
   function playSoundFile(filename) {

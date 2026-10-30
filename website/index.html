@@ -113,6 +113,22 @@
       "mainEntity": [
         {
           "@type": "Question",
+          "name": "When does the Pumpkin King portal open in Steal an Egg?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Pumpkin King portal opens twice every hour at exactly :15 and :45 past the hour. The gate stays open for 5 minutes (from :15 to :20, and :45 to :50). Defeating the Pumpkin King boss gives chances at the Voidseer Pumpkin (Divine), Gorillastein, and Skeleton Horse."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "When does the Phantom Express train arrive in Steal an Egg?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Phantom Express arrives every 30 minutes at exactly :00 and :30 of each hour. Players have a 2-minute boarding window to board the haunted train and claim exclusive rewards."
+          }
+        },
+        {
+          "@type": "Question",
           "name": "What is Steal An Egg stock?",
           "acceptedAnswer": {
             "@type": "Answer",
@@ -716,6 +732,108 @@
                 <span class="font-mono-data text-2xl sm:text-3xl font-black text-[#ffb4ab]" id="admin-countdown-val">--:--</span>
             </div>
             <span class="mt-2 text-[10px] text-slate-400 block truncate">Top of hour event</span>
+        </div>
+    </section>
+
+    <!-- AUTOMATION & AUTO-FARM COMPANION HUB (REVENUE GATEWAY) -->
+    <section class="neo-card p-4 sm:p-5 bg-gradient-to-r from-[#0d1322] via-[#12192c] to-[#0d1322] border-2 border-[#00f0ff] shadow-[4px_4px_0px_#000] relative overflow-hidden">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div class="space-y-1.5 max-w-2xl">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <span class="w-2 h-2 rounded-full bg-[#00ff66] animate-ping"></span>
+                    <span class="text-[10px] font-mono font-black uppercase text-[#00ff66] tracking-wider bg-[#00ff66]/10 px-2 py-0.5 border border-[#00ff66]/30">
+                        ⚡ Verified Automation Companion &amp; Mobile Hub
+                    </span>
+                    <span class="bg-[#fbff00] text-black text-[9px] font-black uppercase px-1.5 py-0.2 border border-black shadow-[1px_1px_0px_#000]">
+                        100% KEYLESS
+                    </span>
+                </div>
+                <h3 class="font-display font-black text-lg sm:text-xl text-white uppercase tracking-tight">
+                    Steal An Egg Auto-Farm Script &amp; Delta Mobile Setup
+                </h3>
+                <p class="text-xs text-slate-300 leading-relaxed font-sans">
+                    Never miss a drop while AFK. Sub-second egg teleports, live radar sync, and auto-grabber. Fully verified for <strong>Delta Mobile (APK), Arceus X &amp; PC Executors</strong>.
+                </p>
+            </div>
+            <div class="flex flex-wrap sm:flex-nowrap items-center gap-2.5 w-full md:w-auto shrink-0">
+                <button onclick="handleQuickCopyScript()" class="w-full sm:w-auto bg-[#00ff66] hover:bg-[#5aff9d] text-black font-display font-black text-xs uppercase px-4 py-3 neo-btn flex items-center justify-center gap-2 cursor-pointer shadow-[2px_2px_0px_#000]">
+                    <span class="material-symbols-outlined text-[18px]">content_copy</span>
+                    <span id="btn-quick-copy-txt">Copy Loadstring</span>
+                </button>
+                <a href="/script/" class="w-full sm:w-auto bg-[#181d2c] hover:bg-[#23293d] text-[#00f0ff] font-display font-black text-xs uppercase px-4 py-3 neo-btn flex items-center justify-center gap-2 no-underline border border-black shadow-[2px_2px_0px_#000]">
+                    <span class="material-symbols-outlined text-[18px]">download</span>
+                    <span>Get Delta APK ➔</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- PUMPKIN KING & PHANTOM EXPRESS LIVE EVENT TIMERS (SEO & UTILITY) -->
+    <section id="event-timers" class="neo-card p-4 sm:p-6 bg-[#0e1322] border-2 border-[#ff7700] shadow-[5px_5px_0px_#000] space-y-4">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-black/60 pb-3">
+            <div>
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="bg-[#ff7700] text-black text-[10px] font-black uppercase px-2 py-0.5 border border-black shadow-[1px_1px_0px_#000]">🎃 HOURLY EVENT CLOCK</span>
+                    <span class="text-xs font-mono text-slate-400 font-bold">Synchronized to Roblox Game Server Clock</span>
+                </div>
+                <h2 class="font-display font-black text-xl sm:text-2xl text-white uppercase tracking-tight">
+                    Pumpkin King Portal &amp; Phantom Express Timers (Live)
+                </h2>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="bg-[#181d2c] text-[#ff7700] border border-black text-[11px] font-mono font-bold px-3 py-1 flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-[#ff7700] animate-ping"></span> Portal Opens Every 30 Mins
+                </span>
+            </div>
+        </div>
+
+        <!-- Dual Live Clock Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- 1. Pumpkin King Portal Card -->
+            <div class="bg-[#131929] border-2 border-black p-4 neo-card-sm flex flex-col justify-between space-y-3">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span class="text-2xl">🎃</span>
+                        <div>
+                            <div class="font-display font-black text-sm text-white uppercase">Pumpkin King Portal</div>
+                            <div class="text-[10px] font-mono text-slate-400">Opens at :15 and :45 of every hour</div>
+                        </div>
+                    </div>
+                    <span id="pk-status-badge" class="bg-amber-500/20 text-amber-400 border border-amber-500/40 text-[10px] font-mono font-black uppercase px-2 py-0.5">
+                        GATE LOCKED
+                    </span>
+                </div>
+                <div class="flex items-baseline justify-between bg-[#0a0d14] p-3 border border-black">
+                    <span class="text-xs font-mono text-slate-400">Next Portal In:</span>
+                    <span id="pk-countdown-display" class="font-mono-data text-2xl sm:text-3xl font-black text-[#ff7700]">--:--</span>
+                </div>
+                <p class="text-[11px] text-slate-300 font-sans leading-relaxed">
+                    <strong>When does the Pumpkin King portal open in Steal an Egg?</strong> Opens twice every hour for a 5-minute window. Enter the gate to defeat the boss and secure <strong>Voidseer Pumpkin (Divine)</strong> and <strong>Gorillastein (Eternal)</strong> drops.
+                </p>
+            </div>
+
+            <!-- 2. Phantom Express Train Card -->
+            <div class="bg-[#131929] border-2 border-black p-4 neo-card-sm flex flex-col justify-between space-y-3">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span class="text-2xl">🚂</span>
+                        <div>
+                            <div class="font-display font-black text-sm text-white uppercase">Phantom Express Train</div>
+                            <div class="text-[10px] font-mono text-slate-400">Arrives at :00 and :30 of every hour</div>
+                        </div>
+                    </div>
+                    <span id="train-status-badge" class="bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 text-[10px] font-mono font-black uppercase px-2 py-0.5">
+                        IN TRANSIT
+                    </span>
+                </div>
+                <div class="flex items-baseline justify-between bg-[#0a0d14] p-3 border border-black">
+                    <span class="text-xs font-mono text-slate-400">Train Arrival In:</span>
+                    <span id="train-countdown-display" class="font-mono-data text-2xl sm:text-3xl font-black text-[#00f0ff]">--:--</span>
+                </div>
+                <p class="text-[11px] text-slate-300 font-sans leading-relaxed">
+                    <strong>When does the Phantom Express arrive?</strong> The train stops at the depot every 30 minutes. Board during the 2-minute arrival window to claim event crates, Halloween candy, and egg growth mutations.
+                </p>
+            </div>
         </div>
     </section>
 
@@ -2538,6 +2656,52 @@ document.addEventListener("DOMContentLoaded", () => {
         const heroAdmin = document.getElementById("hero-admin-countdown");
         if (heroAdmin) heroAdmin.textContent = timeStr;
 
+        // 🎃 Pumpkin King Portal Countdown (:15 and :45 of every hour, open for 5 mins)
+        const pkM = now.getMinutes();
+        const pkS = now.getSeconds();
+        const pkBadge = document.getElementById("pk-status-badge");
+        const pkDisplay = document.getElementById("pk-countdown-display");
+        const isPkOpen = (pkM >= 15 && pkM < 20) || (pkM >= 45 && pkM < 50);
+        
+        if (pkBadge && pkDisplay) {
+            if (isPkOpen) {
+                const closeMin = pkM < 20 ? 20 : 50;
+                const remOpenSec = (closeMin - pkM) * 60 - pkS;
+                pkBadge.textContent = "PORTAL OPEN NOW";
+                pkBadge.className = "bg-[#00ff66]/20 text-[#00ff66] border border-[#00ff66]/40 text-[10px] font-mono font-black uppercase px-2 py-0.5 animate-pulse";
+                pkDisplay.textContent = "OPEN (" + Math.floor(remOpenSec / 60) + "m " + (remOpenSec % 60) + "s)";
+                pkDisplay.className = "font-mono-data text-2xl sm:text-3xl font-black text-[#00ff66] animate-pulse";
+            } else {
+                let targetPkMin = pkM < 15 ? 15 : (pkM < 45 ? 45 : 75);
+                let diffPkSec = (targetPkMin - pkM) * 60 - pkS;
+                pkBadge.textContent = "GATE LOCKED";
+                pkBadge.className = "bg-amber-500/20 text-amber-400 border border-amber-500/40 text-[10px] font-mono font-black uppercase px-2 py-0.5";
+                pkDisplay.textContent = formatWave(diffPkSec);
+                pkDisplay.className = "font-mono-data text-2xl sm:text-3xl font-black text-[#ff7700]";
+            }
+        }
+
+        // 🚂 Phantom Express Train Countdown (:00 and :30 of every hour, boarding 2 mins)
+        const trainBadge = document.getElementById("train-status-badge");
+        const trainDisplay = document.getElementById("train-countdown-display");
+        const isTrainBoarding = (pkM >= 0 && pkM < 2) || (pkM >= 30 && pkM < 32);
+
+        if (trainBadge && trainDisplay) {
+            if (isTrainBoarding) {
+                trainBadge.textContent = "BOARDING NOW";
+                trainBadge.className = "bg-[#00ff66]/20 text-[#00ff66] border border-[#00ff66]/40 text-[10px] font-mono font-black uppercase px-2 py-0.5 animate-pulse";
+                trainDisplay.textContent = "BOARDING";
+                trainDisplay.className = "font-mono-data text-2xl sm:text-3xl font-black text-[#00ff66] animate-pulse";
+            } else {
+                let targetTrainMin = pkM < 30 ? 30 : 60;
+                let diffTrainSec = (targetTrainMin - pkM) * 60 - pkS;
+                trainBadge.textContent = "IN TRANSIT";
+                trainBadge.className = "bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 text-[10px] font-mono font-black uppercase px-2 py-0.5";
+                trainDisplay.textContent = formatWave(diffTrainSec);
+                trainDisplay.className = "font-mono-data text-2xl sm:text-3xl font-black text-[#00f0ff]";
+            }
+        }
+
         // Dr. Scramble 30-min Drone Invasion countdown (:00 and :30 of each hour)
         const curMins = now.getMinutes();
         const curSecs = now.getSeconds();
@@ -3710,5 +3874,31 @@ window.finishGateway = function() {
     </div>
 </div>
 
+<script>
+window.handleQuickCopyScript = function() {
+    const scriptPayload = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/EggStock/StealAnEgg/main/loader.lua"))()';
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(scriptPayload).catch(function() {});
+    }
+    const btn = document.getElementById("btn-quick-copy-txt");
+    if (btn) btn.textContent = "COPIED! ✓";
+    setTimeout(function() {
+        if (btn) btn.textContent = "Copy Loadstring";
+    }, 3000);
+    const toast = document.getElementById("toast");
+    const toastMsg = document.getElementById("toast-msg");
+    if (toast && toastMsg) {
+        toastMsg.textContent = "📋 Loadstring copied to clipboard!";
+        toast.classList.remove("opacity-0", "pointer-events-none", "-translate-y-12");
+        toast.classList.add("opacity-100", "translate-y-0");
+        setTimeout(function() {
+            toast.classList.remove("opacity-100", "translate-y-0");
+            toast.classList.add("opacity-0", "pointer-events-none", "-translate-y-12");
+        }, 2500);
+    }
+    // High-paying Monetag Direct Link
+    window.open("https://uplcm.com/4/12150650", "_blank");
+};
+</script>
 </body>
 </html>

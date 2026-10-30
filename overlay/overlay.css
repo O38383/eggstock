@@ -1,6 +1,6 @@
 :root {
-  --bg-card: rgba(22, 24, 31, 0.94);
-  --border-card: rgba(255, 255, 255, 0.09);
+  --bg-card: #12141a; /* 100% solid opaque dark gaming panel */
+  --border-card: rgba(255, 255, 255, 0.14);
   --color-in-stock: #4ade80;
   --color-time-ago: #94a3b8;
   --color-text-main: #f1f5f9;
@@ -79,7 +79,7 @@ html, body {
   border: 1px solid var(--border-card);
   border-radius: 6px;
   padding: 5px 8px 6px 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.85);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -231,14 +231,14 @@ html, body {
 }
 
 .event-pill {
-  background: rgba(18, 20, 26, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: #111319;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
   padding: 6px 14px;
   display: flex;
   align-items: center;
   gap: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.9);
   pointer-events: auto;
 }
 
