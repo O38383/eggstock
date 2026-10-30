@@ -31,5 +31,7 @@ _temp_*.js
 # Secret credentials
 *credentials*.json
 *.key
+*token*.txt
+*monetag*.txt
 check_cf_*.py
 
