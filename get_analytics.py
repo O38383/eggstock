@@ -2,6 +2,7 @@ from google.oauth2 import service_account
 import google.auth.transport.requests
 import requests
 import json
+import datetime
 import sys
 
 if hasattr(sys.stdout, 'reconfigure'):
@@ -24,6 +25,9 @@ def fetch_overview():
     token = get_token()
     headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
     
+    today_str = datetime.date.today().isoformat()
+    yesterday_str = (datetime.date.today() - datetime.timedelta(days=1)).isoformat()
+
     # 1. Realtime Active Users
     rt_res = requests.post(
         f"https://analyticsdata.googleapis.com/v1beta/properties/{PROPERTY_ID}:runRealtimeReport",
@@ -50,7 +54,23 @@ def fetch_overview():
         }
     ).json()
 
-    # 3. Top Pages Today
+    # 3. Yesterday Totals
+    yesterday_res = requests.post(
+        f"https://analyticsdata.googleapis.com/v1beta/properties/{PROPERTY_ID}:runReport",
+        headers=headers,
+        json={
+            "dateRanges": [{"startDate": "yesterday", "endDate": "yesterday"}],
+            "metrics": [
+                {"name": "activeUsers"},
+                {"name": "newUsers"},
+                {"name": "sessions"},
+                {"name": "screenPageViews"},
+                {"name": "eventCount"}
+            ]
+        }
+    ).json()
+
+    # 4. Top Pages Today
     pages_res = requests.post(
         f"https://analyticsdata.googleapis.com/v1beta/properties/{PROPERTY_ID}:runReport",
         headers=headers,
@@ -63,7 +83,7 @@ def fetch_overview():
         }
     ).json()
 
-    # 4. Top Traffic Sources / Referrers Today
+    # 5. Top Sources Today
     sources_res = requests.post(
         f"https://analyticsdata.googleapis.com/v1beta/properties/{PROPERTY_ID}:runReport",
         headers=headers,
@@ -76,28 +96,40 @@ def fetch_overview():
         }
     ).json()
 
-    print("\n" + "="*50)
+    print("\n" + "="*55)
     print("🚀 EGGSTOCK LIVE GOOGLE ANALYTICS REPORT")
-    print("="*50)
+    print("="*55)
 
     # Realtime
     rt_total = sum(int(r["metricValues"][0]["value"]) for r in rt_res.get("rows", []))
-    print(f"\n🔴 REAL-TIME ACTIVE USERS (Last 30 Min): {rt_total}")
+    print(f"\n🔴 REAL-TIME ACTIVE USERS RIGHT NOW (Last 30 Min): {rt_total}")
     print("Top Countries Right Now:")
-    for r in rt_res.get("rows", [])[:7]:
+    for r in rt_res.get("rows", [])[:8]:
         country = r["dimensionValues"][0]["value"]
         users = r["metricValues"][0]["value"]
         print(f"  • {country}: {users} users")
 
     # Today Totals
+    print(f"\n📅 TODAY'S STATS SO FAR ({today_str}):")
     if today_res.get("rows"):
         m = today_res["rows"][0]["metricValues"]
-        print(f"\n📅 TODAY'S STATS (Oct 29, 2026):")
-        print(f"  • Total Active Users: {m[0]['value']}")
-        print(f"  • New Users:          {m[1]['value']}")
-        print(f"  • Total Sessions:     {m[2]['value']}")
-        print(f"  • Page Views:         {m[3]['value']}")
-        print(f"  • Total Events:       {m[4]['value']}")
+        print(f"  • Active Users:     {m[0]['value']}")
+        print(f"  • New Users:        {m[1]['value']}")
+        print(f"  • Sessions:         {m[2]['value']}")
+        print(f"  • Page Views:       {m[3]['value']}")
+        print(f"  • Total Events:     {m[4]['value']}")
+    else:
+        print("  • No session data recorded yet today.")
+
+    # Yesterday Totals
+    print(f"\n📊 YESTERDAY'S FULL DAY RECAP ({yesterday_str}):")
+    if yesterday_res.get("rows"):
+        ym = yesterday_res["rows"][0]["metricValues"]
+        print(f"  • Total Active Users: {ym[0]['value']}")
+        print(f"  • New Users:          {ym[1]['value']}")
+        print(f"  • Total Sessions:     {ym[2]['value']}")
+        print(f"  • Page Views:         {ym[3]['value']}")
+        print(f"  • Total Events:       {ym[4]['value']}")
 
     # Top Pages
     print(f"\n📄 TOP PAGES TODAY:")
@@ -105,16 +137,16 @@ def fetch_overview():
         path = r["dimensionValues"][0]["value"]
         views = r["metricValues"][0]["value"]
         users = r["metricValues"][1]["value"]
-        print(f"  • {path:<30} {views:>5} views ({users} users)")
+        print(f"  • {path:<32} {views:>5} views ({users} users)")
 
     # Top Sources
-    print(f"\n🌐 TOP TRAFFIC SOURCES:")
+    print(f"\n🌐 TOP TRAFFIC SOURCES TODAY:")
     for r in sources_res.get("rows", []):
         src = r["dimensionValues"][0]["value"]
         sess = r["metricValues"][0]["value"]
         users = r["metricValues"][1]["value"]
-        print(f"  • {src:<30} {sess:>5} sessions ({users} users)")
-    print("="*50 + "\n")
+        print(f"  • {src:<32} {sess:>5} sessions ({users} users)")
+    print("="*55 + "\n")
 
 if __name__ == "__main__":
     fetch_overview()
