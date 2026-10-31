@@ -7,6 +7,7 @@ __pycache__/
 Thumbs.db
 
 # Heavy promo and build directories
+video_assets/
 promo/
 promo_build/
 promo_new_build/
