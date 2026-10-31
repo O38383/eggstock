@@ -29,6 +29,7 @@ export_*.py
 _temp_*.js
 
 # Secret credentials
+render.yaml
 *credentials*.json
 *.key
 *token*.txt
