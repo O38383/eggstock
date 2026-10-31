@@ -2005,7 +2005,7 @@ async def handle_status(request):
         egg_name = d.get("egg") or ""
         loc = d.get("location") or PET_WORLD_MAP.get(egg_name, "")
         matched_world = None
-        for w in known_worlds:
+        for w in sorted(known_worlds, key=len, reverse=True):
             if w.lower() in loc.lower():
                 matched_world = w
                 break

@@ -7,10 +7,6 @@
     "directory": "./website",
     "binding": "ASSETS"
   },
-  "routes": [
-    { "pattern": "eggstock.xyz/*", "zone_id": "00787efa5160ae87d07cb0b9caa9d7a5" },
-    { "pattern": "www.eggstock.xyz/*", "zone_id": "00787efa5160ae87d07cb0b9caa9d7a5" }
-  ],
   "triggers": {
     "crons": ["*/10 * * * *"]
   }
