@@ -284,7 +284,7 @@
     html {
         scroll-behavior: smooth;
         scroll-padding-top: 5rem;
-        overflow-x: hidden;
+        overflow-x: clip;
         max-width: 100vw;
     }
     section, [id] {
@@ -294,7 +294,7 @@
         background-color: #0a0d14;
         font-family: 'Inter', sans-serif;
         color: #dfe2f1;
-        overflow-x: hidden;
+        overflow-x: clip;
         max-width: 100vw;
     }
     .dot-grid-bg {
@@ -533,7 +533,9 @@
         </div>
     </div>
 
-    <!-- MOBILE NAVIGATION DRAWER OVERLAY -->
+</header>
+
+<!-- MOBILE NAVIGATION DRAWER OVERLAY -->
     <div id="mobile-nav-drawer" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden transition-opacity duration-300">
         <div class="fixed inset-y-0 right-0 max-w-xs w-full bg-[#0a0d14] border-l-2 border-black p-5 shadow-[6px_0px_0px_#000] flex flex-col justify-between overflow-y-auto z-50">
             <div>
@@ -589,7 +591,7 @@
             </div>
         </div>
     </div>
-</header>
+
 
 <!-- MAIN CONTAINER -->
 <main class="max-w-6xl mx-auto px-4 sm:px-6 pt-6 sm:pt-10 flex-grow w-full space-y-8 sm:space-y-12">
@@ -3613,7 +3615,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const pathname = window.location.pathname.toLowerCase();
     const isScriptRoute = pathname.startsWith('/script') || pathname.startsWith('/scripts');
     const urlParams = new URLSearchParams(window.location.search);
-    const hasScriptParam = urlParams.has('script') || urlParams.has('dest') || urlParams.has('get_script');
+    const hasScriptParam = urlParams.has('script') || urlParams.has('get_script');
 
     if (!isScriptRoute && !hasScriptParam) return;
 
@@ -3630,7 +3632,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Dynamic destination link support (defaults to user's pastebin)
     const defaultPastebin = 'https://pastebin.com/qnacww3y';
-    const targetUrl = urlParams.get('dest') || defaultPastebin;
+    const targetUrl = defaultPastebin;
     const rawTargetUrl = targetUrl.includes('/raw/') ? targetUrl : targetUrl.replace('pastebin.com/', 'pastebin.com/raw/');
     
     window._gatewayTargetUrl = targetUrl;
