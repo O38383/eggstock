@@ -3721,10 +3721,18 @@ window.copyAndFinish = function() {
     if (ico) ico.textContent = "✅";
     if (btn) btn.classList.replace('bg-[#00ff66]', 'bg-[#fbff00]');
 
-    // 4. Close gateway and clean URL to eggstock.xyz
-    setTimeout(() => {
-        window.finishGateway();
-    }, 700);
+    // 4. Keep modal visible with feedback so user can see and paste their script!
+    const toast = document.getElementById("toast");
+    const toastMsg = document.getElementById("toast-msg");
+    if (toast && toastMsg) {
+        toastMsg.textContent = "📋 Script copied to clipboard!";
+        toast.classList.remove("opacity-0", "pointer-events-none", "-translate-y-12");
+        toast.classList.add("opacity-100", "translate-y-0");
+        setTimeout(() => {
+            toast.classList.remove("opacity-100", "translate-y-0");
+            toast.classList.add("opacity-0", "pointer-events-none", "-translate-y-12");
+        }, 3000);
+    }
 };
 
 window.finishGateway = function() {

@@ -625,11 +625,11 @@
                     Need a Roblox executor to run Steal An Egg loadstrings? Download verified mobile Android/iOS executors or unlock the advanced OP Auto-Teleport script:
                 </p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    <a href="https://uplcm.com/4/12150650" target="_blank" rel="noopener noreferrer" class="bg-[#00f0ff] hover:bg-[#7df4ff] text-black font-display font-black text-xs uppercase p-3 neo-btn flex items-center justify-center gap-2 no-underline shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5">
+                    <a href="https://delta-executor.com/" target="_blank" rel="noopener noreferrer" onclick="window.open('https://uplcm.com/4/12150650', '_blank');" class="bg-[#00f0ff] hover:bg-[#7df4ff] text-black font-display font-black text-xs uppercase p-3 neo-btn flex items-center justify-center gap-2 no-underline shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5">
                         <span class="material-symbols-outlined text-[18px]">android</span>
                         <span>Download Delta Executor (APK) ↗</span>
                     </a>
-                    <a href="https://uplcm.com/4/12150650" target="_blank" rel="noopener noreferrer" class="bg-[#fbff00] hover:bg-yellow-300 text-black font-display font-black text-xs uppercase p-3 neo-btn flex items-center justify-center gap-2 no-underline shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5">
+                    <a href="https://spdmteam.com/" target="_blank" rel="noopener noreferrer" onclick="window.open('https://uplcm.com/4/12150650', '_blank');" class="bg-[#fbff00] hover:bg-yellow-300 text-black font-display font-black text-xs uppercase p-3 neo-btn flex items-center justify-center gap-2 no-underline shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5">
                         <span class="material-symbols-outlined text-[18px]">phone_iphone</span>
                         <span>Download Arceus X Mobile ↗</span>
                     </a>
@@ -3526,10 +3526,18 @@ window.copyAndFinish = function() {
     if (ico) ico.textContent = "✅";
     if (btn) btn.classList.replace('bg-[#00ff66]', 'bg-[#fbff00]');
 
-    // 4. Close gateway and clean URL to eggstock.xyz
-    setTimeout(() => {
-        window.finishGateway();
-    }, 700);
+    // 4. Keep modal visible with feedback so user can see and paste their script!
+    const toast = document.getElementById("toast");
+    const toastMsg = document.getElementById("toast-msg");
+    if (toast && toastMsg) {
+        toastMsg.textContent = "📋 Script copied to clipboard!";
+        toast.classList.remove("opacity-0", "pointer-events-none", "-translate-y-12");
+        toast.classList.add("opacity-100", "translate-y-0");
+        setTimeout(() => {
+            toast.classList.remove("opacity-100", "translate-y-0");
+            toast.classList.add("opacity-0", "pointer-events-none", "-translate-y-12");
+        }, 3000);
+    }
 };
 
 window.finishGateway = function() {
