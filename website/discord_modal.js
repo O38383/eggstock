@@ -21,6 +21,7 @@ window.__showDiscordModal = function() {
 window.__resetDiscordModal = function() {
     try {
         localStorage.removeItem("es_discord_popup_disabled");
+        localStorage.removeItem("es_discord_joined");
         sessionStorage.removeItem("es_discord_session_seen");
         sessionStorage.removeItem("es_session_dwell_start");
         console.log("[EggStock Discord] Storage reset successfully! Reload or wait 30s.");
@@ -33,7 +34,8 @@ window.__testDiscordModal = window.__showDiscordModal;
     const STORAGE_KEY_DISABLED = "es_discord_popup_disabled";
     const SESSION_KEY_SEEN = "es_discord_session_seen";
     const SESSION_KEY_START = "es_session_dwell_start";
-    const DWELL_DELAY_MS = 30000; // 30 seconds active dwell time
+    const STORAGE_KEY_JOINED = "es_discord_joined";
+    const DWELL_DELAY_MS = 25000; // 25 seconds active dwell time
 
     // 0. If user just completed OAuth login (?auth=success), permanently disable and exit
     if (window.location.search.includes("auth=success")) {
@@ -44,7 +46,11 @@ window.__testDiscordModal = window.__showDiscordModal;
         return;
     }
 
-    // 1. If permanently disabled by the user or auth status, never show
+    // 1. If already joined or permanently disabled, never show
+    if (localStorage.getItem(STORAGE_KEY_JOINED) === "true") {
+        console.log("[EggStock Discord] User already joined Discord. Modal suppressed.");
+        return;
+    }
     if (localStorage.getItem(STORAGE_KEY_DISABLED) === "true") {
         console.log("[EggStock Discord] Popup permanently disabled on this browser.");
         return;
@@ -222,7 +228,21 @@ window.__testDiscordModal = window.__showDiscordModal;
         }
 
         if (ctaBtn) {
-            ctaBtn.addEventListener("click", () => closeDiscordModal(true));
+            ctaBtn.addEventListener("click", () => {
+                localStorage.setItem("es_discord_joined", "true");
+                closeDiscordModal(true);
+            });
+        }
+
+        const manualLink = modalDiv.querySelector('a[href*="discord.gg"]');
+        if (manualLink) {
+            manualLink.addEventListener("click", () => {
+                localStorage.setItem("es_discord_joined", "true");
+                closeDiscordModal(true);
+                if (typeof window.showToast === "function") {
+                    window.showToast("🎉 Discord Joined! Welcome to the server.");
+                }
+            });
         }
 
         modalDiv.addEventListener("click", (e) => {

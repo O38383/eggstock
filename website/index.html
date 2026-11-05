@@ -1068,8 +1068,46 @@
             <button id="clear-world-filter" class="text-white hover:text-red-400 font-bold ml-2">✕ Clear</button>
         </div>
 
-        <!-- Drops Feed Content (All visitors allowed full access) -->
+        <!-- Drops Feed Content (With Teaser Preview & Discord Member Lock) -->
         <div id="drops-feed-wrapper" class="relative transition-all duration-300">
+            <!-- Exclusive Radar Teaser & Discord Join Lock (Active for unverified guests when > 3 drops) -->
+            <div id="radar-preview-overlay" class="hidden absolute inset-x-0 bottom-0 top-[180px] bg-gradient-to-t from-[#0a0d14] via-[#0a0d14]/98 via-40% to-transparent flex flex-col items-center justify-center p-4 z-20 pointer-events-auto">
+                <div class="max-w-md w-full bg-[#131722]/98 border-2 border-black p-4 sm:p-5 shadow-[6px_6px_0px_#000] text-center neo-card backdrop-blur-md relative">
+                    <!-- Accent ribbon -->
+                    <div id="radar-preview-badge" class="inline-flex items-center gap-1.5 bg-[#fbff00] text-black font-black uppercase text-[10px] px-2.5 py-0.5 border border-black shadow-[1px_1px_0px_#000] mb-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-black animate-ping"></span>
+                        FREE PREVIEW • SHOWING 3 OF 50+ LIVE DROPS
+                    </div>
+                    <h3 class="font-display font-black text-lg sm:text-xl text-white uppercase tracking-tight mb-1">
+                        Join Our Discord to View Full Live Feed
+                    </h3>
+                    <p class="text-xs text-slate-300 font-mono mb-3 leading-relaxed">
+                        Showing top drops preview. Join 1,610+ members on Discord to unlock all 50+ live drops, Secret &amp; Divine spawn alerts, and private VIP servers!
+                    </p>
+
+                    <!-- Primary 1-Click Discord Auto-Join Button -->
+                    <a id="btn-radar-discord-join" href="/api/auth/discord/login" onclick="unlockRadarManual()" class="w-full bg-[#5865F2] hover:bg-[#4752c4] text-white font-display font-black py-3 px-4 text-xs sm:text-sm uppercase neo-btn flex items-center justify-center gap-2 no-underline cursor-pointer mb-2.5 shadow-[3px_3px_0px_#000]">
+                        <svg class="w-5 h-5 fill-white shrink-0" viewBox="0 0 127.14 96.36">
+                            <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,45.91,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,45.91,96.12,53,91.08,65.69,84.69,65.69Z"/>
+                        </svg>
+                        <span>⚡ Join Discord to Unlock Radar (1-Click)</span>
+                    </a>
+
+                    <!-- Secondary Direct Invite Link -->
+                    <div class="text-center mb-2.5">
+                        <span class="text-[11px] text-slate-400 font-mono">Prefer direct invite? </span>
+                        <a href="https://discord.gg/Jmvam6Ktgm" target="_blank" rel="noopener noreferrer" onclick="unlockRadarManual()" class="text-[11px] text-[#00f0ff] hover:underline font-mono font-bold">discord.gg/Jmvam6Ktgm ↗</a>
+                    </div>
+
+                    <!-- Perks list -->
+                    <div class="grid grid-cols-3 gap-2 text-center text-[10px] font-mono text-slate-400 border-t border-black/50 pt-2">
+                        <div><span class="text-[#4edea3] font-bold">✓</span> 100% Free</div>
+                        <div><span class="text-[#4edea3] font-bold">✓</span> Auto-Joins Server</div>
+                        <div><span class="text-[#4edea3] font-bold">✓</span> Unlocks All 50+ Drops</div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Feed Content -->
             <div id="drops-feed-content" class="transition-all duration-300">
                 <!-- Desktop Table View (>= 640px) -->
@@ -1724,21 +1762,68 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // ── Full Live Feed Access (Everyone Allowed) ──
+    // ── Discord Radar Lock & Verification System ──
     let isUserAuthenticated = false;
-    let lastRenderedDropsCount = 50;
+    let isRadarDiscordUnlocked = localStorage.getItem("es_discord_joined") === "true";
+    let isSearchBot = navigator.userAgent && /googlebot|bingbot|yandex|duckduckbot|slurp|baiduspider/i.test(navigator.userAgent);
+
+    window.unlockRadarManual = function() {
+        try {
+            localStorage.setItem("es_discord_joined", "true");
+            localStorage.setItem("es_discord_popup_disabled", "true");
+        } catch (e) {}
+        isRadarDiscordUnlocked = true;
+        setRadarPreviewLock(false);
+        const dm = document.getElementById("discord-modal");
+        if (dm) {
+            dm.classList.add("hidden");
+            dm.style.display = "none";
+        }
+        if (typeof showToast === "function") {
+            showToast("🎉 Welcome to Discord! Full live radar feed unlocked.");
+        }
+    };
 
     function setRadarPreviewLock(isLocked, filteredCount) {
         const feedWrapper = document.getElementById("drops-feed-wrapper");
+        const previewOverlay = document.getElementById("radar-preview-overlay");
+        const previewBadge = document.getElementById("radar-preview-badge");
         const guestBar = document.getElementById("radar-filter-guest-bar");
-        if (feedWrapper) {
-            feedWrapper.classList.remove("max-h-[460px]", "min-h-[440px]", "overflow-hidden");
+
+        if (!feedWrapper || !previewOverlay) return;
+
+        // If authenticated, verified by clicking invite, or search bot -> ALWAYS unlock full radar feed
+        if (isUserAuthenticated || isRadarDiscordUnlocked || isSearchBot) {
+            feedWrapper.classList.remove("max-h-[380px]", "sm:max-h-[370px]", "overflow-hidden");
+            previewOverlay.classList.add("hidden");
+            if (guestBar) guestBar.classList.add("hidden");
+            return;
         }
-        if (guestBar) guestBar.classList.add("hidden");
+
+        const count = typeof filteredCount === "number" ? filteredCount : 50;
+
+        if (isLocked && count > 3) {
+            // Apply clipping and show overlay
+            feedWrapper.classList.add("max-h-[380px]", "sm:max-h-[370px]", "overflow-hidden");
+            previewOverlay.classList.remove("hidden");
+            if (previewBadge) {
+                previewBadge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-black animate-ping"></span> FREE PREVIEW • SHOWING 3 OF ${count}+ LIVE DROPS`;
+            }
+            if (guestBar) guestBar.classList.add("hidden");
+        } else {
+            // Unlocked or <= 3 drops (e.g. filtered to rare drop)
+            feedWrapper.classList.remove("max-h-[380px]", "sm:max-h-[370px]", "overflow-hidden");
+            previewOverlay.classList.add("hidden");
+            if (guestBar && count > 0 && count <= 3) {
+                guestBar.classList.remove("hidden");
+            } else if (guestBar) {
+                guestBar.classList.add("hidden");
+            }
+        }
     }
 
-    // Default: Feed is 100% unlocked for everyone
-    setRadarPreviewLock(false);
+    // Default: Preview mode is active immediately on visit for unverified guests
+    setRadarPreviewLock(!isRadarDiscordUnlocked && !isSearchBot);
 
     async function checkAuthStatus() {
         try {
@@ -1746,6 +1831,11 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await res.json();
             if (data && data.authenticated && data.user) {
                 isUserAuthenticated = true;
+                isRadarDiscordUnlocked = true;
+                try {
+                    localStorage.setItem("es_discord_joined", "true");
+                    localStorage.setItem("es_discord_popup_disabled", "true");
+                } catch (e) {}
                 const u = data.user;
                 if (loginBtn) loginBtn.classList.add("hidden");
                 if (userProfileMenu) {
@@ -1756,12 +1846,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (userDisplayName) userDisplayName.textContent = u.username || "Member";
                 if (dropdownUsername) dropdownUsername.textContent = `@${u.raw_username || u.username || 'user'}`;
 
-                // User is authenticated -> full radar feed unlocked
+                // User is authenticated -> ALWAYS unlock full radar feed
                 setRadarPreviewLock(false);
+                const dm = document.getElementById("discord-modal");
+                if (dm) {
+                    dm.classList.add("hidden");
+                    dm.style.display = "none";
+                }
             } else {
-                // Unauthenticated visitor -> full radar feed unlocked for everyone
-                isUserAuthenticated = false;
-                setRadarPreviewLock(false);
+                // Unauthenticated visitor -> enforce lock if not already joined
+                if (!isRadarDiscordUnlocked && !isSearchBot) {
+                    setRadarPreviewLock(true);
+                }
             }
         } catch (e) {}
     }
@@ -1770,7 +1866,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get("auth") === "success") {
         showToast("🎉 Logged in with Discord! Joined server.");
+        isRadarDiscordUnlocked = true;
+        try {
+            localStorage.setItem("es_discord_joined", "true");
+            localStorage.setItem("es_discord_popup_disabled", "true");
+        } catch (e) {}
         setRadarPreviewLock(false);
+        const dm = document.getElementById("discord-modal");
+        if (dm) {
+            dm.classList.add("hidden");
+            dm.style.display = "none";
+        }
         window.history.replaceState({}, document.title, window.location.pathname);
     } else if (urlParams.get("auth") === "error") {
         showToast("⚠️ Discord login was cancelled or failed.");
@@ -3757,5 +3863,6 @@ document.addEventListener("DOMContentLoaded", () => {
     </div>
 </div>
 
+<script src="/discord_modal.js"></script>
 </body>
 </html>
