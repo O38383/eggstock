@@ -12,7 +12,7 @@ from datetime import datetime, timezone
 from collections import defaultdict, Counter
 import statistics
 
-TOKEN = "REDACTED_DISCORD_TOKEN"
+TOKEN = os.environ.get("DISCORD_TOKEN", "")
 CHANNEL_ID = "1546504423910670458"
 HEADERS = {
     "Authorization": f"Bot {TOKEN}",
