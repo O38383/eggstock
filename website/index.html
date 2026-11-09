@@ -1764,7 +1764,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ── Discord Radar Lock & Verification System ──
     let isUserAuthenticated = false;
-    let isRadarDiscordUnlocked = true; // Fully unlocked & open source
+    let isRadarDiscordUnlocked = localStorage.getItem("es_discord_joined") === "true";
     let isSearchBot = navigator.userAgent && /googlebot|bingbot|yandex|duckduckbot|slurp|baiduspider/i.test(navigator.userAgent);
 
     window.unlockRadarManual = function() {
