@@ -71,7 +71,7 @@ ALLOWED_ORIGINS = {
     "https://www.eggstock.xyz",
     "https://ideal-trust-production-6d45.up.railway.app",
     "https://divine-gentleness-production-c60f.up.railway.app",
-    "https://eggstock-web-production.up.railway.app",
+    "https://eggstock-web-production-3b27.up.railway.app",
     "http://localhost:8080",
     "http://127.0.0.1:8080",
 }

@@ -231,6 +231,8 @@ html, body {
 }
 
 .event-pill {
+  position: relative;
+  min-width: 300px;
   background: #111319;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
@@ -382,7 +384,7 @@ html, body {
   display: flex;
   gap: 6px;
   height: 100%;
-  width: 390px;
+  width: 700px;
   flex-shrink: 0;
 }
 
@@ -390,3 +392,79 @@ html, body {
   flex: 1;
   height: 100%;
 }
+
+
+/* =========================================================
+   LIVE DROP PILL / SYNC / ALERT STATES (added 2026-11-10)
+   ========================================================= */
+.event-pill-icon img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
+}
+
+.event-tag-badge.tag-secret { color: #c084fc; }
+.event-tag-badge.tag-eternal { color: #fbbf24; }
+.event-tag-badge.tag-divine { color: #22d3ee; }
+
+.event-progress-bar.bar-secret { background: linear-gradient(90deg, #a855f7, #d8b4fe); }
+.event-progress-bar.bar-eternal { background: linear-gradient(90deg, #f59e0b, #fde68a); }
+.event-progress-bar.bar-divine { background: linear-gradient(90deg, #06b6d4, #a5f3fc); }
+
+.sync-dot {
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #475569;
+  box-shadow: 0 0 4px rgba(0,0,0,0.8);
+}
+.sync-dot.online { background: #4ade80; box-shadow: 0 0 6px #4ade80; }
+.sync-dot.offline { background: #f87171; box-shadow: 0 0 6px #f87171; animation: syncBlink 1s infinite; }
+
+@keyframes syncBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+
+@keyframes pillFlash {
+  0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.9), 0 4px 18px rgba(0,0,0,0.9); transform: scale(1); }
+  30% { box-shadow: 0 0 0 10px rgba(255,255,255,0), 0 4px 18px rgba(0,0,0,0.9); transform: scale(1.06); }
+  100% { box-shadow: 0 0 0 0 rgba(255,255,255,0), 0 4px 18px rgba(0,0,0,0.9); transform: scale(1); }
+}
+.event-pill.flash { animation: pillFlash 0.9s ease-out 3; }
+.event-pill.flash-divine { border-color: #22d3ee; }
+.event-pill.flash-eternal { border-color: #fbbf24; }
+
+/* Freshly dropped pet row highlight (first 60s) */
+@keyframes rowGlow {
+  0%, 100% { background: rgba(74, 222, 128, 0.0); }
+  50% { background: rgba(74, 222, 128, 0.22); }
+}
+.card-item.just-dropped {
+  animation: rowGlow 1s infinite;
+  border-radius: 3px;
+}
+
+/* Countdown urgency states */
+.timer-val.warn { color: #ffb020; }
+@keyframes urgentPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+}
+.timer-val.urgent {
+  display: inline-block;
+  color: #ff3b3b;
+  animation: urgentPulse 0.5s infinite ease-in-out;
+}
+.timer-val.spawning {
+  display: inline-block;
+  color: #00ff66;
+  animation: pulseGreen 0.6s infinite ease-in-out;
+}
+
+.bottom-card .item-name { max-width: 96px; }

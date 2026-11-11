@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700;800&family=Lilita+One&family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="overlay.css">
+  <link rel="stylesheet" href="overlay.css?v=20261110">
 </head>
 <body>
   <div id="stream-canvas" class="stream-canvas">
@@ -21,149 +21,84 @@
          LEFT PANEL: 3 COLUMNS × 4 ROWS = 12 BIOME CARDS
          ========================================================= -->
     <aside class="side-panel-left">
-      <!-- Col 1, Row 1 -->
-      <div class="biome-card" data-biome="forest">
-        <div class="card-header">Forest</div>
-        <div class="card-list" id="list-forest"></div>
-      </div>
-      <!-- Col 2, Row 1 -->
-      <div class="biome-card" data-biome="snow">
-        <div class="card-header">Snow</div>
-        <div class="card-list" id="list-snow"></div>
-      </div>
-      <!-- Col 3, Row 1 -->
-      <div class="biome-card" data-biome="cosmic">
-        <div class="card-header">Cosmic</div>
-        <div class="card-list" id="list-cosmic"></div>
-      </div>
+      <div class="biome-card" data-biome="forest"><div class="card-header">Forest</div><div class="card-list" id="list-forest"></div></div>
+      <div class="biome-card" data-biome="snow"><div class="card-header">Snow</div><div class="card-list" id="list-snow"></div></div>
+      <div class="biome-card" data-biome="cosmic"><div class="card-header">Cosmic</div><div class="card-list" id="list-cosmic"></div></div>
 
-      <!-- Col 1, Row 2 -->
-      <div class="biome-card" data-biome="lake">
-        <div class="card-header">Lake</div>
-        <div class="card-list" id="list-lake"></div>
-      </div>
-      <!-- Col 2, Row 2 -->
-      <div class="biome-card" data-biome="volcano">
-        <div class="card-header">Volcano</div>
-        <div class="card-list" id="list-volcano"></div>
-      </div>
-      <!-- Col 3, Row 2 -->
-      <div class="biome-card" data-biome="cherry_blossom">
-        <div class="card-header">Cherry Blossom</div>
-        <div class="card-list" id="list-cherry_blossom"></div>
-      </div>
+      <div class="biome-card" data-biome="lake"><div class="card-header">Lake</div><div class="card-list" id="list-lake"></div></div>
+      <div class="biome-card" data-biome="volcano"><div class="card-header">Volcano</div><div class="card-list" id="list-volcano"></div></div>
+      <div class="biome-card" data-biome="cherry_blossom"><div class="card-header">Cherry Blossom</div><div class="card-list" id="list-cherry_blossom"></div></div>
 
-      <!-- Col 1, Row 3 -->
-      <div class="biome-card" data-biome="desert">
-        <div class="card-header">Desert</div>
-        <div class="card-list" id="list-desert"></div>
-      </div>
-      <!-- Col 2, Row 3 -->
-      <div class="biome-card" data-biome="abyss_ocean">
-        <div class="card-header">Abyss Ocean</div>
-        <div class="card-list" id="list-abyss_ocean"></div>
-      </div>
-      <!-- Col 3, Row 3 -->
-      <div class="biome-card" data-biome="titan_temple">
-        <div class="card-header">Titan Temple</div>
-        <div class="card-list" id="list-titan_temple"></div>
-      </div>
+      <div class="biome-card" data-biome="desert"><div class="card-header">Desert</div><div class="card-list" id="list-desert"></div></div>
+      <div class="biome-card" data-biome="abyss_ocean"><div class="card-header">Abyss Ocean</div><div class="card-list" id="list-abyss_ocean"></div></div>
+      <div class="biome-card" data-biome="titan_temple"><div class="card-header">Titan Temple</div><div class="card-list" id="list-titan_temple"></div></div>
 
-      <!-- Col 1, Row 4 -->
-      <div class="biome-card" data-biome="jungle">
-        <div class="card-header">Jungle</div>
-        <div class="card-list" id="list-jungle"></div>
-      </div>
-      <!-- Col 2, Row 4 -->
-      <div class="biome-card" data-biome="prehistoric">
-        <div class="card-header">Prehistoric</div>
-        <div class="card-list" id="list-prehistoric"></div>
-      </div>
-      <!-- Col 3, Row 4 -->
-      <div class="biome-card" data-biome="angels">
-        <div class="card-header">Angels</div>
-        <div class="card-list" id="list-angels"></div>
-      </div>
+      <div class="biome-card" data-biome="jungle"><div class="card-header">Jungle</div><div class="card-list" id="list-jungle"></div></div>
+      <div class="biome-card" data-biome="prehistoric"><div class="card-header">Prehistoric</div><div class="card-list" id="list-prehistoric"></div></div>
+      <div class="biome-card" data-biome="angels"><div class="card-header">Angels</div><div class="card-list" id="list-angels"></div></div>
     </aside>
 
     <!-- =========================================================
          RIGHT PANEL: 1 COLUMN × 4 ROWS (EVENTS & HALLOWEEN)
          ========================================================= -->
     <aside class="side-panel-right">
-      <div class="biome-card" data-biome="events">
-        <div class="card-header">Events</div>
-        <div class="card-list" id="list-events"></div>
-      </div>
-      <div class="biome-card" data-biome="graveyard">
-        <div class="card-header">Graveyard</div>
-        <div class="card-list" id="list-graveyard"></div>
-      </div>
-      <div class="biome-card" data-biome="haunted_swamp">
-        <div class="card-header">Haunted Swamp</div>
-        <div class="card-list" id="list-haunted_swamp"></div>
-      </div>
-      <div class="biome-card" data-biome="abandoned_manor">
-        <div class="card-header">Abandoned Manor</div>
-        <div class="card-list" id="list-abandoned_manor"></div>
-      </div>
+      <div class="biome-card" data-biome="events"><div class="card-header">Events</div><div class="card-list" id="list-events"></div></div>
+      <div class="biome-card" data-biome="graveyard"><div class="card-header">Graveyard</div><div class="card-list" id="list-graveyard"></div></div>
+      <div class="biome-card" data-biome="haunted_swamp"><div class="card-header">Haunted Swamp</div><div class="card-list" id="list-haunted_swamp"></div></div>
+      <div class="biome-card" data-biome="abandoned_manor"><div class="card-header">Abandoned Manor</div><div class="card-list" id="list-abandoned_manor"></div></div>
     </aside>
 
     <!-- =========================================================
-         CENTER TOP HUD: PHANTOM EXPRESS / LIVE EVENT PILL
+         CENTER TOP HUD: LATEST RARE DROP PILL (live from radar)
          ========================================================= -->
     <div class="center-top-hud">
-      <div class="event-pill">
-        <div class="event-pill-icon">🚂</div>
+      <div class="event-pill" id="drop-pill">
+        <div class="event-pill-icon" id="drop-pill-icon">🥚</div>
         <div class="event-pill-body">
-          <div class="event-tag-badge">EVENTS</div>
-          <div class="event-title">Phantom Express</div>
+          <div class="event-tag-badge" id="drop-pill-tag">RADAR</div>
+          <div class="event-title" id="drop-pill-title">Waiting for drops…</div>
           <div class="event-progress-wrap">
-            <div class="event-progress-bar" id="event-progress-bar" style="width: 65%;"></div>
+            <div class="event-progress-bar" id="drop-pill-bar" style="width: 0%;"></div>
           </div>
         </div>
-        <div class="event-pill-time" id="event-timer-val">3m 47s</div>
+        <div class="event-pill-time" id="drop-pill-time">--</div>
+        <div class="sync-dot" id="sync-dot" title="Radar link"></div>
       </div>
     </div>
 
     <!-- =========================================================
-         CENTER BOTTOM: COUNTDOWNS + DEMONS & ENCHANTED FOREST
+         CENTER BOTTOM: COUNTDOWNS + DEMONS / ENCHANTED / ALIEN CARDS
          ========================================================= -->
     <footer class="center-bottom-wrap">
-      <!-- Big Text Countdowns Overlay -->
       <div class="big-countdowns-area">
         <div class="timer-line line-yellow">
           <span class="timer-label">New Eggs in:</span>
-          <span class="timer-val" id="timer-new-eggs">3m 47s</span>
+          <span class="timer-val" id="timer-new-eggs">--</span>
         </div>
         <div class="timer-line line-orange">
           <span class="timer-label">Pumpkin King in:</span>
-          <span class="timer-val" id="timer-pumpkin-king">13m</span>
+          <span class="timer-val" id="timer-pumpkin-king">--</span>
         </div>
         <div class="timer-line line-green">
           <span class="timer-label">Train in:</span>
-          <span class="timer-val pulse-now" id="timer-train">NOW</span>
+          <span class="timer-val" id="timer-train">--</span>
         </div>
         <div class="timer-line line-red">
           <span class="timer-label">Update in:</span>
-          <span class="timer-val" id="timer-update">1d 12h 28m</span>
+          <span class="timer-val" id="timer-update">--</span>
         </div>
       </div>
 
-      <!-- Remaining 2 Biome Cards: Demons & Enchanted Forest -->
       <div class="bottom-cards-area">
-        <div class="biome-card bottom-card" data-biome="demons">
-          <div class="card-header">Demons</div>
-          <div class="card-list" id="list-demons"></div>
-        </div>
-        <div class="biome-card bottom-card" data-biome="enchanted_forest">
-          <div class="card-header">Enchanted Forest</div>
-          <div class="card-list" id="list-enchanted_forest"></div>
-        </div>
+        <div class="biome-card bottom-card" data-biome="demons"><div class="card-header">Demons</div><div class="card-list" id="list-demons"></div></div>
+        <div class="biome-card bottom-card" data-biome="enchanted_forest"><div class="card-header">Enchanted Forest</div><div class="card-list" id="list-enchanted_forest"></div></div>
+        <div class="biome-card bottom-card" data-biome="alien_planet"><div class="card-header">Alien Planet</div><div class="card-list" id="list-alien_planet"></div></div>
+        <div class="biome-card bottom-card" data-biome="flooded_alien_planet"><div class="card-header">Flooded Alien Planet</div><div class="card-list" id="list-flooded_alien_planet"></div></div>
       </div>
     </footer>
 
   </div>
 
-  <script src="overlay.js?v=1793334714"></script>
+  <script src="overlay.js?v=20261110"></script>
 </body>
 </html>

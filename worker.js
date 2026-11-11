@@ -117,8 +117,9 @@ button { background: #00f0ff; color: #000; border: none; padding: 10px 20px; fon
         }
       }
 
-      const backendUrl = "https://eggstock-web-production.up.railway.app" + url.pathname + url.search;
+      const backendUrl = "https://eggstock-web-production-3b27.up.railway.app" + url.pathname + url.search;
       const headers = new Headers(request.headers);
+      headers.set("Host", "www.eggstock.xyz");
       headers.set("Referer", "https://eggstock.xyz");
       headers.set("Origin", "https://eggstock.xyz");
 
@@ -207,7 +208,7 @@ button { background: #00f0ff; color: #000; border: none; padding: 10px 20px; fon
   // Keep-alive cron: pings Railway backend every 10 minutes to maintain 24/7 uptime
   async scheduled(controller, env, ctx) {
     ctx.waitUntil(
-      fetch("https://eggstock-web-production.up.railway.app/api/status", {
+      fetch("https://eggstock-web-production-3b27.up.railway.app/api/status", {
         headers: { "User-Agent": "EggStock-Cloudflare-KeepAlive/1.0" }
       })
         .then(res => console.log(`[KeepAlive] Railway ping status: ${res.status}`))

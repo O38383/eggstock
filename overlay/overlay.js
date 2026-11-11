@@ -50,7 +50,10 @@
     "cosmic skeleton": imgBase + "cosmic_skeleton_boss.png",
     "stag": imgBase + "stag.png",
     "mutant shark": imgBase + "mutant_shark.png",
-    "king snake": imgBase + "snake_king.png"
+    "king snake": imgBase + "snake_king.png",
+    "aetheron": imgBase + "aetheron.png",
+    "equinox": imgBase + "equinox.png",
+    "dr. scramble": imgBase + "dr_scramble.png"
   };
 
   // Default emojis for standard animals without local PNGs
@@ -66,7 +69,9 @@
     centapede: "🐛", crane: "🦩", salamander: "🦎", panda: "🐼", koi: "🐟",
     crustacia: "🦀", beetle: "🪲", jackalope: "🐇", sunbird: "🦅",
     moon: "🌕", pumpkin: "🎃", butterfly: "🦋", cat: "🐱", clown: "🤡", candle: "🕯️", ghost: "👻",
-    gerbil: "🐹", toadstool: "🍄", chest: "📦", crow: "🦅", wolf: "🐺"
+    gerbil: "🐹", toadstool: "🍄", chest: "📦", crow: "🦅", wolf: "🐺",
+    bloomfin: "🐠", vexlet: "👾", bloomspire: "🌸", glacigon: "🧊", redmaw: "👹", prowler: "🐆", rex: "🦖",
+    jellynova: "🪼", flarefish: "🐡", tideler: "🌊", abyssjaw: "🦈", prismare: "🐴"
   };
 
   function getPetIconHtml(name) {
@@ -226,6 +231,23 @@
       { name: "Celestial Sunlion", status: "9h ago", inStock: false },
       { name: "Royal Skywhale", status: "2d ago", inStock: false }
     ],
+    alien_planet: [
+      { name: "Bloomfin", status: "x1", inStock: true },
+      { name: "Vexlet", status: "x1", inStock: true },
+      { name: "Bloomspire", status: "24m ago", inStock: false },
+      { name: "Glacigon", status: "x3", inStock: true },
+      { name: "Redmaw", status: "24m ago", inStock: false },
+      { name: "Aurora Stag", status: "4h ago", inStock: false },
+      { name: "Viridian Prowler", status: "1h ago", inStock: false },
+      { name: "Obsidian Rex", status: "Never", inStock: false }
+    ],
+    flooded_alien_planet: [
+      { name: "Jellynova", status: "9m ago", inStock: false },
+      { name: "Flarefish", status: "9m ago", inStock: false },
+      { name: "Tideler", status: "2h ago", inStock: false },
+      { name: "Abyssjaw", status: "49m ago", inStock: false },
+      { name: "Prismare", status: "2d ago", inStock: false }
+    ],
     events: [
       { name: "Blood Moon", status: "5m ago", inStock: false },
       { name: "Pumpkin Moon", status: "1h ago", inStock: false },
@@ -257,49 +279,58 @@
     ]
   };
 
+
+  // =========================================================
   // Render cards into DOM
+  // =========================================================
+  const JUST_DROPPED_WINDOW = 60; // seconds a fresh drop row keeps glowing
+  const IN_STOCK_WINDOW = 240;    // seconds a drop counts as "in stock"
+
+  function statusFromElapsed(elapsedSec) {
+    if (elapsedSec < 60) return "just now";
+    if (elapsedSec < 3600) return Math.floor(elapsedSec / 60) + "m ago";
+    if (elapsedSec < 86400) return Math.floor(elapsedSec / 3600) + "h ago";
+    return Math.floor(elapsedSec / 86400) + "d ago";
+  }
+
   function renderAllCards() {
+    const nowUnix = Math.floor(Date.now() / 1000);
     for (const [biomeKey, items] of Object.entries(ROSTER_DATA)) {
       const container = document.getElementById(`list-${biomeKey}`);
       if (!container) continue;
 
       container.innerHTML = items.map((item) => {
         const iconHtml = getPetIconHtml(item.name);
-        
+        const fresh = item.droppedAt && (nowUnix - item.droppedAt) < JUST_DROPPED_WINDOW;
+        const rowClass = fresh ? "card-item just-dropped" : "card-item";
+
         if (item.inStock) {
           let colorClass = "status-in-stock";
           if (item.color === "yellow") colorClass = "status-yellow";
           else if (item.color === "blue") colorClass = "status-blue";
-          
           return `
-            <div class="card-item">
+            <div class="${rowClass}">
               <div class="item-left">
                 ${iconHtml}
                 <span class="item-name ${colorClass}">${item.name} ${item.status}</span>
               </div>
-            </div>
-          `;
-        } else {
-          return `
-            <div class="card-item">
-              <div class="item-left">
-                ${iconHtml}
-                <span class="item-name">${item.name}</span>
-              </div>
-              <span class="item-status status-time-ago">— ${item.status}</span>
-            </div>
-          `;
+            </div>`;
         }
+        return `
+          <div class="${rowClass}">
+            <div class="item-left">
+              ${iconHtml}
+              <span class="item-name">${item.name}</span>
+            </div>
+            <span class="item-status status-time-ago">— ${item.status}</span>
+          </div>`;
       }).join("");
     }
   }
 
-  // Live Countdowns Engine
-  let newEggsSecs = 227;      // 3m 47s
-  let pumpkinKingSecs = 780;  // 13m
-  let eventSecs = 227;        // 3m 47s
-  let updateSecs = 131308;    // 1d 12h 28m
-
+  // =========================================================
+  // Formatting helpers
+  // =========================================================
   function formatMmSs(sec) {
     if (sec <= 0) return "0m 00s";
     const m = Math.floor(sec / 60);
@@ -316,83 +347,101 @@
     return `${d}d ${h}h ${m}m`;
   }
 
-  // ── Audio & Speech Alert Engine (Native HTML5 WAV Audio for OBS CEF) ──
-  let alarmEnabled = true;
+  function formatAgoShort(sec) {
+    if (sec < 60) return `${sec}s`;
+    if (sec < 3600) return `${Math.floor(sec / 60)}m`;
+    if (sec < 86400) return `${Math.floor(sec / 3600)}h`;
+    return `${Math.floor(sec / 86400)}d`;
+  }
 
-  // Continuous Inaudible Audio Carrier (Keeps OBS CEF Audio Stream Alive at 160 kbps 24/7)
-  // Guarantees YouTube Studio never flags "Audio bit rate (0)" during quiet periods
+  // =========================================================
+  // Audio engine (native HTML5 WAV for OBS CEF)
+  // =========================================================
+  let alarmEnabled = params.get("mute") !== "true";
+  const soundBase = isLocalFile ? "../website/sounds/" : "/sounds/";
+
+  // Inaudible carrier keeps the OBS audio track alive so YouTube never sees 0 kbps
   function initAudioCarrier() {
     try {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
-      if (AudioContext) {
-        const carrierCtx = new AudioContext();
-        const osc = carrierCtx.createOscillator();
-        const gain = carrierCtx.createGain();
-        gain.gain.value = 0.00001; // inaudible carrier
-        osc.frequency.value = 440;
-        osc.connect(gain);
-        gain.connect(carrierCtx.destination);
-        osc.start();
-
-        setInterval(() => {
-          if (carrierCtx.state === 'suspended') {
-            carrierCtx.resume().catch(() => {});
-          }
-        }, 3000);
-      }
+      if (!AudioContext) return;
+      const carrierCtx = new AudioContext();
+      const osc = carrierCtx.createOscillator();
+      const gain = carrierCtx.createGain();
+      gain.gain.value = 0.00001;
+      osc.frequency.value = 440;
+      osc.connect(gain);
+      gain.connect(carrierCtx.destination);
+      osc.start();
+      setInterval(() => {
+        if (carrierCtx.state === "suspended") carrierCtx.resume().catch(() => {});
+      }, 3000);
     } catch (e) {}
   }
   initAudioCarrier();
-  let lastSpokenWaveSecond = null;
+
+  // Pre-create audio objects so the first alert plays without a fetch delay
+  const SOUNDS = {};
+  ["warning_30s.wav", "urgent_10s.wav", "drop_chime.wav", "divine_chord.wav", "train_bell.wav"].forEach((f) => {
+    try {
+      const a = new Audio(soundBase + f);
+      a.preload = "auto";
+      SOUNDS[f] = a;
+    } catch (e) {}
+  });
 
   function playSoundFile(filename) {
     if (!alarmEnabled) return;
     try {
-      const isLocal = window.location.protocol === "file:";
-      const basePath = isLocal ? "../website/sounds/" : "/sounds/";
-      const audio = new Audio(basePath + filename);
+      const base = SOUNDS[filename];
+      const audio = base ? base.cloneNode() : new Audio(soundBase + filename);
       audio.volume = 1.0;
       const p = audio.play();
-      if (p !== undefined) {
-        p.catch(() => {});
-      }
+      if (p !== undefined) p.catch(() => {});
     } catch (e) {}
   }
 
+  function playAlertSound(rarity = "secret") {
+    const r = (rarity || "").toLowerCase();
+    playSoundFile(r === "divine" ? "divine_chord.wav" : "drop_chime.wav");
+  }
+
+  let lastSpokenWaveSecond = null;
   function checkWaveAlarms(s) {
     if (!alarmEnabled || s === null || s === undefined) return;
     const sec = Math.round(Number(s));
-
-    // 30 seconds warning
     if (sec === 30 && lastSpokenWaveSecond !== 30) {
       lastSpokenWaveSecond = 30;
       playSoundFile("warning_30s.wav");
-    }
-    // 10 seconds urgent warning
-    else if (sec === 10 && lastSpokenWaveSecond !== 10) {
+    } else if (sec === 10 && lastSpokenWaveSecond !== 10) {
       lastSpokenWaveSecond = 10;
       playSoundFile("urgent_10s.wav");
-    }
-    // 0 seconds - Wave spawned!
-    else if (sec === 0 && lastSpokenWaveSecond !== 0) {
+    } else if (sec === 0 && lastSpokenWaveSecond !== 0) {
       lastSpokenWaveSecond = 0;
       playSoundFile("drop_chime.wav");
-    }
-    else if (sec > 35) {
-      if (lastSpokenWaveSecond !== null && lastSpokenWaveSecond <= 10) {
-        lastSpokenWaveSecond = null;
-      }
+    } else if (sec > 35 && lastSpokenWaveSecond !== null) {
+      lastSpokenWaveSecond = null;
     }
   }
 
-  // ── Synchronized In-Game Timers (Aligned with live Roblox server schedule) ──
+  let lastTrainBellMinute = -1;
+  function checkTrainBell(train) {
+    if (!alarmEnabled || !train.inStation) return;
+    const m = new Date().getMinutes();
+    if (m !== lastTrainBellMinute && (m === 0 || m === 30)) {
+      lastTrainBellMinute = m;
+      playSoundFile("train_bell.wav");
+    }
+  }
 
-  // 1. Pumpkin King: Spawns twice an hour at exactly :15 and :45
+  // =========================================================
+  // Synchronized in-game timers (Roblox server schedule)
+  // =========================================================
+  // Pumpkin King: :15 and :45, portal open 5 min
   function getPumpkinKingData() {
     const now = new Date();
     const m = now.getMinutes();
     const s = now.getSeconds();
-    // Portal open window: 5 minutes (:15-:20 and :45-:50)
     if ((m >= 15 && m < 20) || (m >= 45 && m < 50)) {
       const rem = (m < 20 ? 20 - m : 50 - m) * 60 - s;
       return { active: true, text: "OPEN NOW", remainingSec: rem };
@@ -402,12 +451,11 @@
     return { active: false, text: formatMmSs(rem), remainingSec: rem };
   }
 
-  // 2. Train / Phantom Express: Arrives at :00 and :30
+  // Phantom Express: :00 and :30, boarding 5 min
   function getTrainData() {
     const now = new Date();
     const m = now.getMinutes();
     const s = now.getSeconds();
-    // In station / boarding: 5 minutes (:00-:05 and :30-:35)
     if ((m >= 0 && m < 5) || (m >= 30 && m < 35)) {
       const rem = (m < 5 ? 5 - m : 35 - m) * 60 - s;
       return { inStation: true, text: "NOW", remainingSec: rem };
@@ -417,8 +465,15 @@
     return { inStation: false, text: formatMmSs(rem), remainingSec: rem };
   }
 
-  // 3. New Eggs / Night Cycle (5-minute rotation: 4m 50s day, 10s night refresh)
+  // New Eggs: radar ETA when the API is fresh, otherwise the fixed 5-minute cycle
+  let waveTargetMs = null;   // absolute time of the next wave from /api/status
+  let waveSyncedAt = 0;      // when that ETA was received
+  const WAVE_SYNC_MAX_AGE = 45000;
+
   function getNewEggsRemaining() {
+    if (waveTargetMs && (Date.now() - waveSyncedAt) < WAVE_SYNC_MAX_AGE) {
+      return Math.max(0, Math.round((waveTargetMs - Date.now()) / 1000));
+    }
     const now = new Date();
     const secInCycle = (now.getMinutes() * 60 + now.getSeconds()) % 300;
     let rem = 300 - secInCycle + 6;
@@ -427,70 +482,120 @@
     return rem;
   }
 
-  // 4. Weekly Update Countdown (Saturdays at 14:00 UTC)
+  // Weekly update: Saturdays 14:00 UTC
   function getWeeklyUpdateRemaining() {
     const now = new Date();
     const target = new Date(now);
     target.setUTCHours(14, 0, 0, 0);
     const day = now.getUTCDay();
     let diffDays = (6 - day + 7) % 7;
-    if (diffDays === 0 && now.getUTCHours() >= 14) {
-      diffDays = 7;
-    }
+    if (diffDays === 0 && now.getUTCHours() >= 14) diffDays = 7;
     target.setUTCDate(now.getUTCDate() + diffDays);
     return Math.max(0, Math.floor((target - now) / 1000));
   }
 
+  function setUrgency(el, rem, spawningText) {
+    el.classList.remove("warn", "urgent", "spawning", "pulse-now");
+    if (rem <= 0) {
+      el.textContent = spawningText;
+      el.classList.add("spawning");
+    } else if (rem <= 10) {
+      el.classList.add("urgent");
+    } else if (rem <= 30) {
+      el.classList.add("warn");
+    }
+  }
+
   function tickCountdowns() {
-    // 1. New Eggs timer (Synchronized 5-min cycle)
     const eggsRem = getNewEggsRemaining();
     const elNewEggs = document.getElementById("timer-new-eggs");
-    if (elNewEggs) elNewEggs.textContent = formatMmSs(eggsRem);
+    if (elNewEggs) {
+      elNewEggs.textContent = formatMmSs(eggsRem);
+      setUrgency(elNewEggs, eggsRem, "SPAWNING!");
+    }
     checkWaveAlarms(eggsRem);
 
-    // 2. Train & Event Pill (Synchronized 30-min schedule: :00 and :30)
     const train = getTrainData();
     const elTrain = document.getElementById("timer-train");
     if (elTrain) {
       elTrain.textContent = train.text;
-      if (train.inStation) {
-        elTrain.classList.add("pulse-now");
-      } else {
-        elTrain.classList.remove("pulse-now");
-      }
+      elTrain.classList.toggle("pulse-now", train.inStation);
     }
+    checkTrainBell(train);
 
-    const elEventTime = document.getElementById("event-timer-val");
-    if (elEventTime) {
-      elEventTime.textContent = train.inStation ? "BOARDING" : formatMmSs(train.remainingSec);
-    }
-    const elProgressBar = document.getElementById("event-progress-bar");
-    if (elProgressBar) {
-      const pct = Math.max(5, Math.min(100, ((1800 - train.remainingSec) / 1800) * 100));
-      elProgressBar.style.width = `${pct}%`;
-    }
-
-    // 3. Pumpkin King timer (Synchronized twice per hour: :15 and :45)
     const pk = getPumpkinKingData();
     const elPumpkin = document.getElementById("timer-pumpkin-king");
     if (elPumpkin) {
       elPumpkin.textContent = pk.text;
-      if (pk.active) elPumpkin.classList.add("pulse-now");
-      else elPumpkin.classList.remove("pulse-now");
+      elPumpkin.classList.toggle("pulse-now", pk.active);
     }
 
-    // 4. Update timer (Weekly Saturday update)
-    const updSec = getWeeklyUpdateRemaining();
     const elUpdate = document.getElementById("timer-update");
-    if (elUpdate) elUpdate.textContent = formatDhm(updSec);
+    if (elUpdate) elUpdate.textContent = formatDhm(getWeeklyUpdateRemaining());
+
+    tickDropPill();
   }
 
+  // =========================================================
+  // Latest drop pill (top centre)
+  // =========================================================
+  let latestDrop = null; // { egg, rarity, location, ts }
+
+  function tickDropPill() {
+    const elTime = document.getElementById("drop-pill-time");
+    const elBar = document.getElementById("drop-pill-bar");
+    if (!latestDrop || !elTime || !elBar) return;
+    const ago = Math.max(0, Math.floor(Date.now() / 1000) - latestDrop.ts);
+    elTime.textContent = formatAgoShort(ago);
+    const pct = Math.max(0, 100 - (ago / IN_STOCK_WINDOW) * 100);
+    elBar.style.width = `${pct}%`;
+  }
+
+  function showDropPill(drop, isNew) {
+    latestDrop = drop;
+    const r = (drop.rarity || "secret").toLowerCase();
+    const pill = document.getElementById("drop-pill");
+    const elIcon = document.getElementById("drop-pill-icon");
+    const elTag = document.getElementById("drop-pill-tag");
+    const elTitle = document.getElementById("drop-pill-title");
+    const elBar = document.getElementById("drop-pill-bar");
+    if (elIcon) elIcon.innerHTML = getPetIconHtml(drop.egg);
+    if (elTag) {
+      elTag.textContent = `${(drop.location || "RADAR").toUpperCase()} • ${r.toUpperCase()}`;
+      elTag.className = `event-tag-badge tag-${r}`;
+    }
+    if (elTitle) elTitle.textContent = drop.egg;
+    if (elBar) elBar.className = `event-progress-bar bar-${r}`;
+    tickDropPill();
+
+    if (isNew && pill) {
+      pill.classList.remove("flash", "flash-divine", "flash-eternal");
+      void pill.offsetWidth; // restart animation
+      pill.classList.add("flash");
+      if (r === "divine") pill.classList.add("flash-divine");
+      if (r === "eternal") pill.classList.add("flash-eternal");
+      setTimeout(() => pill.classList.remove("flash", "flash-divine", "flash-eternal"), 3000);
+    }
+  }
+
+  function setSyncState(online) {
+    const dot = document.getElementById("sync-dot");
+    if (!dot) return;
+    dot.classList.toggle("online", online);
+    dot.classList.toggle("offline", !online);
+  }
+
+  // =========================================================
+  // Roster matching
+  // =========================================================
   function getRosterBiomeKey(loc) {
     if (!loc) return "";
     const l = loc.toLowerCase().trim();
     if (l === "angels") return "angels";
     if (l === "demons") return "demons";
     if (l.includes("angel") && l.includes("demon")) return "demons";
+    if (l.includes("flooded")) return "flooded_alien_planet";
+    if (l.includes("alien")) return "alien_planet";
     if (l.includes("enchant")) return "enchanted_forest";
     if (l.includes("cherry")) return "cherry_blossom";
     if (l.includes("abyss") || l.includes("ocean")) return "abyss_ocean";
@@ -500,182 +605,126 @@
     return l.replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
   }
 
-  // =========================================================
-  // Web Audio API Sound Alerts Engine (Synthesized loud gaming pings)
-  // =========================================================
-  let audioCtx = null;
-  function getAudioContext() {
-    if (!audioCtx) {
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      if (AudioContext) audioCtx = new AudioContext();
+  function findRosterPet(petName, preferredBiome) {
+    const n = petName.toLowerCase().trim();
+    if (!n) return null;
+    const order = preferredBiome && ROSTER_DATA[preferredBiome]
+      ? [preferredBiome, ...Object.keys(ROSTER_DATA).filter((k) => k !== preferredBiome)]
+      : Object.keys(ROSTER_DATA);
+    for (const key of order) {
+      const exact = ROSTER_DATA[key].find((p) => p.name.toLowerCase().trim() === n);
+      if (exact) return exact;
     }
-    if (audioCtx && audioCtx.state === "suspended") {
-      audioCtx.resume().catch(() => {});
+    for (const key of order) {
+      const loose = ROSTER_DATA[key].find((p) => {
+        const pn = p.name.toLowerCase().trim();
+        return pn.includes(n) || n.includes(pn);
+      });
+      if (loose) return loose;
     }
-    return audioCtx;
+    return null;
   }
 
-  function playAlertSound(rarity = "secret") {
-    const r = (rarity || "").toLowerCase();
-    if (r === "divine") playSoundFile("divine_chord.wav");
-    else if (r === "eternal") playSoundFile("drop_chime.wav");
-    else playSoundFile("drop_chime.wav");
-    return;
-    try {
-      const ctx = getAudioContext();
-      if (!ctx) return;
-
-      const now = ctx.currentTime;
-      const r = (rarity || "").toLowerCase();
-
-      if (r === "divine") {
-        // Triumphant 4-tone ascending fanfare (C5 -> E5 -> G5 -> C6)
-        const notes = [523.25, 659.25, 783.99, 1046.50];
-        notes.forEach((freq, idx) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = "triangle";
-          osc.frequency.setValueAtTime(freq, now + idx * 0.12);
-          gain.gain.setValueAtTime(0.35, now + idx * 0.12);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.12 + 0.35);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(now + idx * 0.12);
-          osc.stop(now + idx * 0.12 + 0.35);
-        });
-      } else if (r === "eternal") {
-        // High-pitch 2-tone melodic chime
-        const notes = [659.25, 987.77];
-        notes.forEach((freq, idx) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = "sine";
-          osc.frequency.setValueAtTime(freq, now + idx * 0.14);
-          gain.gain.setValueAtTime(0.3, now + idx * 0.14);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.14 + 0.4);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(now + idx * 0.14);
-          osc.stop(now + idx * 0.14 + 0.4);
-        });
-      } else {
-        // Crisp drop radar ping
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = "sine";
-        osc.frequency.setValueAtTime(880, now);
-        osc.frequency.exponentialRampToValueAtTime(1320, now + 0.18);
-        gain.gain.setValueAtTime(0.25, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(now);
-        osc.stop(now + 0.45);
-      }
-    } catch (e) {
-      console.warn("Audio alert failed", e);
+  function applyDropToRoster(pet, elapsedSec, dropTs) {
+    if (elapsedSec < IN_STOCK_WINDOW) {
+      pet.status = "x1";
+      pet.inStock = true;
+    } else {
+      pet.inStock = false;
+      pet.status = statusFromElapsed(elapsedSec);
     }
+    if (dropTs && (!pet.droppedAt || dropTs > pet.droppedAt)) pet.droppedAt = dropTs;
   }
 
-  // Periodic API Sync with bot's /api/status if reachable
+  // =========================================================
+  // Live sync with /api/status
+  // =========================================================
   let lastSeenDropTime = null;
+  let consecutiveFailures = 0;
 
   async function syncWithApi() {
     try {
       const reqHeaders = {};
       if (token) reqHeaders["X-EggStock-Token"] = token;
       const res = await fetch(apiUrl, { cache: "no-store", headers: reqHeaders });
-      if (!res.ok) return;
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
+      consecutiveFailures = 0;
+      setSyncState(true);
 
-      // If next wave estimate exists, sync the new eggs timer
-      if (data.next_wave_estimate && data.next_wave_estimate.overall && data.next_wave_estimate.overall.eta_seconds) {
-        newEggsSecs = Math.max(0, Math.floor(data.next_wave_estimate.overall.eta_seconds));
+      const nowUnix = Math.floor(Date.now() / 1000);
+
+      // Wave ETA from the radar
+      const eta = data.next_wave_estimate && data.next_wave_estimate.overall
+        ? data.next_wave_estimate.overall.eta_seconds
+        : null;
+      if (eta !== null && eta !== undefined) {
+        waveTargetMs = Date.now() + Math.max(0, Math.floor(eta)) * 1000;
+        waveSyncedAt = Date.now();
       }
 
-      // ── Live Pet Timestamps Sync from SenZ V2 ──
+      // Last-seen timestamps for every tracked pet
       if (data.last_seen_snapshot && data.last_seen_snapshot.sections) {
-        const nowUnix = Math.floor(Date.now() / 1000);
-        const allItems = [];
-        for (const [rarity, list] of Object.entries(data.last_seen_snapshot.sections)) {
-          if (Array.isArray(list)) {
-            list.forEach(item => allItems.push(item));
-          }
+        for (const list of Object.values(data.last_seen_snapshot.sections)) {
+          if (!Array.isArray(list)) continue;
+          list.forEach((livePet) => {
+            const pet = findRosterPet(livePet.name || "");
+            if (!pet) return;
+            const ts = livePet.ts || nowUnix;
+            applyDropToRoster(pet, Math.max(0, nowUnix - ts), ts);
+          });
         }
-
-        allItems.forEach(livePet => {
-          const petName = (livePet.name || "").toLowerCase().trim();
-          const elapsedSec = Math.max(0, nowUnix - (livePet.ts || nowUnix));
-
-          for (const [biomeKey, cardList] of Object.entries(ROSTER_DATA)) {
-            const match = cardList.find(p => {
-              const n = p.name.toLowerCase().trim();
-              return n === petName || n.includes(petName) || petName.includes(n) || (n.includes("patapim") && petName.includes("patapim"));
-            });
-
-            if (match) {
-              if (elapsedSec < 240) {
-                // Dropped within last 4 minutes -> IN STOCK!
-                match.status = "x1";
-                match.inStock = true;
-              } else {
-                match.inStock = false;
-                if (elapsedSec < 3600) {
-                  match.status = Math.floor(elapsedSec / 60) + "m ago";
-                } else if (elapsedSec < 86400) {
-                  match.status = Math.floor(elapsedSec / 3600) + "h ago";
-                } else {
-                  match.status = Math.floor(elapsedSec / 86400) + "d ago";
-                }
-              }
-            }
-          }
-        });
-        renderAllCards();
       }
 
-      // Check recent drops to flash updates and trigger loud sound alerts
+      // Recent drops: newest first
       if (Array.isArray(data.recent_drops) && data.recent_drops.length > 0) {
         const lastDrop = data.recent_drops[0];
-        
-        // Detect if this is a newly arrived drop
-        if (lastDrop.time && lastDrop.time !== lastSeenDropTime) {
-          if (lastSeenDropTime !== null) {
-            // Play alert sound for stream!
-            playAlertSound(lastDrop.rarity || "secret");
-          }
+        const dropTs = lastDrop.time ? Math.floor(Date.parse(lastDrop.time) / 1000) : nowUnix;
+        const isNew = !!lastDrop.time && lastDrop.time !== lastSeenDropTime;
+        const firstSync = lastSeenDropTime === null;
+
+        if (isNew) {
+          if (!firstSync) playAlertSound(lastDrop.rarity || "secret");
           lastSeenDropTime = lastDrop.time;
         }
 
-        const biomeKey = getRosterBiomeKey(lastDrop.location || "");
-        if (ROSTER_DATA[biomeKey]) {
-          const match = ROSTER_DATA[biomeKey].find(p => p.name.toLowerCase().includes((lastDrop.egg || "").toLowerCase()));
-          if (match) {
-            match.status = "x1";
-            match.inStock = true;
-            renderAllCards();
-          }
-        }
+        showDropPill({
+          egg: lastDrop.egg || "Unknown",
+          rarity: lastDrop.rarity || "secret",
+          location: lastDrop.location || "",
+          ts: isNaN(dropTs) ? nowUnix : dropTs
+        }, isNew && !firstSync);
+
+        data.recent_drops.slice(0, 20).forEach((d) => {
+          const ts = d.time ? Math.floor(Date.parse(d.time) / 1000) : nowUnix;
+          const pet = findRosterPet(d.egg || "", getRosterBiomeKey(d.location || ""));
+          if (pet) applyDropToRoster(pet, Math.max(0, nowUnix - (isNaN(ts) ? nowUnix : ts)), ts);
+        });
       }
+
+      renderAllCards();
     } catch (e) {
-      // Graceful offline fallback -- local simulation continues flawlessly
+      consecutiveFailures++;
+      if (consecutiveFailures >= 3) setSyncState(false);
     }
   }
 
-  // Keyboard shortcut for Streamer:
-  // 'P' -> Toggle mock gameplay backdrop
-  // 'F' -> Toggle Fullscreen
+  // =========================================================
+  // Streamer hotkeys: P backdrop, F fullscreen, M mute, T test alert
+  // =========================================================
   window.addEventListener("keydown", (e) => {
-    if (e.key === "p" || e.key === "P") {
+    const k = e.key.toLowerCase();
+    if (k === "p") {
       const backdrop = document.getElementById("gameplay-preview-backdrop");
       if (backdrop) backdrop.classList.toggle("active");
-    }
-    if (e.key === "f" || e.key === "F") {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(() => {});
-      } else {
-        document.exitFullscreen().catch(() => {});
-      }
+    } else if (k === "f") {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
+      else document.exitFullscreen().catch(() => {});
+    } else if (k === "m") {
+      alarmEnabled = !alarmEnabled;
+    } else if (k === "t") {
+      showDropPill({ egg: "Pure Jellyfish", rarity: "secret", location: "Angels", ts: Math.floor(Date.now() / 1000) }, true);
+      playAlertSound("secret");
     }
   });
 
@@ -686,6 +735,9 @@
 
   // Initialization
   renderAllCards();
+  tickCountdowns();
   setInterval(tickCountdowns, 1000);
+  setInterval(renderAllCards, 30000); // keep "Xm ago" labels moving even if the API is quiet
+  syncWithApi();
   setInterval(syncWithApi, 3000);
 })();
