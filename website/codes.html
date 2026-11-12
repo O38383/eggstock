@@ -121,7 +121,7 @@
           "name": "How can I get free luck boosts and rewards in Steal An Egg without codes?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "You can obtain free rewards through four 100% legitimate in-game methods: (1) Hourly Admin 2x Luck events that trigger at the top of every hour; (2) Whacking Dr. Scramble Drones every 30 minutes to collect Samples and Drone Parts; (3) Finding the 5 Vault Parts for Nibbles to unlock The Scrambler Bat (+450% Speed); (4) Stealing high-tier wild eggs like Equinox ($1.8B/s) and Aetheron ($6.9B/s) in the Angels & Demons biome (requires 20B Speed)."
+            "text": "You can obtain free rewards through four 100% legitimate in-game methods: (1) Hourly Admin 2x Luck events that trigger at the top of every hour; (2) Whacking Dr. Scramble Drones every 30 minutes to collect Samples and Drone Parts; (3) Finding the 5 Vault Parts for Dr. Scramble to unlock The Extinction Egg (+450% Speed); (4) Stealing high-tier wild eggs like Equinox ($1.8B/s) and Aetheron ($6.9B/s) in the Angels & Demons biome (requires 20B Speed)."
           }
         },
         {
@@ -338,39 +338,39 @@
                 </div>
             </div>
 
-            <!-- 2. Dr. Scramble Drone Invasions -->
+            <!-- 2. Alien Lagoon Fishing Milestones (Update 12) -->
             <div class="neo-card p-5 flex flex-col justify-between space-y-3">
                 <div>
                     <div class="flex items-center justify-between mb-2">
-                        <span class="bg-[#00f0ff] text-black text-[10px] font-black uppercase px-2 py-0.5 border border-black">UPDATE 5</span>
-                        <span class="material-symbols-outlined text-[#00f0ff] text-xl">smart_toy</span>
+                        <span class="bg-[#00f0ff] text-black text-[10px] font-black uppercase px-2 py-0.5 border border-black">UPDATE 12</span>
+                        <span class="material-symbols-outlined text-[#00f0ff] text-xl">phishing</span>
                     </div>
-                    <h3 class="font-display font-black text-lg uppercase text-white">2. 30-Min Drone Invasions &amp; Samples</h3>
+                    <h3 class="font-display font-black text-lg uppercase text-white">2. Alien Lagoon Fishing Milestones</h3>
                     <p class="text-xs text-slate-300 leading-relaxed font-sans">
-                        Dr. Scramble's Drones invade every <strong>30 minutes</strong> in Abyss Ocean, Cosmic, and Angels &amp; Demons. Whacking drones rewards free <strong>Samples</strong> to buy the <em>Scrambled Mutation</em> in the Experiment Shop!
+                        Talk to the Alien Ferryman in the Alien Planet to access the Alien Lagoon. Completing the <strong>100 Fishing Milestones</strong> unlocks free upgraded fishing rods, Void Pearls, and exclusive extraterrestrial event pets!
                     </p>
                 </div>
                 <div class="bg-[#0a0d14] p-3 border border-black flex items-center justify-between text-xs font-mono">
-                    <span class="text-slate-400">Next Drone Wave:</span>
-                    <span id="codes-drone-timer" class="text-[#00f0ff] font-mono-data font-black text-sm">--:--</span>
+                    <span class="text-slate-400">Lagoon Status:</span>
+                    <span class="text-[#00f0ff] font-mono-data font-black text-sm">ACTIVE • 100 GOALS</span>
                 </div>
             </div>
 
-            <!-- 3. The Scrambler Bat Quest -->
+            <!-- 3. Dr. Scramble's Laboratory Trade-In -->
             <div class="neo-card p-5 flex flex-col justify-between space-y-3">
                 <div>
                     <div class="flex items-center justify-between mb-2">
-                        <span class="bg-[#4edea3] text-black text-[10px] font-black uppercase px-2 py-0.5 border border-black">FREE WEAPON</span>
-                        <span class="material-symbols-outlined text-[#4edea3] text-xl">sports_cricket</span>
+                        <span class="bg-[#4edea3] text-black text-[10px] font-black uppercase px-2 py-0.5 border border-black">FREE RE-ROLLS</span>
+                        <span class="material-symbols-outlined text-[#4edea3] text-xl">science</span>
                     </div>
-                    <h3 class="font-display font-black text-lg uppercase text-white">3. Secret Nibbles Cave (+450% Speed Bat)</h3>
+                    <h3 class="font-display font-black text-lg uppercase text-white">3. Dr. Scramble Egg Trade-In System</h3>
                     <p class="text-xs text-slate-300 leading-relaxed font-sans">
-                        Swim to the hidden cave behind the glowing coral in <strong>Abyss Ocean (Zone 6)</strong> with 2.5M Speed. Talk to Nibbles to find the 5 Vault Parts (2 map spawns + 3 Drone drops) to unlock <strong>The Scrambler Bat</strong> for free!
+                        Trade in surplus unhatched eggs directly at Dr. Scramble's lobby pod to earn Scientist Credits. Redeem credits for speed elixirs and rolls for rare mystery laboratory eggs like the <strong>Extinction Egg</strong>!
                     </p>
                 </div>
                 <div class="bg-[#0a0d14] p-3 border border-black flex items-center justify-between text-xs font-mono">
-                    <span class="text-slate-400">Reward:</span>
-                    <span class="text-[#4edea3] font-bold">+450% Speed &amp; Scramble Hit</span>
+                    <span class="text-slate-400">Trade Pod:</span>
+                    <span class="text-[#4edea3] font-bold">Lobby Hub Active</span>
                 </div>
             </div>
 
@@ -531,7 +531,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const adminEl = document.getElementById("codes-admin-timer");
         if (adminEl) adminEl.textContent = formatWave(adminDiff);
 
-        // 2. 30-min Drone Invasion
+        // 2. 30-min Alien Tidal Surge
         const mins = now.getMinutes();
         const secs = now.getSeconds();
         const targetMin = mins < 30 ? 30 : 60;

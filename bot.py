@@ -219,6 +219,12 @@ PET_WORLD_MAP = {
     "Toro": "Demons",
     "Equinox": "Angels & Demons",
     "Aetheron": "Angels & Demons",
+    # Update 12 Alien Planet & Alien Lagoon (Verified Official Roster)
+    "Obsidian Rex": "Alien Planet",
+    "Nebuloth Kraken": "Alien Planet",
+    "Xenorath": "Alien Planet",
+    "Alien Ferryman": "Alien Lagoon",
+    "Void Walker": "Alien Planet",
     # Update 7 Enchanted Forest (Verified Official Roster)
     "Prism Gecko": "Enchanted Forest",
     "Petal Beetle": "Enchanted Forest",
@@ -1988,7 +1994,8 @@ async def handle_status(request):
     known_worlds = [
         "Forest", "Desert", "Jungle", "Snow", "Volcano",
         "Prehistoric", "Abyss Ocean", "Cherry Blossom", "Titan Temple", "Cosmic",
-        "Angels", "Demons", "Angels & Demons", "Enchanted Forest"
+        "Angels", "Demons", "Angels & Demons", "Enchanted Forest",
+        "Alien Planet", "Alien Lagoon", "Alien"
     ]
     world_telemetry = {}
     for w in known_worlds:

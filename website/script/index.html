@@ -161,26 +161,26 @@
         },
         {
           "@type": "Question",
-          "name": "What is the Update 5 Dr. Scramble Event in Steal An Egg?",
+          "name": "What is Update 12 (Alien Planet Biome) in Steal An Egg?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Update 5 (Dr. Scramble Event) introduced 30-minute Drone Invasions across Abyss Ocean and high-tier biomes where players whack drones to collect Samples (event currency) and Drone Parts. Phase 2: Dr. Scramble's Revenge & Admin Abuse is currently LIVE in-game, featuring boosted boss drops, Vault Part puzzles, and 2x luck waves."
+            "text": "Update 12 introduces the 250 Billion Speed Alien Planet Biome, the Obsidian Rex guardian, the Alien Ferryman NPC who transports players to the Alien Lagoon for 100 fishing milestones, and rare Divine spawns like Obsidian Rex, Nebuloth Kraken, and Xenorath."
           }
         },
         {
           "@type": "Question",
-          "name": "Where is Nibbles (Experiment #013) located in Steal An Egg?",
+          "name": "How does Dr. Scramble's Laboratory egg trade-in work in Steal An Egg?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Nibbles (Experiment #013) is hidden inside an underwater secret cave behind the glowing coral wall in Abyss Ocean (Zone 6). Reaching the cave requires at least 2.5 Million Speed. Interacting with Nibbles unlocks the quest to retrieve 5 Vault Parts."
+            "text": "Dr. Scramble's Laboratory allows players to deposit unhatched eggs directly at the testing pod in the lobby to earn Scientist Credits, clear inventory carry weight, and roll for exclusive laboratory eggs such as the Extinction Egg."
           }
         },
         {
           "@type": "Question",
-          "name": "How do you get The Scrambler Bat and Vault Parts in Steal An Egg?",
+          "name": "How do you reach 250 Billion Speed for the Alien Planet?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "To unlock The Scrambler Bat (+450% Speed boost and opponent egg scramble), players must collect 5 Vault Parts: 2 are hidden in world maps (Titan Temple behind a pillar, Cherry Blossom atop the pagoda), and 3 drop from defeating Dr. Scramble Drones during 30-minute invasions."
+            "text": "To reach 250B Speed, stack high-multiplier fusion pets (Equinox / Aetheron), participate in Saturday Admin Abuse 2x Luck sessions, join the developer group for permanent speed buffs, and run 15-minute speed boost potions."
           }
         },
         {
@@ -188,7 +188,7 @@
           "name": "Are there working promo codes for Steal An Egg?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. Roblox Steal An Egg does not have a promo code redemption box. All legitimate bonuses and boosts are obtained through in-game mechanics like hourly Admin 2x Luck events, Drone Invasions, and the secret Fusion Shrine."
+            "text": "No. Roblox Steal An Egg does not have a promo code redemption box. All legitimate bonuses and boosts are obtained through in-game mechanics like hourly Admin 2x Luck events, Alien Tidal Surge, and the secret Fusion Shrine."
           }
         },
         {
@@ -196,7 +196,7 @@
           "name": "What is the Dr. Scramble Experiment Egg in Steal An Egg?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "The Dr. Scramble Experiment Egg is a Secret-tier egg introduced in Update 5. It spawns during Dr. Scramble active events and Drone Invasions, hatching into high-tier mutated pets with exceptional base speed multipliers."
+            "text": "The Dr. Scramble Experiment Egg is a Secret-tier egg introduced in Update 5. It spawns during Dr. Scramble active events and Alien Tidal Surge, hatching into high-tier mutated pets with exceptional base speed multipliers."
           }
         },
         {
@@ -2274,7 +2274,7 @@ document.addEventListener("DOMContentLoaded", () => {
             odds: "0.010% (1 in ~10,000)",
             badgeWins: "Event Drop",
             world: "Invasion Event",
-            tips: "Exclusive event egg dropped during Dr. Scramble drone invasions.",
+            tips: "Exclusive laboratory egg synthesized at Dr. Scramble's trade-in pod.",
             icon: "/images/eggs/dr__scramble_experiment.png",
             egg_image: "/images/eggs/dr__scramble_experiment.png",
             pet_image: "/images/pets/dr__scramble_experiment.png"
@@ -2587,7 +2587,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const heroAdmin = document.getElementById("hero-admin-countdown");
         if (heroAdmin) heroAdmin.textContent = timeStr;
 
-        // Dr. Scramble 30-min Drone Invasion countdown (:00 and :30 of each hour)
+        // Alien Lagoon 20-min Tidal Surge countdown
         const curMins = now.getMinutes();
         const curSecs = now.getSeconds();
         const targetMin = curMins < 30 ? 30 : 60;
