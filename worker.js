@@ -2,7 +2,34 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    // Handle OAuth callback from Monetag
+    // 1. Enforce primary domain canonicalization (www -> apex)
+    if (url.hostname === "www.eggstock.xyz") {
+      return Response.redirect(`https://eggstock.xyz${url.pathname}${url.search}`, 301);
+    }
+
+    // 2. Trailing slash normalization (eliminate duplicate URLs & canonical issues)
+    if (url.pathname.length > 1 && url.pathname.endsWith("/")) {
+      const cleanPath = url.pathname.replace(/\/+$/, "");
+      return Response.redirect(`https://eggstock.xyz${cleanPath}${url.search}`, 301);
+    }
+
+    // 3. 301 Permanent Redirects for legacy and alias routes
+    const legacyRedirects = {
+      "/prediction": "/predictions",
+      "/scripts": "/script",
+      "/tierlist": "/tier-list",
+      "/tier_list": "/tier-list",
+      "/servers": "/",
+      "/feed": "/stock",
+      "/halloween": "/event",
+      "/guides": "/blog"
+    };
+
+    if (legacyRedirects[url.pathname]) {
+      return Response.redirect(`https://eggstock.xyz${legacyRedirects[url.pathname]}${url.search}`, 301);
+    }
+
+    // 4. Handle OAuth callback from Monetag
     if (url.pathname === "/oauth/callback") {
       const code = url.searchParams.get("code");
       const error = url.searchParams.get("error");
@@ -76,7 +103,7 @@ button { background: #00f0ff; color: #000; border: none; padding: 10px 20px; fon
       }
     }
 
-    // Handle Monetag push service worker
+    // 5. Handle Monetag push service worker
     if (url.pathname === "/sw.js") {
       const swResponse = await env.ASSETS.fetch(request);
       const headers = new Headers(swResponse.headers);
@@ -88,7 +115,7 @@ button { background: #00f0ff; color: #000; border: none; padding: 10px 20px; fon
       });
     }
 
-    // Proxy API calls directly to Railway live bot backend with Edge Caching & CORS
+    // 6. Proxy API calls directly to Railway live bot backend with Edge Caching & CORS
     if (url.pathname.startsWith("/api/")) {
       if (request.method === "OPTIONS") {
         return new Response(null, {
@@ -102,7 +129,7 @@ button { background: #00f0ff; color: #000; border: none; padding: 10px 20px; fon
         });
       }
 
-      // Check Cloudflare edge cache for GET requests (prevents worker subrequest exhaustion)
+      // Check Cloudflare edge cache for GET requests
       const cache = caches.default;
       const cacheKey = new Request(url.toString(), request);
 
@@ -132,7 +159,6 @@ button { background: #00f0ff; color: #000; border: none; padding: 10px 20px; fon
 
         const newHeaders = new Headers(response.headers);
         newHeaders.set("Access-Control-Allow-Origin", "*");
-        // Edge cache for 5s; stale-while-revalidate for 10s
         newHeaders.set("Cache-Control", "public, max-age=2, s-maxage=5, stale-while-revalidate=10");
 
         const proxiedResponse = new Response(response.body, {
@@ -151,58 +177,71 @@ button { background: #00f0ff; color: #000; border: none; padding: 10px 20px; fon
 
         return proxiedResponse;
       } catch (err) {
-        return new Response(JSON.stringify({ error: "Backend proxy error", details: err.message }), {
+        return new Response(JSON.stringify({ error: "Backend proxy error", details: err.message, status: "degraded" }), {
           status: 502,
           headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
         });
       }
     }
 
-    // Clean URL mappings for canonical pages & sitemap entries
-    const cleanPath = url.pathname.replace(/\/$/, "");
+    // 7. Clean Canonical Route Mappings
+    const staticMap = {
+      "/": "/index.html",
+      "/stock": "/stock.html",
+      "/predictions": "/predictions.html",
+      "/notifier": "/notifier.html",
+      "/calculator": "/calculator.html",
+      "/codes": "/codes.html",
+      "/tier-list": "/tier-list.html",
+      "/values": "/values.html",
+      "/trading": "/trading.html",
+      "/event": "/event.html",
+      "/script": "/script.html",
+      "/faq": "/faq.html",
+      "/blog": "/blog.html",
+      "/about": "/about.html",
+      "/contact": "/contact.html",
+      "/terms": "/terms.html",
+      "/privacy": "/privacy.html",
+      "/soundboard": "/soundboard.html"
+    };
 
-    if (cleanPath === "/notifier") {
-      return env.ASSETS.fetch(new Request(new URL("/notifier.html", request.url), request));
-    }
-    if (cleanPath === "/calculator") {
-      return env.ASSETS.fetch(new Request(new URL("/calculator.html", request.url), request));
-    }
-    if (cleanPath === "/stock") {
-      return env.ASSETS.fetch(new Request(new URL("/stock.html", request.url), request));
-    }
-    if (cleanPath === "/predictions") {
-      return env.ASSETS.fetch(new Request(new URL("/predictions.html", request.url), request));
-    }
-    if (cleanPath === "/script" || cleanPath === "/scripts") {
-      return env.ASSETS.fetch(new Request(new URL("/script/index.html", request.url), request));
-    }
-    if (cleanPath === "/tier-list" || cleanPath === "/tierlist" || cleanPath === "/tier_list") {
-      return env.ASSETS.fetch(new Request(new URL("/tier_list.html", request.url), request));
-    }
-    if (cleanPath === "/codes") {
-      return env.ASSETS.fetch(new Request(new URL("/codes.html", request.url), request));
-    }
-    if (cleanPath === "/event") {
-      return env.ASSETS.fetch(new Request(new URL("/event.html", request.url), request));
-    }
-    if (cleanPath === "/values" || cleanPath === "/trading") {
-      return env.ASSETS.fetch(new Request(new URL("/tier_list.html", request.url), request));
+    if (staticMap[url.pathname]) {
+      return env.ASSETS.fetch(new Request(new URL(staticMap[url.pathname], request.url), request));
     }
 
-    // Serve static assets from ./website with automatic .html and SPA 404 fallback (prevents origin 429s)
-    let assetResponse = await env.ASSETS.fetch(request);
-    if (assetResponse.status === 404 && !url.pathname.includes(".")) {
-      // Try resolving with .html appended
-      const htmlUrl = new URL(url.pathname + ".html", request.url);
-      const htmlResponse = await env.ASSETS.fetch(new Request(htmlUrl, request));
-      if (htmlResponse.status === 200) {
-        return htmlResponse;
+    // 8. Blog Post Routes (/blog/:slug)
+    if (url.pathname.startsWith("/blog/")) {
+      const blogHtmlUrl = new URL(url.pathname + ".html", request.url);
+      const blogResponse = await env.ASSETS.fetch(new Request(blogHtmlUrl, request));
+      if (blogResponse.status === 200) {
+        return blogResponse;
       }
-      // Clean SPA fallback to index.html instead of hitting rate-limited origin
-      return env.ASSETS.fetch(new Request(new URL("/index.html", request.url), request));
     }
 
-    return assetResponse;
+    // 9. Standard Static Asset Fetch (Images, CSS, JS, Favicons)
+    let assetResponse = await env.ASSETS.fetch(request);
+    if (assetResponse.status === 200) {
+      return assetResponse;
+    }
+
+    // 10. True 404 Response (NO SOFT 404s — prevents duplicate canonical index penalty in GSC)
+    try {
+      const notFoundPage = await env.ASSETS.fetch(new Request(new URL("/404.html", request.url), request));
+      return new Response(notFoundPage.body, {
+        status: 404,
+        statusText: "Not Found",
+        headers: {
+          "Content-Type": "text/html; charset=UTF-8",
+          "Cache-Control": "public, max-age=60"
+        }
+      });
+    } catch (e) {
+      return new Response("<h1>404 Not Found</h1><p>The requested egg does not exist.</p>", {
+        status: 404,
+        headers: { "Content-Type": "text/html; charset=UTF-8" }
+      });
+    }
   },
 
   // Keep-alive cron: pings Railway backend every 10 minutes to maintain 24/7 uptime
