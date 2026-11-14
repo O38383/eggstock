@@ -2292,6 +2292,20 @@ async def handle_tier_list(request):
     return _render_page_with_token(tier_file)
 
 
+async def handle_values(request):
+    values_file = WEBSITE_DIR / "values.html"
+    if values_file.exists():
+        return _render_page_with_token(values_file)
+    return _render_page_with_token(WEBSITE_DIR / "tier-list.html")
+
+
+async def handle_trading(request):
+    trading_file = WEBSITE_DIR / "trading.html"
+    if trading_file.exists():
+        return _render_page_with_token(trading_file)
+    return _render_page_with_token(WEBSITE_DIR / "tier-list.html")
+
+
 async def handle_event(request):
     return _render_page_with_token(WEBSITE_DIR / "event.html")
 
@@ -2658,10 +2672,10 @@ async def start_web_app():
         web.get("/tierlist/", handle_tier_list),
         web.get("/tier_list", handle_tier_list),
         web.get("/tier_list/", handle_tier_list),
-        web.get("/values", handle_tier_list),
-        web.get("/values/", handle_tier_list),
-        web.get("/trading", handle_tier_list),
-        web.get("/trading/", handle_tier_list),
+        web.get("/values", handle_values),
+        web.get("/values/", handle_values),
+        web.get("/trading", handle_trading),
+        web.get("/trading/", handle_trading),
         web.get("/event", handle_event),
         web.get("/event/", handle_event),
         web.get("/script", handle_script_gateway),
