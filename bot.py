@@ -2197,6 +2197,7 @@ async def handle_monetag_oauth(request):
                 }
             ) as resp:
                 token_data = await resp.json()
+                logger.info(f"[MONETAG_OAUTH] Token response keys: {list(token_data.keys())}")
                 token_val = token_data.get("access_token") or json.dumps(token_data)
 
                 # Persist access token to disk so API scripts can read it automatically
@@ -2204,8 +2205,11 @@ async def handle_monetag_oauth(request):
                     try:
                         token_file = Path(__file__).resolve().parent / "monetag_token.txt"
                         token_file.write_text(token_data["access_token"].strip(), encoding="utf-8")
-                    except Exception:
-                        pass
+                        json_file = Path(__file__).resolve().parent / "monetag_token.json"
+                        json_file.write_text(json.dumps(token_data), encoding="utf-8")
+                        logger.info(f"[MONETAG_TOKEN] Saved access token (len={len(token_data['access_token'])})")
+                    except Exception as e:
+                        logger.error(f"[MONETAG_TOKEN] Error saving token: {e}")
 
                 html = f"""<!DOCTYPE html>
 <html>
