@@ -2181,8 +2181,8 @@ async def handle_monetag_oauth(request):
 
     token_url = "https://publishers.monetag.com/api/oauth2/token"
     verifier = "EggStockMonetagMcpVerifierSecureKey20261023SafeRandomStr999"
-    client_id = "mcp_dyn_2fe369d9bc20f449bd5ec09ae1bba14b"
-    redirect_uri = "https://eggstock.xyz/oauth/callback"
+    client_id = request.query.get("client_id") or os.environ.get("MONETAG_CLIENT_ID", "mcp_dyn_9292bdaae99875c765523f8f70987726")
+    redirect_uri = request.query.get("redirect_uri") or "https://eggstock.xyz/oauth/callback"
 
     try:
         async with aiohttp.ClientSession() as session:
@@ -2198,6 +2198,14 @@ async def handle_monetag_oauth(request):
             ) as resp:
                 token_data = await resp.json()
                 token_val = token_data.get("access_token") or json.dumps(token_data)
+
+                # Persist access token to disk so API scripts can read it automatically
+                if token_data.get("access_token"):
+                    try:
+                        token_file = Path(__file__).resolve().parent / "monetag_token.txt"
+                        token_file.write_text(token_data["access_token"].strip(), encoding="utf-8")
+                    except Exception:
+                        pass
 
                 html = f"""<!DOCTYPE html>
 <html>
