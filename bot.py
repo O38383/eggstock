@@ -2123,6 +2123,42 @@ async def handle_pt(request):
     return _render_page_with_token(WEBSITE_DIR / "pt.html")
 
 
+async def handle_egg_image(request):
+    filename = request.match_info.get("filename", "")
+    target = WEBSITE_DIR / "images" / "eggs" / filename
+    if target.exists() and target.is_file():
+        return web.FileResponse(target)
+    clean_name = filename.replace("_", "").lower()
+    for f in (WEBSITE_DIR / "images" / "eggs").glob("*.png"):
+        if f.stem.replace("_", "").lower() == clean_name.replace(".png", ""):
+            return web.FileResponse(f)
+    fallback = WEBSITE_DIR / "images" / "eggs" / "default_egg.png"
+    if fallback.exists():
+        return web.FileResponse(fallback)
+    secondary = WEBSITE_DIR / "images" / "eggs" / "dr_scramble_experiment.png"
+    if secondary.exists():
+        return web.FileResponse(secondary)
+    return web.Response(status=404)
+
+
+async def handle_pet_image(request):
+    filename = request.match_info.get("filename", "")
+    target = WEBSITE_DIR / "images" / "pets" / filename
+    if target.exists() and target.is_file():
+        return web.FileResponse(target)
+    clean_name = filename.replace("_", "").lower()
+    for f in (WEBSITE_DIR / "images" / "pets").glob("*.png"):
+        if f.stem.replace("_", "").lower() == clean_name.replace(".png", ""):
+            return web.FileResponse(f)
+    fallback = WEBSITE_DIR / "images" / "pets" / "default_pet.png"
+    if fallback.exists():
+        return web.FileResponse(fallback)
+    secondary = WEBSITE_DIR / "images" / "pets" / "dr_scramble_experiment.png"
+    if secondary.exists():
+        return web.FileResponse(secondary)
+    return web.Response(status=404)
+
+
 async def handle_stock(request):
     return _render_page_with_token(WEBSITE_DIR / "stock.html")
 
@@ -2728,6 +2764,8 @@ async def start_web_app():
         web.get("/overlay.js", lambda req: web.FileResponse(OVERLAY_DIR / "overlay.js")),
         web.static("/overlay/assets", OVERLAY_DIR),
         web.static("/website/assets", WEBSITE_DIR),
+        web.get("/images/eggs/{filename}", handle_egg_image),
+        web.get("/images/pets/{filename}", handle_pet_image),
         web.static("/images", WEBSITE_DIR / "images"),
     ]
     sounds_dir = WEBSITE_DIR / "sounds"
