@@ -2115,6 +2115,10 @@ async def handle_root(request):
     return _render_page_with_token(WEBSITE_DIR / "index.html")
 
 
+async def handle_vip(request):
+    return _render_page_with_token(WEBSITE_DIR / "vip.html")
+
+
 async def handle_es(request):
     return _render_page_with_token(WEBSITE_DIR / "es.html")
 
@@ -2709,6 +2713,10 @@ async def start_web_app():
         web.get("/oauth/callback", handle_monetag_oauth),
 
         # High-Intent SEO Landing Routes (Google Search optimization)
+        web.get("/vip", handle_vip),
+        web.get("/vip/", handle_vip),
+        web.get("/private-server", handle_vip),
+        web.get("/private-servers", handle_vip),
         web.get("/es", handle_es),
         web.get("/es/", handle_es),
         web.get("/pt", handle_pt),
