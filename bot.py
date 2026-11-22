@@ -2230,7 +2230,7 @@ async def handle_monetag_oauth(request):
     token_url = "https://publishers.monetag.com/api/oauth2/token"
     verifier = "EggStockMonetagMcpVerifierSecureKey20261023SafeRandomStr999"
     state_val = request.query.get("state", "")
-    client_id = request.query.get("client_id") or (state_val if state_val.startswith("mcp_dyn_") else None) or os.environ.get("MONETAG_CLIENT_ID", "mcp_dyn_29e36464633bcac923e3e6765578649d")
+    client_id = request.query.get("client_id") or (state_val if state_val.startswith("mcp_dyn_") else None) or os.environ.get("MONETAG_CLIENT_ID", "mcp_dyn_6ee6e12a0723308b95e2317d16aa4a98")
     redirect_uri = request.query.get("redirect_uri") or "https://eggstock.xyz/oauth/callback"
 
     try:
