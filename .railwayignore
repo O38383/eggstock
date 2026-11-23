@@ -2,9 +2,15 @@
 promo/
 promo_build/
 promo_new_build/
+video_assets/
+today_viral_short/
+.user_uploaded/
+.git/
 *.mp4
 *.wav
 *.mp3
+*.zip
+*.tar.gz
 preview_*.png
 verify_*.png
 test_*.py
@@ -17,3 +23,4 @@ _temp_*.js
 __pycache__/
 *.pyc
 .env
+.env.*
