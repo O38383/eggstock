@@ -44,15 +44,10 @@
 <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png?v=3"/>
 <link rel="manifest" href="/site.webmanifest?v=3"/>
 
-<!-- Google Verification & Monetag -->
+<!-- Google Verification & Monetag Meta -->
 <meta name="google-site-verification" content="google2dcf6b5ce2c3be8e"/>
 <meta name="monetag" content="854b35e3fcba804363de728b93c3565c"/>
-<!-- Monetag Onclick Popunder (Zone: 12084958) -->
-<script>(function(s){s.dataset.zone='12084958',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-<!-- Monetag In-Page Push (Zone: 12084963) -->
-<script>(function(s){s.dataset.zone='12084963',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-<!-- Monetag Push Notifications (Zone: 12093388) -->
-<script src="https://5gvci.com/act/files/tag.min.js?z=12093388" data-cfasync="false" async></script>
+<!-- Clean Experience: Zero onclick popunders & zero ad showers. Monetization via Unlock Button only -->
 
 <!-- Schema.org JSON-LD Structured Data -->
 <script type="application/ld+json">
@@ -125,12 +120,12 @@
 
 <!-- TOP NAVBAR -->
 <header class="border-b-2 border-black bg-[#0d111a] sticky top-0 z-40">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+  <div class="max-w-7xl mx-auto px-3 sm:px-6 h-13 sm:h-14 flex items-center justify-between">
     <!-- Brand -->
-    <div class="flex items-center gap-3">
-      <a href="/" class="flex items-center gap-2 no-underline">
-        <span class="font-display font-black text-xl sm:text-2xl uppercase tracking-tight text-[#00f0ff]">EggStock</span>
-        <span class="bg-[#fbff00] text-black text-[9px] font-black px-1.5 py-0.5 uppercase border border-black shadow-[1px_1px_0px_#000]">AI PREDICT</span>
+    <div class="flex items-center gap-2 sm:gap-3">
+      <a href="/" class="flex items-center gap-1.5 sm:gap-2 no-underline">
+        <span class="font-display font-black text-lg sm:text-2xl uppercase tracking-tight text-[#00f0ff]">EggStock</span>
+        <span class="bg-[#fbff00] text-black text-[9px] font-black px-1.5 py-0.5 uppercase border border-black shadow-[1px_1px_0px_#000]">PREDICTIONS</span>
       </a>
       <span class="hidden md:inline text-xs font-mono text-slate-400 border-l border-slate-700 pl-3">Live Spawn Prediction Radar</span>
     </div>
@@ -155,12 +150,12 @@
     </nav>
 
     <!-- Header Actions -->
-    <div class="flex items-center gap-2">
-      <div id="pass-status-pill" class="text-[11px] font-mono font-bold px-2.5 py-1 border border-black shadow-[2px_2px_0px_#000] bg-[#ff0055] text-white flex items-center gap-1">
-        <span class="material-symbols-outlined text-[14px]">lock</span>
-        <span id="pass-status-text">PRO: LOCKED</span>
+    <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+      <div id="pass-status-pill" class="text-[10px] sm:text-[11px] font-mono font-black px-2 sm:px-2.5 py-1 border border-black shadow-[1px_1px_0px_#000] bg-[#ff0055] text-white flex items-center gap-1 rounded">
+        <span class="material-symbols-outlined text-[13px] sm:text-[14px]">lock</span>
+        <span id="pass-status-text">LOCKED</span>
       </div>
-      <a href="https://discord.gg/Jmvam6Ktgm" target="_blank" rel="noopener noreferrer" class="bg-[#5865F2] hover:bg-[#4752c4] text-white px-3 py-1 neo-btn text-xs font-bold uppercase flex items-center gap-1 no-underline">
+      <a href="https://discord.gg/Jmvam6Ktgm" target="_blank" rel="noopener noreferrer" class="bg-[#5865F2] hover:bg-[#4752c4] text-white px-2.5 sm:px-3 py-1 neo-btn text-xs font-bold uppercase flex items-center gap-1 no-underline">
         <span class="material-symbols-outlined text-[15px]">forum</span>
         <span class="hidden sm:inline">Discord</span>
       </a>
@@ -169,63 +164,71 @@
 </header>
 
 <!-- MAIN WRAPPER -->
-<main class="max-w-6xl mx-auto px-4 sm:px-6 py-6 flex-grow w-full space-y-6">
+<main class="max-w-6xl mx-auto px-3 sm:px-6 py-4 sm:py-6 flex-grow w-full space-y-4 sm:space-y-6">
 
   <!-- HERO BANNER -->
-  <section class="space-y-3">
-    <div class="flex items-center gap-2 flex-wrap">
-      <span class="bg-[#fbff00] text-black text-[10px] font-black uppercase px-2.5 py-0.5 border border-black shadow-[2px_2px_0px_#000]">👑 EGGSTOCK PRO TELEMETRY</span>
-      <span class="bg-[#00f0ff] text-black text-[10px] font-mono font-black uppercase px-2 py-0.5 border border-black shadow-[2px_2px_0px_#000]">16-BIOME MARKOV CHAINS</span>
-      <span class="bg-[#ff9900] text-black text-[10px] font-mono font-black uppercase px-2 py-0.5 border border-black shadow-[2px_2px_0px_#000]">🦃 UPDATE 14 TURKEY RAMPAGE</span>
-      <span class="bg-[#00ff88] text-black text-[10px] font-mono font-bold uppercase px-2 py-0.5 border border-black shadow-[2px_2px_0px_#000] ml-auto" id="live-users-pill">● 517,400+ PLAYING</span>
+  <section class="space-y-2.5 sm:space-y-3">
+    <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap text-[10px] font-mono font-bold uppercase">
+      <span class="bg-[#00f0ff]/15 text-[#00f0ff] border border-[#00f0ff]/40 px-2 py-0.5 rounded flex items-center gap-1">
+        <span class="w-1.5 h-1.5 rounded-full bg-[#00f0ff] animate-ping"></span> Live AI Radar
+      </span>
+      <span class="bg-purple-500/15 text-purple-300 border border-purple-500/40 px-2 py-0.5 rounded">
+        16 Biomes
+      </span>
+      <span class="bg-[#ff9900]/15 text-[#ff9900] border border-[#ff9900]/40 px-2 py-0.5 rounded">
+        🦃 Update 14
+      </span>
+      <span class="bg-emerald-500/15 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded ml-auto" id="live-users-pill">
+        ● 600K+ Online
+      </span>
     </div>
 
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4">
       <div>
-        <h1 class="font-display font-black text-2xl sm:text-4xl uppercase text-white tracking-tight leading-tight">
-          EggStock PRO Radar<br/>
-          <span class="text-[#fbff00]">Divine Surge Matrix &amp; Island Forecast</span>
+        <h1 class="font-display font-black text-xl sm:text-4xl uppercase text-white tracking-tight leading-tight">
+          Steal An Egg Predictions<br/>
+          <span class="text-[#fbff00]">Divine Surge Radar &amp; Spawn Telemetry</span>
         </h1>
         <p class="text-xs sm:text-sm text-slate-300 font-mono mt-1 max-w-2xl leading-relaxed">
-          High-frequency AI drop telemetry powered by 588+ verified historical spawns. Features sub-second Divine wave probabilities, next-biome transition forecasts, and Update 14 King Gobble boss raid clocks.
+          Empirical drop forecasts powered by 588+ verified spawns. Real-time Divine wave odds, 16-biome Markov transition chains, and Turkey Rampage raid timers.
         </p>
       </div>
 
       <!-- Live Quick Clocks -->
-      <div class="grid grid-cols-2 gap-2 shrink-0 sm:w-80">
-        <div class="neo-box p-2.5 bg-[#0f1422]">
-          <div class="text-[10px] font-mono text-slate-400 uppercase">Next Wave Drop</div>
-          <div class="font-mono-data text-xl font-black text-[#00f0ff]" id="stat-next-wave">--:--</div>
-          <div class="text-[9px] font-mono text-slate-500">Cadence ~7.6m</div>
+      <div class="grid grid-cols-2 gap-2 shrink-0 sm:w-80 mt-1 sm:mt-0">
+        <div class="neo-box p-2 sm:p-2.5 bg-[#0f1422] border border-black">
+          <div class="text-[9px] sm:text-[10px] font-mono text-slate-400 uppercase">Next Wave Drop</div>
+          <div class="font-mono-data text-lg sm:text-xl font-black text-[#00f0ff]" id="stat-next-wave">--:--</div>
+          <div class="text-[8px] sm:text-[9px] font-mono text-slate-500">Cadence ~7.6m</div>
         </div>
-        <div class="neo-box p-2.5 bg-[#0f1422]">
-          <div class="text-[10px] font-mono text-[#ff9900] uppercase font-bold">🦃 Turkey Boss (:15/:45)</div>
-          <div class="font-mono-data text-xl font-black text-[#ff9900]" id="stat-turkey-wave">--:--</div>
-          <div class="text-[9px] font-mono text-slate-500">King Gobble Raid</div>
+        <div class="neo-box p-2 sm:p-2.5 bg-[#0f1422] border border-black">
+          <div class="text-[9px] sm:text-[10px] font-mono text-[#ff9900] uppercase font-bold">🦃 Turkey Boss (:15/:45)</div>
+          <div class="font-mono-data text-lg sm:text-xl font-black text-[#ff9900]" id="stat-turkey-wave">--:--</div>
+          <div class="text-[8px] sm:text-[9px] font-mono text-slate-500">King Gobble Raid</div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- PRO RADAR CONTAINER WITH LOCK OVERLAY -->
-  <div class="relative neo-box bg-[#0b0f19] p-4 sm:p-6 overflow-hidden min-h-[500px]">
+  <!-- RADAR CONTAINER WITH LOCK OVERLAY -->
+  <div class="relative neo-box bg-[#0b0f19] p-3 sm:p-6 overflow-hidden min-h-[460px]">
 
     <!-- ==================== LOCKED MODAL OVERLAY ==================== -->
-    <div id="pro-lock-gate" class="absolute inset-0 z-30 pro-blur-overlay flex items-center justify-center p-4">
-      <div class="max-w-md w-full bg-[#111624] neo-box-glow p-6 sm:p-7 text-center space-y-4 relative">
-        <div class="w-16 h-16 bg-[#fbff00] text-black rounded-full flex items-center justify-center mx-auto border-2 border-black shadow-[3px_3px_0px_#000]">
-          <span class="material-symbols-outlined text-[36px]">lock</span>
+    <div id="pro-lock-gate" class="absolute inset-0 z-30 pro-blur-overlay flex flex-col items-center justify-start pt-3 sm:pt-6 p-3 sm:p-4 overflow-y-auto">
+      <div class="max-w-md w-full bg-[#111624] neo-box-glow p-5 sm:p-6 text-center space-y-3 sm:space-y-3.5 border-2 border-black shadow-[4px_4px_0px_#000] relative rounded">
+        <div class="w-12 h-12 sm:w-14 sm:h-14 bg-[#fbff00] text-black rounded-full flex items-center justify-center mx-auto border-2 border-black shadow-[2px_2px_0px_#000]">
+          <span class="material-symbols-outlined text-[28px] sm:text-[32px]">lock</span>
         </div>
 
         <div>
-          <span class="bg-[#fbff00] text-black text-[10px] font-black uppercase px-2 py-0.5 border border-black shadow-[1px_1px_0px_#000]">24-HOUR VIP PASS</span>
-          <h2 class="font-display font-black text-xl sm:text-2xl uppercase text-white mt-2">Unlock Live Prediction Radar</h2>
-          <p class="text-xs text-slate-300 font-mono mt-1 leading-relaxed">
-            Get 24-hour instant access to the <strong>Divine Surge Probability Matrix</strong>, <strong>16-Biome Markov Island Chains</strong>, and <strong>Audio Drop Alarms</strong> with 1 quick sponsor task.
+          <span class="bg-[#fbff00] text-black text-[9px] sm:text-[10px] font-black uppercase px-2 py-0.5 border border-black shadow-[1px_1px_0px_#000]">24-HOUR VIP PASS • 0 ADS</span>
+          <h2 class="font-display font-black text-lg sm:text-2xl uppercase text-white mt-1">Unlock Prediction Radar</h2>
+          <p class="text-xs text-slate-300 font-mono mt-0.5 leading-relaxed">
+            Get 24-hour instant access to the <strong>Divine Surge Probability Matrix</strong>, <strong>16-Biome Island Radar</strong>, and <strong>Audio Drop Alarms</strong> with 1 quick sponsor task.
           </p>
         </div>
 
-        <div class="bg-[#080b12] border border-black p-3 text-left space-y-1.5 text-xs font-mono text-slate-300">
+        <div class="bg-[#080b12] border border-black p-2.5 sm:p-3 text-left space-y-1 sm:space-y-1.5 text-xs font-mono text-slate-300 rounded">
           <div class="flex items-center gap-2 text-[#fbff00] font-bold">
             <span class="material-symbols-outlined text-[16px]">check_circle</span>
             <span>Real-Time Divine Wave Odds (Critical Surge)</span>
@@ -238,37 +241,37 @@
             <span class="material-symbols-outlined text-[16px]">check_circle</span>
             <span>Update 14 King Gobble 30m Boss Timer</span>
           </div>
-          <div class="flex items-center gap-2 text-[#4edea3] font-bold">
+          <div class="flex items-center gap-2 text-[#00ff88] font-bold">
             <span class="material-symbols-outlined text-[16px]">check_circle</span>
-            <span>Audible Audio Ping Before Rare Spawns</span>
+            <span>0 Ads For 24 Hours on Entire Prediction Engine</span>
           </div>
         </div>
 
         <!-- Task Button Section -->
-        <div class="space-y-2 pt-1">
-          <button id="start-task-btn" onclick="startMonetagUnlockTask()" class="w-full bg-[#fbff00] hover:bg-white text-black font-display font-black text-sm uppercase py-3.5 px-4 neo-btn flex items-center justify-center gap-2 cursor-pointer shadow-[3px_3px_0px_#000]">
-            <span class="material-symbols-outlined text-[20px]">bolt</span>
-            <span>Complete 1 Free Task to Unlock</span>
+        <div class="space-y-1.5 pt-1">
+          <button id="start-task-btn" onclick="startMonetagUnlockTask()" class="w-full bg-[#fbff00] hover:bg-white text-black font-display font-black text-xs sm:text-sm uppercase py-3 px-4 neo-btn flex items-center justify-center gap-2 cursor-pointer shadow-[3px_3px_0px_#000] border-2 border-black">
+            <span class="material-symbols-outlined text-[18px]">bolt</span>
+            <span>Complete 1 Sponsor Task To Unlock</span>
           </button>
           <div class="text-[10px] font-mono text-slate-400">
-            100% Free • Sponsored by Monetag • Unlocks for 24 Hours
+            Direct Link Sponsor Offer • 100% Ad-Free for 24 Hours
           </div>
         </div>
 
         <!-- Verification in progress box (hidden initially) -->
-        <div id="verifying-box" class="hidden bg-[#07090f] border-2 border-[#fbff00] p-4 text-center space-y-2.5">
+        <div id="verifying-box" class="hidden bg-[#07090f] border-2 border-[#fbff00] p-3.5 text-center space-y-2 rounded">
           <div class="flex items-center justify-center gap-2 text-xs font-mono text-[#fbff00] font-bold animate-pulse">
-            <span class="material-symbols-outlined text-[18px]">hourglass_top</span>
-            <span id="countdown-timer-text">Verifying task completion... (15s)</span>
+            <span class="material-symbols-outlined text-[16px]">hourglass_top</span>
+            <span id="countdown-timer-text">Verifying sponsor task completion... (15s)</span>
           </div>
-          <div class="w-full bg-slate-800 h-2 border border-black overflow-hidden">
+          <div class="w-full bg-slate-800 h-2 border border-black overflow-hidden rounded">
             <div id="task-progress-bar" class="bg-[#fbff00] h-full w-0 transition-all duration-300"></div>
           </div>
           <p class="text-[10px] font-mono text-slate-400">
-            Please interact with the sponsor page. Once finished, click confirm below.
+            Please keep the sponsor offer open. Once 15s completes, click below to unlock.
           </p>
-          <button id="confirm-unlock-btn" onclick="confirmUnlockPass()" disabled class="w-full bg-slate-700 text-slate-400 font-display font-black text-xs uppercase py-2 neo-btn opacity-60 cursor-not-allowed">
-            Waiting for verification...
+          <button id="confirm-unlock-btn" onclick="confirmUnlockPass()" disabled class="w-full bg-slate-700 text-slate-400 font-display font-black text-xs uppercase py-2.5 neo-btn opacity-60 cursor-not-allowed border border-black">
+            Waiting for verification... (15s)
           </button>
         </div>
       </div>
@@ -278,17 +281,17 @@
     <div id="pro-content-body" class="space-y-6">
 
       <!-- Active Pass Top Banner -->
-      <div id="pro-active-banner" class="hidden bg-gradient-to-r from-[#fbff00]/20 via-[#00f0ff]/10 to-[#fbff00]/20 border-2 border-[#fbff00] p-3 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs font-mono">
-        <div class="flex items-center gap-2 text-[#fbff00] font-black">
+      <div id="pro-active-banner" class="hidden bg-gradient-to-r from-[#00ff88]/20 via-[#00f0ff]/15 to-[#00ff88]/20 border-2 border-[#00ff88] p-3 rounded flex flex-col sm:flex-row items-center justify-between gap-2 text-xs font-mono">
+        <div class="flex items-center gap-2 text-[#00ff88] font-black">
           <span class="material-symbols-outlined text-[20px]">verified</span>
-          <span>👑 PRO RADAR ACTIVE — Pass Expires in: <span id="pass-countdown">23h 59m</span></span>
+          <span>✅ 24H VIP PASS ACTIVE — 0 ADS • Expires in: <span id="pass-countdown">23h 59m</span></span>
         </div>
         <div class="flex items-center gap-3">
-          <button onclick="toggleAudioAlert()" id="audio-toggle-btn" class="bg-[#181d2c] hover:bg-[#23293d] text-white px-2.5 py-1 neo-btn flex items-center gap-1 text-[11px] font-mono">
+          <button onclick="toggleAudioAlert()" id="audio-toggle-btn" class="bg-[#181d2c] hover:bg-[#23293d] text-white px-2.5 py-1 neo-btn flex items-center gap-1 text-[11px] font-mono border border-black">
             <span class="material-symbols-outlined text-[15px]" id="audio-icon">volume_off</span>
             <span id="audio-text">Audio Alarm: OFF</span>
           </button>
-          <button onclick="relockPassForTesting()" class="text-slate-400 hover:text-white underline text-[10px]">Re-lock</button>
+          <button onclick="relockPassForTesting()" class="text-slate-400 hover:text-white underline text-[10px]" title="Test re-locking the pass">Test Lock</button>
         </div>
       </div>
 
@@ -518,8 +521,10 @@
     document.getElementById("pro-active-banner").classList.remove("hidden");
 
     const pill = document.getElementById("pass-status-pill");
-    pill.className = "text-[11px] font-mono font-bold px-2.5 py-1 border border-black shadow-[2px_2px_0px_#000] bg-[#fbff00] text-black flex items-center gap-1";
-    document.getElementById("pass-status-text").textContent = "PRO: ACTIVE";
+    if (pill) {
+      pill.className = "text-[10px] sm:text-[11px] font-mono font-black px-2 sm:px-2.5 py-1 border border-black shadow-[1px_1px_0px_#000] bg-[#00ff88] text-black flex items-center gap-1 rounded";
+      document.getElementById("pass-status-text").textContent = "0-ADS VIP";
+    }
 
     updatePassCountdown(expiresAt);
   }
@@ -530,8 +535,10 @@
     document.getElementById("pro-active-banner").classList.add("hidden");
 
     const pill = document.getElementById("pass-status-pill");
-    pill.className = "text-[11px] font-mono font-bold px-2.5 py-1 border border-black shadow-[2px_2px_0px_#000] bg-[#ff0055] text-white flex items-center gap-1";
-    document.getElementById("pass-status-text").textContent = "PRO: LOCKED";
+    if (pill) {
+      pill.className = "text-[10px] sm:text-[11px] font-mono font-black px-2 sm:px-2.5 py-1 border border-black shadow-[1px_1px_0px_#000] bg-[#ff0055] text-white flex items-center gap-1 rounded";
+      document.getElementById("pass-status-text").textContent = "LOCKED";
+    }
   }
 
   function updatePassCountdown(expiresAt) {
@@ -546,10 +553,13 @@
     if (el) el.textContent = `${hours}h ${mins}m`;
   }
 
-  // 2. Start Monetag Task Flow
+  // 2. Start Monetag Task Flow (Direct Link Only - Zero Onclick Ads)
   function startMonetagUnlockTask() {
     // Open Monetag Direct Link in a new tab
-    window.open(MONETAG_DIRECT_LINK, "_blank", "noopener,noreferrer");
+    const win = window.open(MONETAG_DIRECT_LINK, "_blank", "noopener,noreferrer");
+    if (!win) {
+      window.location.href = MONETAG_DIRECT_LINK;
+    }
 
     // Show verification in progress box
     document.getElementById("start-task-btn").classList.add("hidden");
@@ -568,13 +578,14 @@
       progressBar.style.width = `${pct}%`;
 
       if (secondsLeft > 0) {
-        timerText.textContent = `Verifying task completion... (${secondsLeft}s)`;
+        timerText.textContent = `Verifying sponsor task completion... (${secondsLeft}s)`;
+        confirmBtn.textContent = `Waiting for verification... (${secondsLeft}s)`;
       } else {
         clearInterval(taskVerificationTimer);
-        timerText.textContent = `Task Registered! Click Unlock Below`;
+        timerText.textContent = `Sponsor Task Completed!`;
         confirmBtn.disabled = false;
-        confirmBtn.className = "w-full bg-[#fbff00] hover:bg-white text-black font-display font-black text-xs uppercase py-2.5 neo-btn cursor-pointer shadow-[2px_2px_0px_#000]";
-        confirmBtn.textContent = "✅ Confirm Completion & Unlock (24H Pass)";
+        confirmBtn.className = "w-full bg-[#00ff88] hover:bg-white text-black font-display font-black text-xs uppercase py-2.5 neo-btn cursor-pointer shadow-[2px_2px_0px_#000] border-2 border-black animate-bounce";
+        confirmBtn.textContent = "✅ Confirm & Unlock (0 Ads For 24H)";
       }
     }, 1000);
   }
