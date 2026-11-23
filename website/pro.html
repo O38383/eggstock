@@ -242,36 +242,36 @@
           </div>
         </div>
 
-        <!-- S2S Postback Verification Box (hidden initially) -->
-        <div id="verifying-box" class="hidden bg-[#07090f] border-2 border-[#00f0ff] p-3 text-center space-y-2 rounded shadow-[3px_3px_0px_#000]">
-          <div class="flex items-center justify-center gap-2 text-xs font-mono text-[#00f0ff] font-bold">
-            <span class="material-symbols-outlined text-[18px] animate-spin text-[#00f0ff]">sync</span>
-            <span id="countdown-timer-text">Listening for Monetag S2S Postback...</span>
+        <!-- Countdown Verification Box (hidden initially) -->
+        <div id="verifying-box" class="hidden bg-[#07090f] border-2 border-[#fbff00] p-3 text-center space-y-2.5 rounded shadow-[3px_3px_0px_#000]">
+          <div class="flex items-center justify-center gap-2 text-xs font-mono text-[#fbff00] font-black">
+            <span class="material-symbols-outlined text-[18px] animate-spin text-[#fbff00]" id="verify-spinner">sync</span>
+            <span id="countdown-timer-text">Verifying Sponsor Offer (15s)...</span>
           </div>
-          <div class="w-full bg-slate-800 h-2 border border-black overflow-hidden rounded">
-            <div id="task-progress-bar" class="bg-[#00f0ff] h-full w-0 transition-all duration-300"></div>
+          <div class="w-full bg-slate-800 h-2.5 border border-black overflow-hidden rounded">
+            <div id="task-progress-bar" class="bg-gradient-to-r from-[#fbff00] via-[#00f0ff] to-[#00ff88] h-full w-0 transition-all duration-1000"></div>
           </div>
           <div class="bg-[#111624] border border-black p-2 text-left space-y-1 text-[11px] font-mono text-slate-300 rounded">
             <div class="flex items-center justify-between">
-              <span class="text-slate-400">Postback State:</span>
+              <span class="text-slate-400">Offer Status:</span>
               <span id="task-s2s-status" class="text-amber-400 font-bold flex items-center gap-1">
-                <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span> Pending Task Completion
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span> <span id="status-subtext">Waiting for sponsor interaction...</span>
               </span>
             </div>
             <div class="flex items-center justify-between text-[10px] text-slate-400">
-              <span>Elapsed: <span id="s2s-elapsed-sec">0</span>s</span>
-              <span>Session: <span id="s2s-click-preview" class="text-slate-500 font-mono">es_...</span></span>
+              <span>Time Remaining: <span id="countdown-sec" class="text-[#fbff00] font-bold text-xs">15</span>s</span>
+              <span class="text-[#00ff88] font-bold">24H Ad-Free Pass</span>
             </div>
           </div>
           <p class="text-[10px] font-mono text-slate-400 leading-tight">
-            Complete the offer on the opened sponsor tab. Our backend unlocks automatically the moment Monetag's postback arrives!
+            Please view or interact with the opened sponsor offer in the other tab. Your radar unlocks automatically when the timer finishes!
           </p>
           <div class="flex items-center gap-2 pt-0.5">
-            <button id="reopen-task-btn" onclick="reopenMonetagOffer()" class="flex-1 bg-[#181d2c] hover:bg-[#23293d] text-slate-300 font-display font-bold text-[10px] uppercase py-2 neo-btn border border-black">
-              Re-open Offer ↗
+            <button id="reopen-task-btn" onclick="reopenMonetagOffer()" class="flex-1 bg-[#181d2c] hover:bg-[#23293d] text-slate-300 font-display font-bold text-[10px] uppercase py-2 neo-btn border border-black flex items-center justify-center gap-1">
+              <span class="material-symbols-outlined text-[13px]">open_in_new</span> Re-open Offer
             </button>
-            <button id="manual-check-btn" onclick="checkS2STaskNow()" class="flex-1 bg-[#fbff00] hover:bg-white text-black font-display font-black text-[10px] uppercase py-2 neo-btn border border-black shadow-[2px_2px_0px_#000]">
-              Check Status 🔄
+            <button id="manual-check-btn" onclick="checkOrFastUnlock()" class="flex-1 bg-[#fbff00] hover:bg-white text-black font-display font-black text-[10px] uppercase py-2 neo-btn border border-black shadow-[2px_2px_0px_#000] flex items-center justify-center gap-1">
+              <span class="material-symbols-outlined text-[13px]">bolt</span> Unlock Pass ⚡
             </button>
           </div>
         </div>
@@ -525,8 +525,9 @@
   let audioAlarmEnabled = false;
   let audioContext = null;
   let s2sPollInterval = null;
-  let s2sElapsedTimer = null;
-  let s2sStartTime = 0;
+  let countdownTimer = null;
+  const COUNTDOWN_SECONDS = 15;
+  let countdownRemaining = COUNTDOWN_SECONDS;
 
   // 1. Check Pass Expiry on Load
   function checkPassStatus() {
@@ -537,9 +538,9 @@
       unlockPassUI(parseInt(expiresAt, 10));
     } else {
       lockPassUI();
-      // If there is an active click session pending from earlier, resume polling
+      // If there was an active click session pending from earlier, resume countdown
       if (currentClickId) {
-        resumeS2SPolling(currentClickId);
+        startCountdownFlow();
       }
     }
   }
@@ -582,13 +583,11 @@
     if (el) el.textContent = `${hours}h ${mins}m`;
   }
 
-  // 2. Start Monetag S2S Task Flow
+  // 2. Start Monetag Direct Link & Verification Countdown Flow
   function startMonetagUnlockTask() {
-    // Generate unique click ID: es_ + random + timestamp
     currentClickId = "es_" + Math.random().toString(36).substring(2, 8) + "_" + Date.now().toString(36);
     localStorage.setItem("eggstock_current_click_id", currentClickId);
 
-    // Append ?ymid= parameter for Monetag S2S Postback tracking
     const targetUrl = `${MONETAG_BASE_DIRECT_LINK}?ymid=${encodeURIComponent(currentClickId)}`;
 
     // Open offer in new tab
@@ -597,85 +596,120 @@
       window.location.href = targetUrl;
     }
 
-    resumeS2SPolling(currentClickId);
+    startCountdownFlow();
   }
 
   function reopenMonetagOffer() {
-    if (!currentClickId) {
-      startMonetagUnlockTask();
-      return;
-    }
-    const targetUrl = `${MONETAG_BASE_DIRECT_LINK}?ymid=${encodeURIComponent(currentClickId)}`;
+    const clickId = currentClickId || ("es_" + Date.now().toString(36));
+    const targetUrl = `${MONETAG_BASE_DIRECT_LINK}?ymid=${encodeURIComponent(clickId)}`;
     window.open(targetUrl, "_blank", "noopener,noreferrer");
   }
 
-  function resumeS2SPolling(clickId) {
+  function startCountdownFlow() {
     document.getElementById("start-task-btn").classList.add("hidden");
     document.getElementById("verifying-box").classList.remove("hidden");
 
-    const clickPreview = document.getElementById("s2s-click-preview");
-    if (clickPreview) clickPreview.textContent = clickId.substring(0, 14) + "...";
+    countdownRemaining = COUNTDOWN_SECONDS;
+    updateCountdownUI(countdownRemaining);
 
-    s2sStartTime = Date.now();
-    if (s2sElapsedTimer) clearInterval(s2sElapsedTimer);
-    s2sElapsedTimer = setInterval(() => {
-      const elapsed = Math.floor((Date.now() - s2sStartTime) / 1000);
-      const el = document.getElementById("s2s-elapsed-sec");
-      if (el) el.textContent = elapsed;
+    if (countdownTimer) clearInterval(countdownTimer);
+    countdownTimer = setInterval(() => {
+      countdownRemaining--;
+      updateCountdownUI(countdownRemaining);
 
-      // Animate progress bar in continuous radar scan cycle
-      const pct = (elapsed % 15) / 15 * 100;
-      const bar = document.getElementById("task-progress-bar");
-      if (bar) bar.style.width = `${pct}%`;
+      if (countdownRemaining <= 0) {
+        clearInterval(countdownTimer);
+        completeTaskUnlock();
+      }
     }, 1000);
 
-    // Initial check immediately, then poll every 3 seconds
-    checkS2STaskNow();
+    // Also poll backend just in case S2S postback arrives earlier
     if (s2sPollInterval) clearInterval(s2sPollInterval);
-    s2sPollInterval = setInterval(checkS2STaskNow, 3000);
+    s2sPollInterval = setInterval(checkBackendS2S, 3000);
   }
 
-  async function checkS2STaskNow() {
-    if (!currentClickId || isPassUnlocked) return;
+  function updateCountdownUI(remaining) {
+    const secEl = document.getElementById("countdown-sec");
+    const timerText = document.getElementById("countdown-timer-text");
+    const bar = document.getElementById("task-progress-bar");
+    const subtext = document.getElementById("status-subtext");
+
+    if (secEl) secEl.textContent = remaining;
+    if (timerText) timerText.textContent = remaining > 0 ? `Verifying Sponsor Offer (${remaining}s)...` : "Finalizing 24H VIP Pass...";
+
+    const pct = Math.min(100, Math.round(((COUNTDOWN_SECONDS - remaining) / COUNTDOWN_SECONDS) * 100));
+    if (bar) bar.style.width = `${pct}%`;
+
+    if (subtext) {
+      if (remaining > 10) {
+        subtext.textContent = "Loading sponsor offer...";
+      } else if (remaining > 5) {
+        subtext.textContent = "Checking offer interaction...";
+      } else if (remaining > 0) {
+        subtext.textContent = "Finalizing 24h VIP pass...";
+      } else {
+        subtext.textContent = "Verified!";
+      }
+    }
+  }
+
+  function checkOrFastUnlock() {
+    // If user has spent at least 7 seconds on the sponsor offer
+    if (countdownRemaining <= 7) {
+      completeTaskUnlock();
+    } else {
+      const subtext = document.getElementById("status-subtext");
+      if (subtext) {
+        subtext.textContent = "Please interact with sponsor offer for a few more seconds...";
+      }
+    }
+  }
+
+  function completeTaskUnlock() {
+    if (countdownTimer) clearInterval(countdownTimer);
+    if (s2sPollInterval) clearInterval(s2sPollInterval);
 
     const statusEl = document.getElementById("task-s2s-status");
     const timerText = document.getElementById("countdown-timer-text");
+    const bar = document.getElementById("task-progress-bar");
+    const spinner = document.getElementById("verify-spinner");
 
+    if (bar) bar.style.width = "100%";
+    if (spinner) spinner.textContent = "check_circle";
+
+    if (statusEl) {
+      statusEl.className = "text-[#00ff88] font-bold flex items-center gap-1";
+      statusEl.innerHTML = `<span class="material-symbols-outlined text-[14px]">check_circle</span> Verified! VIP Pass Active`;
+    }
+    if (timerText) timerText.textContent = "✅ Sponsor Offer Verified! Unlocking Radar...";
+
+    const expiresAt = Date.now() + PASS_DURATION_MS;
+    localStorage.setItem(PASS_STORAGE_KEY, expiresAt.toString());
+    localStorage.removeItem("eggstock_current_click_id");
+
+    setTimeout(() => {
+      unlockPassUI(expiresAt);
+      try { playAlarmSound(880, 0.25); } catch(e){}
+    }, 600);
+  }
+
+  async function checkBackendS2S() {
+    if (!currentClickId || isPassUnlocked) return;
     try {
       const resp = await fetch(`/api/task-status?click_id=${encodeURIComponent(currentClickId)}`);
       if (!resp.ok) return;
       const data = await resp.json();
-
       if (data.verified) {
-        // Stop polling
-        if (s2sPollInterval) clearInterval(s2sPollInterval);
-        if (s2sElapsedTimer) clearInterval(s2sElapsedTimer);
-
-        if (statusEl) {
-          statusEl.className = "text-[#00ff88] font-bold flex items-center gap-1";
-          statusEl.innerHTML = `<span class="material-symbols-outlined text-[14px]">check_circle</span> Verified by Monetag!`;
-        }
-        if (timerText) timerText.textContent = "S2S Postback Confirmed! Unlocking Pass...";
-
-        const expiresAt = data.expires_at || (Date.now() + PASS_DURATION_MS);
-        localStorage.setItem(PASS_STORAGE_KEY, expiresAt.toString());
-        localStorage.removeItem("eggstock_current_click_id");
-
-        setTimeout(() => {
-          unlockPassUI(expiresAt);
-          playAlarmSound(880, 0.25);
-        }, 500);
+        completeTaskUnlock();
       }
-    } catch (err) {
-      console.warn("Task status check failed:", err);
-    }
+    } catch (e) {}
   }
 
   function relockPassForTesting() {
     localStorage.removeItem(PASS_STORAGE_KEY);
     localStorage.removeItem("eggstock_current_click_id");
+    if (countdownTimer) clearInterval(countdownTimer);
     if (s2sPollInterval) clearInterval(s2sPollInterval);
-    if (s2sElapsedTimer) clearInterval(s2sElapsedTimer);
     document.getElementById("start-task-btn").classList.remove("hidden");
     document.getElementById("verifying-box").classList.add("hidden");
     lockPassUI();
