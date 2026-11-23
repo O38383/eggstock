@@ -2348,6 +2348,91 @@ button {{ background: #00f0ff; color: #000; border: none; padding: 10px 20px; fo
         return web.Response(status=500, text=f"<h1>Exchange Error: {e}</h1>", content_type="text/html")
 
 
+VERIFIED_S2S_CLICKS: dict[str, dict] = {}
+
+
+async def handle_monetag_postback(request: web.Request) -> web.Response:
+    """
+    Monetag S2S Postback endpoint.
+    Called by Monetag when a user completes a task or conversion.
+    URL configuration in Monetag Publisher Dashboard:
+      https://www.eggstock.xyz/api/monetag-postback?click_id={ymid}&status={reward_event_type}&payout={estimated_price}&zone_id={zone_id}&country={country}
+    """
+    params = {}
+    if request.method == "POST":
+        try:
+            if request.content_type == "application/json":
+                params = await request.json()
+            else:
+                post_data = await request.post()
+                params = dict(post_data)
+        except Exception as e:
+            log.warning(f"[MONETAG_POSTBACK] Failed to parse POST body: {e}")
+            params = {}
+
+    for k, v in request.query.items():
+        params[k] = v
+
+    click_id = params.get("click_id") or params.get("ymid") or params.get("sub_id") or params.get("sub_id_1")
+    event_status = params.get("status") or params.get("event") or params.get("reward_event_type") or "completed"
+    payout = params.get("payout") or params.get("estimated_price") or "0"
+    zone_id = params.get("zone_id") or "12150650"
+    country = params.get("country") or params.get("geo") or ""
+
+    if not click_id:
+        log.warning(f"[MONETAG_POSTBACK] Missing click_id in postback: {params}")
+        return web.Response(status=400, text="Missing click_id or ymid parameter\n", content_type="text/plain")
+
+    now = time.time()
+    VERIFIED_S2S_CLICKS[click_id] = {
+        "verified": True,
+        "status": event_status,
+        "payout": payout,
+        "zone_id": zone_id,
+        "country": country,
+        "timestamp": now,
+        "expires_at": now + 86400  # 24 hours
+    }
+    log.info(f"[MONETAG_POSTBACK] 🎯 Postback verified! click_id={click_id}, status={event_status}, payout=${payout}, geo={country}")
+
+    # Prune expired clicks if dictionary gets large
+    if len(VERIFIED_S2S_CLICKS) > 1000:
+        expired_keys = [k for k, v in VERIFIED_S2S_CLICKS.items() if now > v.get("expires_at", 0)]
+        for k in expired_keys:
+            VERIFIED_S2S_CLICKS.pop(k, None)
+
+    return web.Response(status=200, text="OK\n", content_type="text/plain")
+
+
+async def handle_task_status(request: web.Request) -> web.Response:
+    """
+    Endpoint for frontend to poll whether Monetag S2S Postback has been received.
+    GET /api/task-status?click_id=...
+    """
+    click_id = request.query.get("click_id") or request.query.get("ymid")
+    if not click_id:
+        return web.json_response({"verified": False, "error": "Missing click_id"}, status=400)
+
+    now = time.time()
+    record = VERIFIED_S2S_CLICKS.get(click_id)
+
+    if record and record.get("verified"):
+        expires_at = record.get("expires_at", now + 86400)
+        if now < expires_at:
+            return web.json_response({
+                "verified": True,
+                "status": record.get("status", "completed"),
+                "payout": record.get("payout", 0),
+                "expires_at": int(expires_at * 1000)
+            })
+
+    return web.json_response({
+        "verified": False,
+        "status": "pending",
+        "message": "Waiting for Monetag S2S postback confirmation"
+    })
+
+
 async def handle_ads_txt(request):
     ads_file = WEBSITE_DIR / "ads.txt"
     if ads_file.exists():
@@ -2772,6 +2857,11 @@ async def start_web_app():
         web.get("/style.css", handle_style_css),
         web.get("/app.js", handle_app_js),
         web.get("/oauth/callback", handle_monetag_oauth),
+        web.get("/api/monetag-postback", handle_monetag_postback),
+        web.post("/api/monetag-postback", handle_monetag_postback),
+        web.get("/api/task-status", handle_task_status),
+        web.route("OPTIONS", "/api/task-status", handle_cors_preflight),
+        web.route("OPTIONS", "/api/monetag-postback", handle_cors_preflight),
 
         # High-Intent SEO Landing Routes (Google Search optimization)
         web.get("/vip", handle_vip),
