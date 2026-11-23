@@ -2232,6 +2232,10 @@ async def handle_predictions(request):
     return _render_page_with_token(WEBSITE_DIR / "predictions.html")
 
 
+async def handle_pro(request):
+    return _render_page_with_token(WEBSITE_DIR / "pro.html")
+
+
 async def handle_calculator(request):
     return _render_page_with_token(WEBSITE_DIR / "calculator.html")
 
@@ -2786,6 +2790,12 @@ async def start_web_app():
         web.get("/prediction/", handle_predictions),
         web.get("/predictions", handle_predictions),
         web.get("/predictions/", handle_predictions),
+        web.get("/pro", handle_pro),
+        web.get("/pro/", handle_pro),
+        web.get("/pro-radar", handle_pro),
+        web.get("/pro-radar/", handle_pro),
+        web.get("/radar", handle_pro),
+        web.get("/radar/", handle_pro),
         web.get("/notifier", handle_notifier),
         web.get("/notifier/", handle_notifier),
         web.get("/calculator", handle_calculator),

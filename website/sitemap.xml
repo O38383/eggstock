@@ -19,6 +19,12 @@
     <priority>0.95</priority>
   </url>
   <url>
+    <loc>https://eggstock.xyz/pro</loc>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
     <loc>https://eggstock.xyz/notifier</loc>
     <lastmod>2026-11-23</lastmod>
     <changefreq>always</changefreq>
