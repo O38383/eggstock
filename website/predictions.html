@@ -772,6 +772,10 @@
                     <span class="text-slate-400">Next Peak Minute:</span>
                     <span class="text-[#fbff00] font-bold" id="pred-next-peak">--m (:20/:40/:55)</span>
                 </div>
+                <div class="mt-1.5 flex items-center justify-between text-[11px] font-mono">
+                    <span class="text-[#ff9900] font-semibold flex items-center gap-1">🦃 Turkey Rampage Boss:</span>
+                    <span class="text-[#ff9900] font-bold" id="pred-turkey-peak">--m (:15/:45)</span>
+                </div>
             </div>
         </div>
     </section>
@@ -3258,6 +3262,13 @@ document.addEventListener("DOMContentLoaded", () => {
         if (pMin) {
             const peakEl = document.getElementById("pred-next-peak");
             if (peakEl) peakEl.textContent = `In ${pMin.minutes_remaining}m (:${String(pMin.target_minute).padStart(2, '0')})`;
+        }
+
+        // Update 14: Turkey Rampage boss event
+        const turkey = model.turkey_rampage_event;
+        if (turkey) {
+            const tEl = document.getElementById("pred-turkey-peak");
+            if (tEl) tEl.textContent = `In ${turkey.minutes_remaining}m (:${String(turkey.target_minute).padStart(2, '0')})`;
         }
     }
 

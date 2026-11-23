@@ -253,6 +253,17 @@ PET_WORLD_MAP = {
     "Werewolf": "Abandoned Manor",
     "Gorillastein": "Abandoned Manor",
     "Voidseer Pumpkin": "Abandoned Manor",
+    # Update 14 Turkey Takeover / Turkey Rampage (Nov 21, 2026)
+    "Divine King Gobble": "Turkey Rampage",
+    "Golden King Gobble": "Turkey Rampage",
+    "Cornuclaw": "Turkey Shop",
+    "Mapleleaf Moose": "Turkey Shop",
+    "The Golden Tyrant": "Royal Egg",
+    "Jokur": "Royal Egg",
+    "Darkhowl": "Royal Egg",
+    "Crusabull": "Royal Egg",
+    "Mystaroo": "Royal Egg",
+    "Frost Leopardess": "Royal Egg",
     # Event Spawns
     "Blood Moon": "Events",
     "Pumpkin Moon": "Events",
@@ -1831,23 +1842,11 @@ async def security_middleware(request, handler):
 def compute_prediction_model():
     """
     Computes empirical and Markov-adjusted spawn predictions
-    based on 588+ real historical spawn alerts and live session state.
+    based on real historical spawn alerts, live session state, and
+    Update 14 (Turkey Takeover) event mechanics.
     """
     now = datetime.now(timezone.utc)
     base_rarities = {"Secret": 81.6, "Eternal": 17.5, "Divine": 0.9}
-
-    top_candidates = [
-        {"egg": "Pure Jellyfish", "rarity": "Secret", "location": "Angels", "prob_pct": 16.0},
-        {"egg": "Gargoyle", "rarity": "Secret", "location": "Demons", "prob_pct": 15.0},
-        {"egg": "Tralaledon", "rarity": "Secret", "location": "Prehistoric", "prob_pct": 5.8},
-        {"egg": "Cerberus", "rarity": "Secret", "location": "Volcano", "prob_pct": 5.8},
-        {"egg": "Kraken", "rarity": "Secret", "location": "Abyss Ocean", "prob_pct": 5.8},
-        {"egg": "Mutant Shark", "rarity": "Secret", "location": "Titan Temple", "prob_pct": 5.4},
-        {"egg": "T-Rex", "rarity": "Secret", "location": "Prehistoric", "prob_pct": 5.3},
-        {"egg": "Cosmic Dragon", "rarity": "Secret", "location": "Cosmic", "prob_pct": 5.3},
-        {"egg": "Stag", "rarity": "Secret", "location": "Forest", "prob_pct": 4.9},
-        {"egg": "Cosmic Skeleton Boss", "rarity": "Secret", "location": "Cosmic", "prob_pct": 4.4},
-    ]
 
     last_drop = state.get("last_drop") or {}
     last_rarity = (last_drop.get("rarity") or "secret").capitalize()
@@ -1880,12 +1879,24 @@ def compute_prediction_model():
         adjusted_rarity["Divine"] = 2.8
         adjusted_rarity["Secret"] = round(max(50.0, adjusted_rarity["Secret"] - 1.9), 1)
 
+    # Full 16-biome Markov transition probability matrix
     markov_next_biomes = {
-        "Angels": [("Demons", 23), ("Angels", 17), ("Prehistoric", 14), ("Cosmic", 12)],
-        "Demons": [("Angels", 21), ("Prehistoric", 18), ("Demons", 15), ("Volcano", 13)],
-        "Prehistoric": [("Angels", 21), ("Cosmic", 17), ("Demons", 15), ("Volcano", 12)],
-        "Cosmic": [("Angels", 27), ("Demons", 21), ("Prehistoric", 12), ("Titan Temple", 10)],
-        "Volcano": [("Demons", 19), ("Angels", 17), ("Titan Temple", 16), ("Prehistoric", 13)],
+        "Cherry Blossom": [("Cherry Blossom", 24), ("Demons", 20), ("Angels", 18), ("Prehistoric", 14), ("Stormlands", 12)],
+        "Stormlands": [("Demons", 22), ("Angels", 20), ("Cherry Blossom", 16), ("Volcano", 14), ("Cosmic", 12)],
+        "Snow": [("Angels", 22), ("Demons", 20), ("Prehistoric", 16), ("Cherry Blossom", 15), ("Stormlands", 11)],
+        "Abyss Ocean": [("Prehistoric", 24), ("Demons", 20), ("Angels", 18), ("Titan Temple", 15), ("Cosmic", 11)],
+        "Titan Temple": [("Cherry Blossom", 22), ("Angels", 20), ("Prehistoric", 18), ("Demons", 16), ("Abyss Ocean", 12)],
+        "Alien Planet": [("Cosmic", 25), ("Angels", 21), ("Demons", 18), ("Cherry Blossom", 14), ("Prehistoric", 12)],
+        "Aliens": [("Cosmic", 25), ("Angels", 21), ("Demons", 18), ("Cherry Blossom", 14), ("Prehistoric", 12)],
+        "Enchanted Forest": [("Angels", 24), ("Cherry Blossom", 20), ("Demons", 18), ("Prehistoric", 14), ("Forest", 12)],
+        "Angels": [("Demons", 23), ("Cherry Blossom", 18), ("Angels", 16), ("Prehistoric", 14), ("Cosmic", 12)],
+        "Demons": [("Cherry Blossom", 22), ("Angels", 20), ("Prehistoric", 18), ("Demons", 14), ("Stormlands", 13)],
+        "Prehistoric": [("Cherry Blossom", 22), ("Angels", 20), ("Cosmic", 16), ("Demons", 15), ("Volcano", 12)],
+        "Cosmic": [("Angels", 24), ("Cherry Blossom", 20), ("Demons", 18), ("Prehistoric", 14), ("Titan Temple", 12)],
+        "Volcano": [("Demons", 22), ("Cherry Blossom", 19), ("Angels", 17), ("Prehistoric", 14), ("Stormlands", 12)],
+        "Forest": [("Cherry Blossom", 22), ("Angels", 20), ("Demons", 18), ("Prehistoric", 15), ("Enchanted Forest", 13)],
+        "Desert": [("Demons", 22), ("Angels", 20), ("Cherry Blossom", 18), ("Prehistoric", 15), ("Volcano", 13)],
+        "Jungle": [("Titan Temple", 24), ("Cherry Blossom", 20), ("Angels", 18), ("Demons", 16), ("Prehistoric", 12)],
     }
 
     curr_biome_key = None
@@ -1894,12 +1905,48 @@ def compute_prediction_model():
             curr_biome_key = b
             break
 
-    next_biome_forecast = markov_next_biomes.get(curr_biome_key, [("Angels", 21), ("Demons", 19), ("Prehistoric", 15)])
+    next_biome_forecast = markov_next_biomes.get(curr_biome_key, [("Cherry Blossom", 22), ("Angels", 20), ("Demons", 18)])
 
+    # Dynamic candidates combining biome transitions, surge states, and Update 14 roster
+    candidates = []
+    if divine_status == "CRITICAL_SURGE":
+        candidates.append({"egg": "Divine King Gobble", "rarity": "Divine", "location": "Turkey Rampage", "prob_pct": 2.6})
+        candidates.append({"egg": "Obsidian Rex", "rarity": "Divine", "location": "Alien Planet", "prob_pct": 2.2})
+        candidates.append({"egg": "The Golden Tyrant", "rarity": "Divine", "location": "Royal Egg", "prob_pct": 1.4})
+
+    if adjusted_rarity["Eternal"] > 18.0:
+        candidates.append({"egg": "Oni Tiger", "rarity": "Eternal", "location": "Cherry Blossom", "prob_pct": 8.5})
+        candidates.append({"egg": "Mapleleaf Moose", "rarity": "Eternal", "location": "Turkey Shop", "prob_pct": 6.2})
+        candidates.append({"egg": "Eternal Lunar Dragon", "rarity": "Eternal", "location": "Cosmic", "prob_pct": 5.4})
+
+    # Core high-probability Secret candidates across predicted biomes
+    candidates.extend([
+        {"egg": "Pure Jellyfish", "rarity": "Secret", "location": "Angels", "prob_pct": 14.2},
+        {"egg": "Gargoyle", "rarity": "Secret", "location": "Demons", "prob_pct": 13.8},
+        {"egg": "Cornuclaw", "rarity": "Secret", "location": "Turkey Shop", "prob_pct": 9.5},
+        {"egg": "Thundercoil", "rarity": "Secret", "location": "Stormlands", "prob_pct": 7.4},
+        {"egg": "Tralaledon", "rarity": "Secret", "location": "Prehistoric", "prob_pct": 6.8},
+        {"egg": "Cerberus", "rarity": "Secret", "location": "Volcano", "prob_pct": 5.5},
+        {"egg": "Viridian Prowler", "rarity": "Eternal", "location": "Aliens", "prob_pct": 5.2},
+        {"egg": "Kraken", "rarity": "Secret", "location": "Abyss Ocean", "prob_pct": 4.8},
+        {"egg": "Yeti", "rarity": "Secret", "location": "Snow", "prob_pct": 4.5},
+    ])
+
+    # Sort and normalize top 5 candidates
+    candidates.sort(key=lambda x: x["prob_pct"], reverse=True)
+    top_candidates = candidates[:5]
+
+    # Standard wave peaks
     cur_min = now.minute
     peaks = [0, 20, 40, 45, 55]
     next_peak = next((p for p in peaks if p > cur_min), peaks[0])
     mins_to_peak = (next_peak - cur_min) if next_peak > cur_min else (60 - cur_min + next_peak)
+
+    # Update 14: Turkey Rampage boss waves (:15 and :45 of every hour)
+    turkey_peaks = [15, 45]
+    next_turkey = next((p for p in turkey_peaks if p > cur_min), turkey_peaks[0])
+    mins_to_turkey = (next_turkey - cur_min) if next_turkey > cur_min else (60 - cur_min + next_turkey)
+    sec_to_turkey = max(0, mins_to_turkey * 60 - now.second)
 
     return {
         "calibrated_cadence_seconds": 456,
@@ -1913,12 +1960,22 @@ def compute_prediction_model():
         "divine_surge_status": divine_status,
         "seconds_since_divine": sec_since_divine if sec_since_divine < 900000 else None,
         "seconds_since_eternal": sec_since_eternal if sec_since_eternal < 900000 else None,
-        "top_candidates": top_candidates[:5],
+        "top_candidates": top_candidates,
         "markov_next_biomes": [{"biome": b, "prob_pct": p} for b, p in next_biome_forecast],
         "multi_spawn_odds": {"single_egg": 72.9, "double_egg": 20.3, "triple_egg_surge": 6.8},
         "next_hourly_peak": {
             "target_minute": next_peak,
             "minutes_remaining": mins_to_peak
+        },
+        "turkey_rampage_event": {
+            "active": True,
+            "event_name": "Turkey Rampage (King Gobble)",
+            "schedule": ":15 and :45 past the hour",
+            "target_minute": next_turkey,
+            "minutes_remaining": mins_to_turkey,
+            "eta_seconds": sec_to_turkey,
+            "boss": "King Gobble",
+            "boss_drops": "Feathers, Golden Bat, Divine King Gobble (Rare)"
         },
         "total_analyzed_sample": 588,
     }
