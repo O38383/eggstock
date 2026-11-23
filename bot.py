@@ -9,6 +9,7 @@ import os
 import re
 import json
 import asyncio
+import time
 import logging
 from datetime import datetime, timezone
 from collections import deque
@@ -2350,6 +2351,14 @@ button {{ background: #00f0ff; color: #000; border: none; padding: 10px 20px; fo
 
 VERIFIED_S2S_CLICKS: dict[str, dict] = {}
 
+CORS_API_HEADERS = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Accept, Origin, X-Requested-With",
+    "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",
+    "Pragma": "no-cache"
+}
+
 
 async def handle_monetag_postback(request: web.Request) -> web.Response:
     """
@@ -2358,6 +2367,9 @@ async def handle_monetag_postback(request: web.Request) -> web.Response:
     URL configuration in Monetag Publisher Dashboard:
       https://www.eggstock.xyz/api/monetag-postback?click_id={ymid}&status={reward_event_type}&payout={estimated_price}&zone_id={zone_id}&country={country}
     """
+    if request.method == "OPTIONS":
+        return web.Response(status=204, headers=CORS_API_HEADERS)
+
     params = {}
     if request.method == "POST":
         try:
@@ -2381,27 +2393,36 @@ async def handle_monetag_postback(request: web.Request) -> web.Response:
 
     if not click_id:
         log.warning(f"[MONETAG_POSTBACK] Missing click_id in postback: {params}")
-        return web.Response(status=400, text="Missing click_id or ymid parameter\n", content_type="text/plain")
+        return web.Response(status=400, text="Missing click_id or ymid parameter\n", content_type="text/plain", headers=CORS_API_HEADERS)
 
     now = time.time()
-    VERIFIED_S2S_CLICKS[click_id] = {
+    expires_at = now + 86400  # 24 hours
+    record = {
         "verified": True,
         "status": event_status,
         "payout": payout,
         "zone_id": zone_id,
         "country": country,
         "timestamp": now,
-        "expires_at": now + 86400  # 24 hours
+        "expires_at": expires_at
     }
+    VERIFIED_S2S_CLICKS[click_id] = record
+
+    # Persist in sqlite database
+    try:
+        oauth_db.save_monetag_postback(click_id, status=event_status, payout=payout, zone_id=zone_id, country=country)
+    except Exception as exc:
+        log.error(f"[MONETAG_POSTBACK] Failed to save in sqlite: {exc}")
+
     log.info(f"[MONETAG_POSTBACK] 🎯 Postback verified! click_id={click_id}, status={event_status}, payout=${payout}, geo={country}")
 
-    # Prune expired clicks if dictionary gets large
+    # Prune expired clicks if in-memory dictionary gets large
     if len(VERIFIED_S2S_CLICKS) > 1000:
         expired_keys = [k for k, v in VERIFIED_S2S_CLICKS.items() if now > v.get("expires_at", 0)]
         for k in expired_keys:
             VERIFIED_S2S_CLICKS.pop(k, None)
 
-    return web.Response(status=200, text="OK\n", content_type="text/plain")
+    return web.Response(status=200, text="OK\n", content_type="text/plain", headers=CORS_API_HEADERS)
 
 
 async def handle_task_status(request: web.Request) -> web.Response:
@@ -2409,12 +2430,27 @@ async def handle_task_status(request: web.Request) -> web.Response:
     Endpoint for frontend to poll whether Monetag S2S Postback has been received.
     GET /api/task-status?click_id=...
     """
+    if request.method == "OPTIONS":
+        return web.Response(status=204, headers=CORS_API_HEADERS)
+
     click_id = request.query.get("click_id") or request.query.get("ymid")
     if not click_id:
-        return web.json_response({"verified": False, "error": "Missing click_id"}, status=400)
+        return web.json_response({"verified": False, "error": "Missing click_id"}, status=400, headers=CORS_API_HEADERS)
 
     now = time.time()
     record = VERIFIED_S2S_CLICKS.get(click_id)
+
+    # If not in memory, check SQLite database
+    if not record:
+        db_rec = oauth_db.get_monetag_postback(click_id)
+        if db_rec:
+            record = {
+                "verified": True,
+                "status": db_rec.get("status", "completed"),
+                "payout": db_rec.get("payout", 0),
+                "expires_at": db_rec.get("expires_at", now + 86400)
+            }
+            VERIFIED_S2S_CLICKS[click_id] = record
 
     if record and record.get("verified"):
         expires_at = record.get("expires_at", now + 86400)
@@ -2424,13 +2460,13 @@ async def handle_task_status(request: web.Request) -> web.Response:
                 "status": record.get("status", "completed"),
                 "payout": record.get("payout", 0),
                 "expires_at": int(expires_at * 1000)
-            })
+            }, headers=CORS_API_HEADERS)
 
     return web.json_response({
         "verified": False,
         "status": "pending",
         "message": "Waiting for Monetag S2S postback confirmation"
-    })
+    }, headers=CORS_API_HEADERS)
 
 
 async def handle_ads_txt(request):

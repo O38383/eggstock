@@ -248,6 +248,20 @@ def init_db():
         conn.execute("""
             CREATE INDEX IF NOT EXISTS idx_sessions_token ON user_sessions(session_token)
         """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS monetag_postbacks (
+                click_id TEXT PRIMARY KEY,
+                status TEXT NOT NULL,
+                payout TEXT,
+                zone_id TEXT,
+                country TEXT,
+                created_at REAL NOT NULL,
+                expires_at REAL NOT NULL
+            )
+        """)
+        conn.execute("""
+            CREATE INDEX IF NOT EXISTS idx_postback_click ON monetag_postbacks(click_id)
+        """)
         conn.commit()
     log.info(f"[oauth_db] Database initialized at {DB_PATH}")
 
@@ -428,3 +442,48 @@ def delete_session(session_token: str):
             _bg_task(_delete_session_from_supabase, session_token)
     except Exception as exc:
         log.error(f"[oauth_db] Error deleting session: {exc}")
+
+
+def save_monetag_postback(click_id: str, status: str = "completed", payout: str = "0", zone_id: str = "12150650", country: str = "") -> dict:
+    """Save verified Monetag S2S postback with 24h validity."""
+    now = time.time()
+    expires_at = now + 86400  # 24 hours
+    try:
+        with sqlite3.connect(DB_PATH) as conn:
+            conn.execute("""
+                INSERT OR REPLACE INTO monetag_postbacks (
+                    click_id, status, payout, zone_id, country, created_at, expires_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?)
+            """, (click_id, status, str(payout), str(zone_id), str(country), now, expires_at))
+            conn.commit()
+    except Exception as exc:
+        log.error(f"[oauth_db] Error saving postback {click_id}: {exc}")
+    return {
+        "click_id": click_id,
+        "status": status,
+        "payout": payout,
+        "zone_id": zone_id,
+        "country": country,
+        "created_at": now,
+        "expires_at": expires_at,
+    }
+
+
+def get_monetag_postback(click_id: str) -> dict | None:
+    """Fetch verified Monetag S2S postback if unexpired."""
+    try:
+        now = time.time()
+        with sqlite3.connect(DB_PATH) as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+            cursor.execute(
+                "SELECT * FROM monetag_postbacks WHERE click_id = ? AND expires_at > ?",
+                (click_id, now)
+            )
+            row = cursor.fetchone()
+            if row:
+                return dict(row)
+    except Exception as exc:
+        log.error(f"[oauth_db] Error fetching postback {click_id}: {exc}")
+    return None
+

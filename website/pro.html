@@ -167,7 +167,7 @@
 <main class="max-w-6xl mx-auto px-3 sm:px-6 py-4 sm:py-6 flex-grow w-full space-y-4 sm:space-y-6">
 
   <!-- HERO BANNER -->
-  <section class="space-y-2.5 sm:space-y-3">
+  <section class="space-y-2 sm:space-y-3">
     <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap text-[10px] font-mono font-bold uppercase">
       <span class="bg-[#00f0ff]/15 text-[#00f0ff] border border-[#00f0ff]/40 px-2 py-0.5 rounded flex items-center gap-1">
         <span class="w-1.5 h-1.5 rounded-full bg-[#00f0ff] animate-ping"></span> Live AI Radar
@@ -183,28 +183,27 @@
       </span>
     </div>
 
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-2.5 sm:gap-4">
       <div>
-        <h1 class="font-display font-black text-xl sm:text-4xl uppercase text-white tracking-tight leading-tight">
-          Steal An Egg Predictions<br/>
-          <span class="text-[#fbff00]">Divine Surge Radar &amp; Spawn Telemetry</span>
+        <h1 class="font-display font-black text-lg sm:text-3xl uppercase text-white tracking-tight leading-tight">
+          EggStock AI Predictions &amp; <span class="text-[#fbff00]">Divine Surge Radar</span>
         </h1>
-        <p class="text-xs sm:text-sm text-slate-300 font-mono mt-1 max-w-2xl leading-relaxed">
+        <p class="text-[11px] sm:text-xs text-slate-300 font-mono mt-0.5 max-w-2xl leading-normal">
           Empirical drop forecasts powered by 588+ verified spawns. Real-time Divine wave odds, 16-biome Markov transition chains, and Turkey Rampage raid timers.
         </p>
       </div>
 
       <!-- Live Quick Clocks -->
-      <div class="grid grid-cols-2 gap-2 shrink-0 sm:w-80 mt-1 sm:mt-0">
-        <div class="neo-box p-2 sm:p-2.5 bg-[#0f1422] border border-black">
-          <div class="text-[9px] sm:text-[10px] font-mono text-slate-400 uppercase">Next Wave Drop</div>
-          <div class="font-mono-data text-lg sm:text-xl font-black text-[#00f0ff]" id="stat-next-wave">--:--</div>
-          <div class="text-[8px] sm:text-[9px] font-mono text-slate-500">Cadence ~7.6m</div>
+      <div class="grid grid-cols-2 gap-2 shrink-0 sm:w-80">
+        <div class="neo-box p-1.5 sm:p-2 bg-[#0f1422] border border-black">
+          <div class="text-[9px] font-mono text-slate-400 uppercase">Next Wave Drop</div>
+          <div class="font-mono-data text-base sm:text-xl font-black text-[#00f0ff]" id="stat-next-wave">--:--</div>
+          <div class="text-[8px] font-mono text-slate-500">Cadence ~7.6m</div>
         </div>
-        <div class="neo-box p-2 sm:p-2.5 bg-[#0f1422] border border-black">
-          <div class="text-[9px] sm:text-[10px] font-mono text-[#ff9900] uppercase font-bold">🦃 Turkey Boss (:15/:45)</div>
-          <div class="font-mono-data text-lg sm:text-xl font-black text-[#ff9900]" id="stat-turkey-wave">--:--</div>
-          <div class="text-[8px] sm:text-[9px] font-mono text-slate-500">King Gobble Raid</div>
+        <div class="neo-box p-1.5 sm:p-2 bg-[#0f1422] border border-black">
+          <div class="text-[9px] font-mono text-[#ff9900] uppercase font-bold">🦃 Turkey Boss (:15/:45)</div>
+          <div class="font-mono-data text-base sm:text-xl font-black text-[#ff9900]" id="stat-turkey-wave">--:--</div>
+          <div class="text-[8px] font-mono text-slate-500">King Gobble Raid</div>
         </div>
       </div>
     </div>
@@ -214,52 +213,37 @@
   <div class="relative neo-box bg-[#0b0f19] p-3 sm:p-6 overflow-hidden min-h-[460px]">
 
     <!-- ==================== LOCKED MODAL OVERLAY ==================== -->
-    <div id="pro-lock-gate" class="absolute inset-0 z-30 pro-blur-overlay flex flex-col items-center justify-start pt-3 sm:pt-6 p-3 sm:p-4 overflow-y-auto">
-      <div class="max-w-md w-full bg-[#111624] neo-box-glow p-5 sm:p-6 text-center space-y-3 sm:space-y-3.5 border-2 border-black shadow-[4px_4px_0px_#000] relative rounded">
-        <div class="w-12 h-12 sm:w-14 sm:h-14 bg-[#fbff00] text-black rounded-full flex items-center justify-center mx-auto border-2 border-black shadow-[2px_2px_0px_#000]">
-          <span class="material-symbols-outlined text-[28px] sm:text-[32px]">lock</span>
-        </div>
-
-        <div>
-          <span class="bg-[#fbff00] text-black text-[9px] sm:text-[10px] font-black uppercase px-2 py-0.5 border border-black shadow-[1px_1px_0px_#000]">24-HOUR VIP PASS • 0 ADS</span>
-          <h2 class="font-display font-black text-lg sm:text-2xl uppercase text-white mt-1">Unlock Prediction Radar</h2>
-          <p class="text-xs text-slate-300 font-mono mt-0.5 leading-relaxed">
-            Get 24-hour instant access to the <strong>Divine Surge Probability Matrix</strong>, <strong>16-Biome Island Radar</strong>, and <strong>Audio Drop Alarms</strong> with 1 quick sponsor task.
-          </p>
-        </div>
-
-        <div class="bg-[#080b12] border border-black p-2.5 sm:p-3 text-left space-y-1 sm:space-y-1.5 text-xs font-mono text-slate-300 rounded">
-          <div class="flex items-center gap-2 text-[#fbff00] font-bold">
-            <span class="material-symbols-outlined text-[16px]">check_circle</span>
-            <span>Real-Time Divine Wave Odds (Critical Surge)</span>
+    <div id="pro-lock-gate" class="absolute inset-0 z-30 pro-blur-overlay flex flex-col items-center justify-start pt-2 sm:pt-4 p-2 sm:p-4 overflow-y-auto">
+      <div class="max-w-md w-full bg-[#111624] neo-box-glow p-4 sm:p-5 text-center space-y-2.5 sm:space-y-3 border-2 border-black shadow-[4px_4px_0px_#000] relative rounded">
+        
+        <!-- Header row inside modal -->
+        <div class="flex items-center justify-center gap-2.5">
+          <div class="w-9 h-9 sm:w-10 sm:h-10 bg-[#fbff00] text-black rounded-full flex items-center justify-center shrink-0 border-2 border-black shadow-[2px_2px_0px_#000]">
+            <span class="material-symbols-outlined text-[22px] sm:text-[24px]">lock</span>
           </div>
-          <div class="flex items-center gap-2 text-[#00f0ff] font-bold">
-            <span class="material-symbols-outlined text-[16px]">check_circle</span>
-            <span>Markov Island Radar: Which Biome To Camp</span>
-          </div>
-          <div class="flex items-center gap-2 text-[#ff9900] font-bold">
-            <span class="material-symbols-outlined text-[16px]">check_circle</span>
-            <span>Update 14 King Gobble 30m Boss Timer</span>
-          </div>
-          <div class="flex items-center gap-2 text-[#00ff88] font-bold">
-            <span class="material-symbols-outlined text-[16px]">check_circle</span>
-            <span>0 Ads For 24 Hours on Entire Prediction Engine</span>
+          <div class="text-left">
+            <span class="bg-[#fbff00] text-black text-[9px] font-black uppercase px-2 py-0.5 border border-black shadow-[1px_1px_0px_#000]">24H VIP PASS • 0 ADS</span>
+            <h2 class="font-display font-black text-base sm:text-xl uppercase text-white leading-tight mt-0.5">Unlock Prediction Radar</h2>
           </div>
         </div>
 
-        <!-- Task Button Section -->
-        <div class="space-y-1.5 pt-1">
-          <button id="start-task-btn" onclick="startMonetagUnlockTask()" class="w-full bg-[#fbff00] hover:bg-white text-black font-display font-black text-xs sm:text-sm uppercase py-3 px-4 neo-btn flex items-center justify-center gap-2 cursor-pointer shadow-[3px_3px_0px_#000] border-2 border-black">
+        <p class="text-xs text-slate-300 font-mono leading-snug">
+          Instant access to <strong>Divine Surge Odds</strong>, <strong>Markov Island Biome Radar</strong> &amp; <strong>Drop Alarms</strong> for 24 hours.
+        </p>
+
+        <!-- Big Bright Yellow CTA Button (RIGHT AT THE TOP) -->
+        <div class="space-y-1 pt-0.5">
+          <button id="start-task-btn" onclick="startMonetagUnlockTask()" class="w-full bg-[#fbff00] hover:bg-white text-black font-display font-black text-xs sm:text-sm uppercase py-3 px-3 neo-btn flex items-center justify-center gap-2 cursor-pointer shadow-[3px_3px_0px_#000] border-2 border-black">
             <span class="material-symbols-outlined text-[18px]">bolt</span>
             <span>Complete 1 Sponsor Task To Unlock</span>
           </button>
-          <div class="text-[10px] font-mono text-slate-400">
+          <div class="text-[9px] sm:text-[10px] font-mono text-slate-400">
             Direct Link Sponsor Offer • 100% Ad-Free for 24 Hours
           </div>
         </div>
 
         <!-- S2S Postback Verification Box (hidden initially) -->
-        <div id="verifying-box" class="hidden bg-[#07090f] border-2 border-[#00f0ff] p-3.5 text-center space-y-2.5 rounded shadow-[3px_3px_0px_#000]">
+        <div id="verifying-box" class="hidden bg-[#07090f] border-2 border-[#00f0ff] p-3 text-center space-y-2 rounded shadow-[3px_3px_0px_#000]">
           <div class="flex items-center justify-center gap-2 text-xs font-mono text-[#00f0ff] font-bold">
             <span class="material-symbols-outlined text-[18px] animate-spin text-[#00f0ff]">sync</span>
             <span id="countdown-timer-text">Listening for Monetag S2S Postback...</span>
@@ -291,6 +275,27 @@
             </button>
           </div>
         </div>
+
+        <!-- 4 Key Features Checklist -->
+        <div class="bg-[#080b12] border border-black p-2 sm:p-2.5 text-left space-y-1 text-[11px] sm:text-xs font-mono text-slate-300 rounded">
+          <div class="flex items-center gap-1.5 text-[#fbff00] font-bold">
+            <span class="material-symbols-outlined text-[14px]">check_circle</span>
+            <span>Real-Time Divine Wave Odds (Critical Surge)</span>
+          </div>
+          <div class="flex items-center gap-1.5 text-[#00f0ff] font-bold">
+            <span class="material-symbols-outlined text-[14px]">check_circle</span>
+            <span>Markov Island Radar: Which Biome To Camp</span>
+          </div>
+          <div class="flex items-center gap-1.5 text-[#ff9900] font-bold">
+            <span class="material-symbols-outlined text-[14px]">check_circle</span>
+            <span>Update 14 King Gobble 30m Boss Timer</span>
+          </div>
+          <div class="flex items-center gap-1.5 text-[#00ff88] font-bold">
+            <span class="material-symbols-outlined text-[14px]">check_circle</span>
+            <span>0 Ads For 24 Hours on Entire Prediction Engine</span>
+          </div>
+        </div>
+
       </div>
     </div>
 
