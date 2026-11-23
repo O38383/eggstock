@@ -917,139 +917,30 @@
         </div>
     </section>
 
-    <!-- PREDICTION ENGINE & RADAR FORECAST SECTION -->
+    <!-- PREDICTION ENGINE CALLOUT BANNER ON HOMEPAGE -->
     <section id="predictions" class="space-y-4">
-        <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-2 border-b-2 border-black pb-3">
-            <div>
-                <span class="text-[10px] font-black uppercase tracking-wider bg-[#00f0ff] text-black px-2 py-0.5 border border-black shadow-[2px_2px_0px_#000]">Empirical AI Forecaster</span>
-                <h2 class="font-display font-black text-2xl sm:text-3xl uppercase text-white mt-1">Live Spawn Prediction Engine</h2>
-                <p class="text-xs text-slate-400 font-mono">Statistical drop forecasts powered by 580+ verified spawn logs, Markov rotation chains &amp; wave cadence telemetry.</p>
-            </div>
-            <div class="flex items-center gap-2">
-                <span class="bg-[#131722] text-[#4edea3] text-[11px] font-mono font-bold px-2.5 py-1 border border-black shadow-[2px_2px_0px_#000] flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-[#4edea3] animate-ping"></span> 94.2% Prediction Accuracy
-                </span>
-            </div>
-        </div>
-
-        <!-- 3-COL PREDICTION CARDS -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <!-- Card 1: Next Drop Egg Forecast -->
-            <div class="neo-card p-4 sm:p-5 flex flex-col justify-between border-2 border-black bg-gradient-to-br from-[#131722] to-[#181d2c]">
-                <div>
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-[10px] font-mono font-bold uppercase text-[#00f0ff] bg-[#00f0ff]/10 px-2 py-0.5 border border-[#00f0ff]/30">Target #1 Candidate</span>
-                        <span class="font-mono text-xs text-[#00ff88] font-bold" id="pred-top-prob">16.0% Odds</span>
+        <div class="neo-card p-5 sm:p-6 border-2 border-black bg-gradient-to-br from-[#111624] via-[#141a2c] to-[#111624] shadow-[4px_4px_0px_#000]">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+                <div class="flex items-start sm:items-center gap-4">
+                    <div class="w-13 h-13 sm:w-14 sm:h-14 bg-[#fbff00] text-black rounded-lg flex items-center justify-center shrink-0 border-2 border-black shadow-[3px_3px_0px_#000]">
+                        <span class="material-symbols-outlined text-[30px] sm:text-[34px]">query_stats</span>
                     </div>
-                    <div class="flex items-center gap-3 mb-3">
-                        <div class="w-12 h-12 bg-black border border-black/80 flex items-center justify-center p-1 shadow-[2px_2px_0px_#000]">
-                            <img id="pred-top-img" src="https://tr.rbxcdn.com/180DAY-66ba84cc7ac5060813a2baa96a92073b/150/150/Image/Png/noFilter" alt="Predicted Egg" class="w-full h-full object-contain" loading="lazy" decoding="async">
+                    <div class="space-y-1.5">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="bg-[#00f0ff] text-black text-[10px] font-black uppercase px-2 py-0.5 border border-black shadow-[1px_1px_0px_#000]">AI PREDICTION RADAR</span>
+                            <span class="bg-[#00ff88] text-black text-[10px] font-mono font-bold px-2 py-0.5 border border-black">● 94.2% ACCURACY</span>
+                            <span class="bg-[#ff9900] text-black text-[10px] font-mono font-bold px-2 py-0.5 border border-black">🦃 UPDATE 14 READY</span>
                         </div>
-                        <div>
-                            <div class="font-display text-lg font-black text-white" id="pred-top-name">Pure Jellyfish</div>
-                            <div class="text-[11px] font-mono text-[#fbabff] font-bold" id="pred-top-rarity">Secret Tier • Angels Biome</div>
-                        </div>
-                    </div>
-                    <div class="space-y-1.5 pt-2 border-t border-black/40 text-xs font-mono">
-                        <div class="flex justify-between text-slate-300">
-                            <span class="text-slate-400">#2 Runner-Up:</span>
-                            <span class="text-white font-bold" id="pred-runner-up">Gargoyle (15.0%)</span>
-                        </div>
-                        <div class="flex justify-between text-slate-300">
-                            <span class="text-slate-400">#3 Dark Horse:</span>
-                            <span class="text-white font-bold" id="pred-dark-horse">Tralaledon (5.8%)</span>
-                        </div>
+                        <h2 class="font-display font-black text-xl sm:text-2xl uppercase text-white mt-1">Live Spawn Predictions &amp; Divine Surge Radar</h2>
+                        <p class="text-xs sm:text-sm text-slate-300 font-mono max-w-xl leading-relaxed">
+                            Looking for drop forecasts? Real-time Divine surge odds, 16-biome Markov transition chains, audio drop alarms, and Turkey Rampage boss clocks are now on our dedicated radar page.
+                        </p>
                     </div>
                 </div>
-                <div class="mt-3 pt-2.5 border-t border-black/40 flex items-center justify-between text-[11px] font-mono">
-                    <span class="text-slate-400">Wave Cadence:</span>
-                    <span class="text-[#00f0ff] font-bold">~7.6 min (Median)</span>
-                </div>
-            </div>
-
-            <!-- Card 2: Rarity Surge & Hazard Watch -->
-            <div class="neo-card p-4 sm:p-5 flex flex-col justify-between border-2 border-black bg-gradient-to-br from-[#131722] to-[#181d2c]">
-                <div>
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-[10px] font-mono font-bold uppercase text-[#ff00ff] bg-[#ff00ff]/10 px-2 py-0.5 border border-[#ff00ff]/30">Rarity Probability</span>
-                        <span class="font-mono text-xs text-[#fbff00] font-bold" id="pred-rarity-surge">Dynamic Gauge</span>
-                    </div>
-                    
-                    <div class="space-y-2 mb-3">
-                        <div>
-                            <div class="flex justify-between text-xs font-mono mb-1">
-                                <span class="text-[#fbabff] font-bold">Secret Tier</span>
-                                <span class="text-white font-mono" id="pred-pct-secret">81.6%</span>
-                            </div>
-                            <div class="w-full bg-black h-2 border border-black/60 overflow-hidden">
-                                <div class="bg-[#fbabff] h-full" id="pred-bar-secret" style="width: 81.6%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between text-xs font-mono mb-1">
-                                <span class="text-[#4edea3] font-bold">Eternal Tier</span>
-                                <span class="text-white font-mono" id="pred-pct-eternal">17.5%</span>
-                            </div>
-                            <div class="w-full bg-black h-2 border border-black/60 overflow-hidden">
-                                <div class="bg-[#4edea3] h-full" id="pred-bar-eternal" style="width: 17.5%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between text-xs font-mono mb-1">
-                                <span class="text-[#00f0ff] font-bold">Divine Tier</span>
-                                <span class="text-white font-mono" id="pred-pct-divine">0.9%</span>
-                            </div>
-                            <div class="w-full bg-black h-2 border border-black/60 overflow-hidden">
-                                <div class="bg-[#00f0ff] h-full" id="pred-bar-divine" style="width: 5%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-2 pt-2 border-t border-black/40 flex items-center justify-between text-[11px] font-mono">
-                    <span class="text-slate-400">Divine Status:</span>
-                    <span class="text-[#00f0ff] font-bold" id="pred-divine-status">Normal Cycle</span>
-                </div>
-            </div>
-
-            <!-- Card 3: Markov Biome Rotation & Hourly Surge -->
-            <div class="neo-card p-4 sm:p-5 flex flex-col justify-between border-2 border-black bg-gradient-to-br from-[#131722] to-[#181d2c]">
-                <div>
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-[10px] font-mono font-bold uppercase text-[#4edea3] bg-[#4edea3]/10 px-2 py-0.5 border border-[#4edea3]/30">Biome Rotation Chain</span>
-                        <span class="font-mono text-xs text-[#00f0ff] font-bold">Markov Sequence</span>
-                    </div>
-                    
-                    <div class="p-2.5 bg-[#0a0d14] border border-black text-xs font-mono mb-3 space-y-1.5">
-                        <div class="text-[10px] text-slate-400 uppercase font-bold">Next Hotspot Prediction:</div>
-                        <div class="flex items-center justify-between text-slate-200">
-                            <span class="font-bold text-white flex items-center gap-1.5">
-                                <span class="w-2 h-2 rounded-full bg-[#00f0ff]"></span>
-                                <span id="pred-markov-1">Angels &amp; Demons Zone</span>
-                            </span>
-                            <span class="text-[#00f0ff] font-bold" id="pred-markov-1-pct">39.1%</span>
-                        </div>
-                        <div class="flex items-center justify-between text-slate-300">
-                            <span class="flex items-center gap-1.5">
-                                <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
-                                <span id="pred-markov-2">Prehistoric Biome</span>
-                            </span>
-                            <span class="text-slate-400" id="pred-markov-2-pct">14.5%</span>
-                        </div>
-                    </div>
-
-                    <div class="text-[11px] font-mono text-slate-300 leading-snug">
-                        <span class="text-[#fbff00] font-bold">Multi-Spawn Surge Odds:</span><br/>
-                        Single Egg: 72.9% • 2-Egg Surge: 20.3% • 3-Egg Surge: 6.8%
-                    </div>
-                </div>
-                <div class="mt-3 pt-2.5 border-t border-black/40 flex items-center justify-between text-[11px] font-mono">
-                    <span class="text-slate-400">Next Peak Minute:</span>
-                    <span class="text-[#fbff00] font-bold" id="pred-next-peak">--m (:20/:40/:55)</span>
-                </div>
-                <div class="mt-1.5 flex items-center justify-between text-[11px] font-mono">
-                    <span class="text-[#ff9900] font-semibold flex items-center gap-1">🦃 Turkey Rampage Boss:</span>
-                    <span class="text-[#ff9900] font-bold" id="pred-turkey-peak">--m (:15/:45)</span>
-                </div>
+                <a href="/prediction" class="w-full md:w-auto shrink-0 bg-[#fbff00] hover:bg-white text-black font-display font-black text-xs sm:text-sm uppercase px-6 py-3.5 neo-btn flex items-center justify-center gap-2 no-underline border-2 border-black shadow-[3px_3px_0px_#000]">
+                    <span>Open Prediction Radar ↗</span>
+                    <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+                </a>
             </div>
         </div>
     </section>
