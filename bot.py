@@ -2229,11 +2229,11 @@ async def handle_notifier(request):
 
 
 async def handle_predictions(request):
-    return _render_page_with_token(WEBSITE_DIR / "predictions.html")
+    return _render_page_with_token(WEBSITE_DIR / "prediction.html")
 
 
 async def handle_pro(request):
-    return _render_page_with_token(WEBSITE_DIR / "pro.html")
+    return _render_page_with_token(WEBSITE_DIR / "prediction.html")
 
 
 async def handle_calculator(request):

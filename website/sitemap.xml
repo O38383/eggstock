@@ -13,6 +13,12 @@
     <priority>0.95</priority>
   </url>
   <url>
+    <loc>https://eggstock.xyz/prediction</loc>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>always</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
     <loc>https://eggstock.xyz/predictions</loc>
     <lastmod>2026-11-23</lastmod>
     <changefreq>always</changefreq>
