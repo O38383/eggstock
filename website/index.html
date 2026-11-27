@@ -917,29 +917,86 @@
         </div>
     </section>
 
-    <!-- PREDICTION ENGINE CALLOUT BANNER ON HOMEPAGE -->
+    <!-- FREEMIUM PREDICTION ENGINE SECTION ON HOMEPAGE -->
     <section id="predictions" class="space-y-4">
-        <div class="neo-card p-5 sm:p-6 border-2 border-black bg-gradient-to-br from-[#111624] via-[#141a2c] to-[#111624] shadow-[4px_4px_0px_#000]">
-            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
-                <div class="flex items-start sm:items-center gap-4">
-                    <div class="w-13 h-13 sm:w-14 sm:h-14 bg-[#fbff00] text-black rounded-lg flex items-center justify-center shrink-0 border-2 border-black shadow-[3px_3px_0px_#000]">
-                        <span class="material-symbols-outlined text-[30px] sm:text-[34px]">query_stats</span>
+        <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-2 border-b-2 border-black pb-3">
+            <div>
+                <div class="flex items-center gap-2 flex-wrap">
+                    <span class="text-[10px] font-black uppercase tracking-wider bg-[#00f0ff] text-black px-2 py-0.5 border border-black shadow-[2px_2px_0px_#000]">Empirical AI Forecaster</span>
+                    <span class="text-[10px] font-black uppercase tracking-wider bg-[#38bdf8] text-black px-2 py-0.5 border border-black shadow-[2px_2px_0px_#000]">❄️ Update 15: Frozen Awakening (Sat Nov 28, 15:00 UTC)</span>
+                </div>
+                <h2 class="font-display font-black text-2xl sm:text-3xl uppercase text-white mt-1.5">Live Spawn Prediction Engine</h2>
+                <p class="text-xs text-slate-400 font-mono">Free Target #1 drop forecast powered by 588+ verified spawn logs &amp; ~7.6m wave cadence telemetry.</p>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="bg-[#131722] text-[#4edea3] text-[11px] font-mono font-bold px-2.5 py-1 border border-black shadow-[2px_2px_0px_#000] flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-[#4edea3] animate-ping"></span> 94.2% Accuracy
+                </span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <!-- FREE Card 1: Target #1 Candidate -->
+            <div class="neo-card p-4 sm:p-5 flex flex-col justify-between border-2 border-black bg-gradient-to-br from-[#131722] to-[#181d2c]">
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-[10px] font-mono font-bold uppercase text-[#00f0ff] bg-[#00f0ff]/10 px-2 py-0.5 border border-[#00f0ff]/30">FREE • Target #1 Candidate</span>
+                        <span class="font-mono text-xs text-[#00ff88] font-bold" id="pred-top-prob">14.2% Odds</span>
                     </div>
-                    <div class="space-y-1.5">
-                        <div class="flex items-center gap-2 flex-wrap">
-                            <span class="bg-[#00f0ff] text-black text-[10px] font-black uppercase px-2 py-0.5 border border-black shadow-[1px_1px_0px_#000]">AI PREDICTION RADAR</span>
-                            <span class="bg-[#00ff88] text-black text-[10px] font-mono font-bold px-2 py-0.5 border border-black">● 94.2% ACCURACY</span>
-                            <span class="bg-[#ff9900] text-black text-[10px] font-mono font-bold px-2 py-0.5 border border-black">🦃 UPDATE 14 READY</span>
+                    <div class="flex items-center gap-3.5 mb-3">
+                        <div class="w-14 h-14 sm:w-16 sm:h-16 bg-black border-2 border-black flex items-center justify-center p-1 shadow-[3px_3px_0px_#000] shrink-0">
+                            <img id="pred-top-img" src="/images/eggs/pure_jellyfish.png" alt="Predicted Egg" class="w-full h-full object-contain" loading="lazy" decoding="async">
                         </div>
-                        <h2 class="font-display font-black text-xl sm:text-2xl uppercase text-white mt-1">Live Spawn Predictions &amp; Divine Surge Radar</h2>
-                        <p class="text-xs sm:text-sm text-slate-300 font-mono max-w-xl leading-relaxed">
-                            Looking for drop forecasts? Real-time Divine surge odds, 16-biome Markov transition chains, audio drop alarms, and Turkey Rampage boss clocks are now on our dedicated radar page.
-                        </p>
+                        <div>
+                            <div class="font-display text-xl sm:text-2xl font-black text-white leading-tight" id="pred-top-name">Pure Jellyfish</div>
+                            <div class="text-xs font-mono text-[#fbabff] font-bold mt-0.5" id="pred-top-rarity">Secret Tier • Angels Biome</div>
+                        </div>
+                    </div>
+                    <div class="bg-[#0a0d14] border border-black p-2.5 text-xs font-mono space-y-1.5">
+                        <div class="flex justify-between text-slate-300">
+                            <span class="text-slate-400">Wave Cadence:</span>
+                            <span class="text-[#00f0ff] font-bold">~7.6 min (Median)</span>
+                        </div>
+                        <div class="flex justify-between text-slate-300">
+                            <span class="text-slate-400">🦃 Update 14 Turkey Boss:</span>
+                            <span class="text-[#ff9900] font-bold">Every :15 &amp; :45 (Ends Today 18:00 UTC)</span>
+                        </div>
                     </div>
                 </div>
-                <a href="/prediction" class="w-full md:w-auto shrink-0 bg-[#fbff00] hover:bg-white text-black font-display font-black text-xs sm:text-sm uppercase px-6 py-3.5 neo-btn flex items-center justify-center gap-2 no-underline border-2 border-black shadow-[3px_3px_0px_#000]">
-                    <span>Open Prediction Radar ↗</span>
-                    <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+                <div class="mt-3 pt-2.5 border-t border-black/40 flex items-center justify-between text-[11px] font-mono">
+                    <span class="text-slate-400">Next Update 15 (Frozen Awakening):</span>
+                    <span class="text-[#38bdf8] font-bold" id="u15-countdown">Sat 15:00 UTC</span>
+                </div>
+            </div>
+
+            <!-- PRO Card 2: Locked Pro Matrix CTA -->
+            <div class="neo-card p-4 sm:p-5 flex flex-col justify-between border-2 border-black bg-gradient-to-br from-[#111624] via-[#1a142c] to-[#111624] relative overflow-hidden">
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-[10px] font-mono font-black uppercase text-black bg-[#fbff00] px-2 py-0.5 border border-black shadow-[1px_1px_0px_#000]">🔒 PRO RADAR • 24H 0-ADS PASS</span>
+                        <span class="font-mono text-xs text-[#ff00ff] font-bold animate-pulse" id="pred-divine-status">Live Surge Active</span>
+                    </div>
+                    <h3 class="font-display font-black text-lg sm:text-xl uppercase text-white leading-tight mb-2">
+                        Unlock Full Divine Matrix &amp; Island Radar
+                    </h3>
+                    <div class="space-y-1.5 text-xs font-mono text-slate-300 bg-[#0a0d14] border border-black p-3 mb-3">
+                        <div class="flex items-center justify-between">
+                            <span class="flex items-center gap-1.5 text-[#fbff00] font-bold"><span class="material-symbols-outlined text-[14px]">lock</span> Divine Surge Exact Odds:</span>
+                            <span class="blur-[4px] select-none text-[#00ff88]">CRITICAL 8.4%</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="flex items-center gap-1.5 text-[#00f0ff] font-bold"><span class="material-symbols-outlined text-[14px]">lock</span> 16-Biome Markov Hotspot:</span>
+                            <span class="blur-[4px] select-none text-[#00f0ff]">Angels 24%</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="flex items-center gap-1.5 text-[#ff9900] font-bold"><span class="material-symbols-outlined text-[14px]">lock</span> Runner-Up &amp; Audio Alarms:</span>
+                            <span class="blur-[4px] select-none text-white">Gargoyle 13.8%</span>
+                        </div>
+                    </div>
+                </div>
+                <a href="/prediction" class="w-full bg-[#fbff00] hover:bg-white text-black font-display font-black text-xs sm:text-sm uppercase px-5 py-3 neo-btn flex items-center justify-center gap-2 no-underline border-2 border-black shadow-[3px_3px_0px_#000]">
+                    <span class="material-symbols-outlined text-[18px]">bolt</span>
+                    <span>Open Pro Prediction Radar ↗</span>
                 </a>
             </div>
         </div>
@@ -2330,6 +2387,117 @@ document.addEventListener("DOMContentLoaded", () => {
             icon: "/images/eggs/dr__scramble_experiment.png",
             egg_image: "/images/eggs/dr__scramble_experiment.png",
             pet_image: "/images/pets/dr__scramble_experiment.png"
+        },
+        // ── Update 13 (Stormlands) & Update 14 (Turkey Takeover) Pets ──
+        "Starry Fox": {
+            tier: "secret",
+            odds: "0.045% (1 in ~2,200)",
+            badgeWins: "1.1M+",
+            world: "Enchanted Forest",
+            tips: "Secret celestial fox ($750M/sec base income) from the Enchanted Forest biome.",
+            icon: "/images/eggs/starry_fox.png",
+            egg_image: "/images/eggs/starry_fox.png",
+            pet_image: "/images/pets/starry_fox.png"
+        },
+        "Aurora Stag": {
+            tier: "secret",
+            odds: "0.030% (1 in ~3,300)",
+            badgeWins: "950K+",
+            world: "Enchanted Forest",
+            tips: "Radiant Secret stag ($1.2B/sec base income) with northern lights aura.",
+            icon: "/images/eggs/aurora_stag.png",
+            egg_image: "/images/eggs/aurora_stag.png",
+            pet_image: "/images/pets/aurora_stag.png"
+        },
+        "Stormclaw Wolf": {
+            tier: "secret",
+            odds: "0.050% (1 in ~2,000)",
+            badgeWins: "800K+",
+            world: "Stormlands",
+            tips: "Update 13 Stormlands Secret wolf ($36M/sec base income + speed boosts). Requires 150M Speed.",
+            icon: "/images/eggs/stormclaw_wolf.png",
+            egg_image: "/images/eggs/stormclaw_wolf.png",
+            pet_image: "/images/pets/stormclaw_wolf.png"
+        },
+        "Thundercoil": {
+            tier: "secret",
+            odds: "0.045% (1 in ~2,200)",
+            badgeWins: "750K+",
+            world: "Stormlands",
+            tips: "Update 13 Stormlands Secret serpent ($42M/sec base income). Spawns during Skyfall events.",
+            icon: "/images/eggs/thundercoil.png",
+            egg_image: "/images/eggs/thundercoil.png",
+            pet_image: "/images/pets/thundercoil.png"
+        },
+        "Stormbreaker Rhino": {
+            tier: "eternal",
+            odds: "0.039% (1 in ~2,560)",
+            badgeWins: "500K+",
+            world: "Stormlands",
+            tips: "Armored Eternal rhino of the Stormlands biome (150M Speed zone).",
+            icon: "/images/eggs/stormbreaker_rhino.png",
+            egg_image: "/images/eggs/stormbreaker_rhino.png",
+            pet_image: "/images/pets/stormbreaker_rhino.png"
+        },
+        "Cornuclaw": {
+            tier: "secret",
+            odds: "Turkey Shop",
+            badgeWins: "Event Drop",
+            world: "Turkey Shop",
+            tips: "Update 14 Turkey Takeover Secret pet purchased with Turkey Feathers from the event shop.",
+            icon: "/images/eggs/cornuclaw.png",
+            egg_image: "/images/eggs/cornuclaw.png",
+            pet_image: "/images/pets/cornuclaw.png"
+        },
+        "Mapleleaf Moose": {
+            tier: "eternal",
+            odds: "Turkey Shop (22.5K Feathers)",
+            badgeWins: "Event Drop",
+            world: "Turkey Shop",
+            tips: "Update 14 Eternal event pet ($1.5B/sec base income). Bought for 22,500 Turkey Feathers.",
+            icon: "/images/eggs/mapleleaf_moose.png",
+            egg_image: "/images/eggs/mapleleaf_moose.png",
+            pet_image: "/images/pets/mapleleaf_moose.png"
+        },
+        "King Gobble": {
+            tier: "divine",
+            odds: "Boss Drop (:15/:45)",
+            badgeWins: "Boss Raid",
+            world: "Turkey Rampage",
+            tips: "Update 14 Divine boss pet dropped rarely by King Gobble during the 30-min Turkey Rampage.",
+            icon: "/images/eggs/king_gobble.png",
+            egg_image: "/images/eggs/king_gobble.png",
+            pet_image: "/images/pets/king_gobble.png"
+        },
+        "Divine King Gobble": {
+            tier: "divine",
+            odds: "Boss Drop (:15/:45)",
+            badgeWins: "Boss Raid",
+            world: "Turkey Rampage",
+            tips: "Rare Divine variant dropped from the King Gobble boss raid.",
+            icon: "/images/eggs/divine_king_gobble.png",
+            egg_image: "/images/eggs/divine_king_gobble.png",
+            pet_image: "/images/pets/divine_king_gobble.png"
+        },
+        "Golden King Gobble": {
+            tier: "divine",
+            odds: "Golden Boss (:15/:45)",
+            badgeWins: "Boss Raid",
+            world: "Turkey Rampage",
+            tips: "Double-feather Golden King Gobble boss variant from Turkey Rampage.",
+            icon: "/images/eggs/golden_king_gobble.png",
+            egg_image: "/images/eggs/golden_king_gobble.png",
+            pet_image: "/images/pets/golden_king_gobble.png"
+        },
+        "Jokur": {
+            tier: "secret",
+            odds: "39% (Royal Egg)",
+            badgeWins: "Robux Shop",
+            world: "Royal Egg",
+            tips: "Mischievous Royal Jester pet hatched from the Robux-exclusive Royal Egg.",
+            icon: "/images/eggs/jokur.png",
+            egg_image: "/images/eggs/jokur.png",
+            pet_image: "/images/pets/jokur.png"
         }
     };
 
@@ -3490,6 +3658,20 @@ document.addEventListener("DOMContentLoaded", () => {
         if (turkey) {
             const tEl = document.getElementById("pred-turkey-peak");
             if (tEl) tEl.textContent = `In ${turkey.minutes_remaining}m (:${String(turkey.target_minute).padStart(2, '0')})`;
+        }
+
+        // Update 15: Frozen Awakening live countdown (Sat Nov 28, 2026 15:00 UTC)
+        const u15El = document.getElementById("u15-countdown");
+        if (u15El) {
+            const target = Date.UTC(2026, 10, 28, 15, 0, 0);
+            const diff = target - Date.now();
+            if (diff > 0) {
+                const hrs = Math.floor(diff / 3600000);
+                const mins = Math.floor((diff % 3600000) / 60000);
+                u15El.textContent = `In ${hrs}h ${mins}m (Sat 15:00 UTC)`;
+            } else {
+                u15El.textContent = "❄️ LIVE NOW!";
+            }
         }
     }
 
