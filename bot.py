@@ -2581,7 +2581,11 @@ async def handle_robots(request):
 async def handle_sitemap(request):
     sitemap_file = WEBSITE_DIR / "sitemap.xml"
     if sitemap_file.exists():
-        return web.FileResponse(sitemap_file, headers={"Content-Type": "application/xml; charset=utf-8"})
+        raw = sitemap_file.read_bytes()
+        # Strip UTF-8 BOM if present — Google's sitemap parser rejects it
+        if raw[:3] == b'\xef\xbb\xbf':
+            raw = raw[3:]
+        return web.Response(body=raw, content_type="application/xml", charset="utf-8")
     return web.Response(status=404, text="Sitemap not found")
 
 
