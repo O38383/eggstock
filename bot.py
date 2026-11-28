@@ -2585,7 +2585,13 @@ async def handle_sitemap(request):
         # Strip UTF-8 BOM if present — Google's sitemap parser rejects it
         if raw[:3] == b'\xef\xbb\xbf':
             raw = raw[3:]
-        return web.Response(body=raw, content_type="application/xml", charset="utf-8")
+        return web.Response(
+            body=raw,
+            headers={
+                "Content-Type": "application/xml; charset=utf-8",
+                "X-BOM-Stripped": "true",
+            },
+        )
     return web.Response(status=404, text="Sitemap not found")
 
 
