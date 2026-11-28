@@ -2583,7 +2583,8 @@ async def handle_sitemap(request):
     if sitemap_file.exists():
         raw = sitemap_file.read_bytes()
         # Strip UTF-8 BOM if present — Google's sitemap parser rejects it
-        if raw[:3] == b'\xef\xbb\xbf':
+        import codecs
+        if raw[:3] == codecs.BOM_UTF8:
             raw = raw[3:]
         return web.Response(
             body=raw,
